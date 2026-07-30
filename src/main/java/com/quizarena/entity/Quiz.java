@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,11 +14,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+// represent a table in database.
 @Entity
+// table name in database
 @Table(name = "quizzes")
 public class Quiz {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+
+    @Id  // primary id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto generated identity
     private int id;
 
 
@@ -24,7 +30,11 @@ public class Quiz {
     private String description;
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "quiz",cascade = CascadeType.ALL, orphanRemoval = true)
+    // Serialize this side.
+    // to stop refrencing back to back between quiz and questions.
+    @JsonManagedReference 
+    //for relation ship with questions, and remove quistons if parent quiz is deleted.  
+    @OneToMany(mappedBy = "quiz",cascade = CascadeType.ALL, orphanRemoval = true) 
     private List<Question> questions = new ArrayList<>();
     
 
