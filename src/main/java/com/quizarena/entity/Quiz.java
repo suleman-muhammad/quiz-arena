@@ -36,6 +36,50 @@ public class Quiz {
     //for relation ship with questions, and remove quistons if parent quiz is deleted.  
     @OneToMany(mappedBy = "quiz",cascade = CascadeType.ALL, orphanRemoval = true) 
     private List<Question> questions = new ArrayList<>();
+
+    public Quiz() {
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
     
 
 }
