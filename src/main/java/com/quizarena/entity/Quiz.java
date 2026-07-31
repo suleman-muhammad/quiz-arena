@@ -24,7 +24,7 @@ public class Quiz {
 
     @Id  // primary id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto generated identity
-    private int id;
+    private long id;
 
 
     private String title;
@@ -47,7 +47,7 @@ public class Quiz {
     }
 
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
