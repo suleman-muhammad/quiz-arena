@@ -17,19 +17,25 @@ import com.quizarena.entity.Quiz;
 import com.quizarena.repository.QuizRepository;
 
 @RestController
-@RequestMapping("/api/quizzes")
+@RequestMapping("/api/quizzes") // this class handles this end point and sub end points of it -if any
 public class QuizController {
     
+    // this is a bean
     private final QuizRepository quizRepository;
+
 
     public QuizController(QuizRepository quizRepository){
         this.quizRepository = quizRepository;
     }
 
 
+    // this method handles the Post mapping on the class' original url
     @PostMapping
-    public Quiz creatQuiz(@RequestBody Quiz quiz){
+    public Quiz creatQuiz(@RequestBody Quiz quiz){ // request body handles the conversion of json to Quiz and quiz to Json while returning
         
+        // foreign key does not gets attached 
+        // cause only quiz gets serialized 
+        // so we have to set the quiz_id field in Questions manually
         for (Question q: quiz.getQuestions()){
             q.setQuiz(quiz);
         }
@@ -38,13 +44,15 @@ public class QuizController {
         return quiz;
     }
 
-
+    // get mapping on main url
+    // returns all quizzes
     @GetMapping
     public List<Quiz> getAllQuizzes(){
         return quizRepository.findAll();
     }
 
-
+    //get mapping with main + sub url
+    // @PathVariable takes the id from the url and assigns it to id
     @GetMapping("/{id}")
     public ResponseEntity<Quiz> quizWithId(@PathVariable Long id){
         Optional<Quiz> quiz = quizRepository.findById(id);
@@ -52,18 +60,19 @@ public class QuizController {
         if(quiz.isPresent()){
             return ResponseEntity.ok(quiz.get());
         }else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build(); // 404 error code
         }
     }
 
 
+    // delete mapping with main + sub url
     @DeleteMapping("/{id}")
     public ResponseEntity<Quiz> delteQuiz(@PathVariable Long id){
         if(quizRepository.existsById(id)){
             quizRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build(); // returns 204 cause nothing to show.
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build(); // returns 404 
     }
 
 }
