@@ -12,7 +12,8 @@ public class GameManager {
     private final Map<String,GameRoom> rooms = new ConcurrentHashMap<>();
 
     public GameRoom createRoom(Long quizId,String hostId){
-        GameRoom room = new GameRoom();
+        String code = generateCode();
+        return new GameRoom(code,quizId,hostId);
     }
 
     private String generateCode(){
@@ -32,6 +33,14 @@ public class GameManager {
             return generateCode();
         }else{
             return sb.toString();
+        }
+    }
+
+    public GameRoom findRoomByCode(String code){
+        if(rooms.containsKey(code)){
+            return rooms.get(code);
+        }else{
+            return null;
         }
     }
 }
