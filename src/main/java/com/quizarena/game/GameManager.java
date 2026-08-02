@@ -51,4 +51,21 @@ public class GameManager {
         }
         return null;
     }
+
+    public GameRoom removePlayerFromRoom(String code,Player player){
+        if(rooms.containsKey(code)){
+            GameRoom room = rooms.get(code);
+            room.removePlayer(player);
+            return room;
+        }
+        return null;
+    }
+
+    public void removeRoom(String code){
+        if(rooms.containsKey(code)){
+            rooms.remove(code);
+        }
+    }
+
+
 }
