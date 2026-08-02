@@ -1,4 +1,5 @@
 package com.quizarena.game;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameRoom {
@@ -8,6 +9,24 @@ public class GameRoom {
     private List<Player> players;
     private String hostId;
     
+    public GameRoom(String code,Long quizId,String hostId){
+        this.quizId = quizId;
+        this.hostId = hostId;
+        this.roomCode = code;
+        this.state = GameState.WAITING;
+        this.players = new ArrayList<>();
+    }
+
+
+    public void addPlayer(Player p){
+        this.players.add(p);
+    }
+
+    public boolean removePlayer(Player p){
+        return players.remove(p);
+    }
+
+
     public long getQuizId() {
         return quizId;
     }
