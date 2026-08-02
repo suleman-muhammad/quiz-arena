@@ -39,8 +39,16 @@ public class GameManager {
     public GameRoom findRoomByCode(String code){
         if(rooms.containsKey(code)){
             return rooms.get(code);
-        }else{
-            return null;
         }
+        return null;
+    }
+
+    public GameRoom addPlayerToRoom(String code,Player player){
+        if(rooms.containsKey(code)){
+            GameRoom room = rooms.get(code);
+            room.addPlayer(player);
+            return room;
+        }
+        return null;
     }
 }
