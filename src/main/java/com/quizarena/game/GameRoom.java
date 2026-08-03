@@ -7,19 +7,28 @@ public class GameRoom {
     private String roomCode;
     private GameState state;
     private List<Player> players;
-    private String hostId;
+    private String host;
     
-    public GameRoom(String code,Long quizId,String hostId){
+    public GameRoom(String code,Long quizId,String host){
         this.quizId = quizId;
-        this.hostId = hostId;
+        this.host = host;
         this.roomCode = code;
         this.state = GameState.WAITING;
         this.players = new ArrayList<>();
     }
 
 
-    public void addPlayer(Player p){
+    public boolean addPlayer(Player p){
+        p.setCurrentPos(1);
+        p.setScore(0);
+        for(Player player: players){
+            if (player.getNickName().equalsIgnoreCase(p.getNickName())){
+                return false;
+            }
+        }
+
         this.players.add(p);
+        return true;
     }
 
     public boolean removePlayer(Player p){
@@ -52,10 +61,10 @@ public class GameRoom {
         this.state = state;
     }
     public String getHostId() {
-        return hostId;
+        return host;
     }
-    public void setHostId(String hostId) {
-        this.hostId = hostId;
+    public void setHostId(String host) {
+        this.host = host;
     }
     
     
