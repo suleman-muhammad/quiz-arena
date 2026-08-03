@@ -47,10 +47,12 @@ public class GameManager {
         return null;
     }
 
-    public GameRoom addPlayerToRoom(String code,Player player){
+    public GameRoom addPlayerToRoom(String code,String playernickName){
         if(rooms.containsKey(code)){
             GameRoom room = rooms.get(code);
-            boolean result = room.addPlayer(player);
+            Player p = new Player();
+            p.setNickName(playernickName);
+            boolean result = room.addPlayer(p);
             return result ? room : null;
         }
         return null;
