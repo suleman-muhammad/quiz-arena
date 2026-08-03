@@ -11,9 +11,13 @@ public class GameManager {
     
     private final Map<String,GameRoom> rooms = new ConcurrentHashMap<>();
 
-    public GameRoom createRoom(Long quizId,String hostId){
+    public GameRoom createRoom(Long quizId,String hostNickName){
         String code = generateCode();
-        return new GameRoom(code,quizId,hostId);
+        Player p = new Player();
+        p.setNickName(hostNickName);
+        GameRoom room = new GameRoom(code,quizId,hostNickName);
+        room.addPlayer(p);
+        return room;
     }
 
     private String generateCode(){
@@ -46,8 +50,8 @@ public class GameManager {
     public GameRoom addPlayerToRoom(String code,Player player){
         if(rooms.containsKey(code)){
             GameRoom room = rooms.get(code);
-            room.addPlayer(player);
-            return room;
+            boolean result = room.addPlayer(player);
+            return result ? room : null;
         }
         return null;
     }
