@@ -32,7 +32,12 @@ public class GameRoom {
     }
 
     public boolean removePlayer(Player p){
-        return players.remove(p);
+        for(Player player: players){
+            if(player.getNickName().equalsIgnoreCase(p.getNickName())){
+                return players.remove(player);
+            }
+        }
+        return false;
     }
 
 
