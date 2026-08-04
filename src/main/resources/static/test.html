@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QuizArena WebSocket Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2/lib/stomp.min.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 5px; padding: 8px 16px; }
+        input { padding: 8px; margin: 5px; }
+        #output { background: #f0f0f0; padding: 15px; margin-top: 15px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Test</h1>
+
+    <div>
+        <button onclick="connect()">Connect</button>
+        <span id="status">Disconnected</span>
+    </div>
+
+    <hr>
+
+    <div>
+        <h3>Create Room</h3>
+        <input id="quizId" placeholder="Quiz ID (number)" value="1">
+        <input id="hostName" placeholder="Host nickname">
+        <button onclick="createRoom()">Create Room</button>
+    </div>
+
+    <hr>
+
+    <div>
+        <h3>Join Room</h3>
+        <input id="roomCode" placeholder="Room code">
+        <input id="playerName" placeholder="Your nickname">
+        <button onclick="joinRoom()">Join Room</button>
+    </div>
+
+    <hr>
+
+    <div>
+        <h3>Leave Room</h3>
+        <button onclick="leaveRoom()">Leave Room</button>
+    </div>
+
+    <div id="output"></div>
+
+    <script>
+        let stompClient = null;
+        let currentRoomCode = null;
+
+        function log(msg) {
+            document.getElementById('output').innerHTML += msg + '\n';
+        }
+
+        function connect() {
+            const socket = new SockJS('http://localhost:8080/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function () {
+                document.getElementById('status').innerText = 'Connected';
+                log('Connected to server');
+            });
+        }
+
+        function createRoom() {
+            const hostName = document.getElementById('hostName').value;
+            
+            // subscribe to personal topic BEFORE creating
+            stompClient.subscribe('/topic/host/' + hostName, function (msg) {
+                const room = JSON.parse(msg.body);
+                currentRoomCode = room.roomCode;
+                log('Room created: ' + room.roomCode);
+                
+                // now subscribe to room updates
+                stompClient.subscribe('/topic/room/' + room.roomCode, function (update) {
+                    log('Room update: ' + JSON.stringify(JSON.parse(update.body), null, 2));
+                });
+            });
+            
+            const quizId = parseInt(document.getElementById('quizId').value);
+            stompClient.send('/app/game/create', {}, JSON.stringify({
+                quizId: quizId,
+                hostNickName: hostName
+            }));
+        }
+
+        function joinRoom() {
+            const code = document.getElementById('roomCode').value;
+            const name = document.getElementById('playerName').value;
+            currentRoomCode = code;
+
+            stompClient.subscribe('/topic/room/' + code, function (update) {
+                log('Room update: ' + JSON.stringify(JSON.parse(update.body), null, 2));
+            });
+
+            stompClient.send('/app/game/join', {}, JSON.stringify({
+                roomCode: code,
+                playerNickName: name
+            }));
+        }
+
+        function leaveRoom() {
+            if (!currentRoomCode) {
+                log('Not in a room');
+                return;
+            }
+            const name = document.getElementById('playerName').value || document.getElementById('hostName').value;
+            stompClient.send('/app/game/leave', {}, JSON.stringify({
+                roomCode: currentRoomCode,
+                playerNickName: name
+            }));
+        }
+    </script>
+</body>
+</html>
