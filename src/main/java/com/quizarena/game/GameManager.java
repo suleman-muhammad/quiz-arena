@@ -17,6 +17,7 @@ public class GameManager {
         p.setNickName(hostNickName);
         GameRoom room = new GameRoom(code,quizId,hostNickName);
         room.addPlayer(p);
+        rooms.put(code, room);
         return room;
     }
 
@@ -63,8 +64,8 @@ public class GameManager {
             GameRoom room = rooms.get(code);
             Player player = new Player();
             player.setNickName(playernickName);
-            room.removePlayer(player);
-            return room;
+            boolean result = room.removePlayer(player);
+            return result ? room : null;
         }
         return null;
     }
