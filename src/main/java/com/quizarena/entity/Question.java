@@ -20,7 +20,7 @@ public class Question {
     private int id;
 
 
-    private String description;
+    private String questionText;
     private String optionA;
     private String optionB;
     private String optionC;
@@ -53,13 +53,13 @@ public class Question {
     }
 
 
-    public String getDescription() {
-        return description;
+    public String getQuestionText() {
+        return questionText;
     }
 
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setQuestionText(String questionText) {
+        this.questionText = questionText;
     }
 
 
