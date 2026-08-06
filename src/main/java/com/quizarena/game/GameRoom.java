@@ -2,12 +2,17 @@ package com.quizarena.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.quizarena.dto.QuestionDTO;
+import com.quizarena.entity.Question;
+
 public class GameRoom {
     private long quizId;
     private String roomCode;
     private GameState state;
     private List<Player> players;
     private String host;
+    private List<Question> questions;
+    private int currQuestionNo;
     
     public GameRoom(String code,Long quizId,String host){
         this.quizId = quizId;
@@ -15,6 +20,30 @@ public class GameRoom {
         this.roomCode = code;
         this.state = GameState.WAITING;
         this.players = new ArrayList<>();
+        this.questions = null;
+    }
+
+
+    public void startRoom(List<Question> questions){
+        this.questions = questions;
+        currQuestionNo = 1;
+    }
+
+    public QuestionDTO getNextQuestion(){
+        if(questions == null || currQuestionNo > questions.size()){
+            return null;
+        }
+
+        QuestionDTO q = new QuestionDTO();
+        Question curr = questions.get(currQuestionNo);
+        q.setQuestionText(curr.getQuestionText());
+        q.setOptionA(curr.getOptionA());
+        q.setOptionB(curr.getOptionB());
+        q.setOptionC(curr.getOptionC());
+        q.setOptionD(curr.getOptionD());
+        q.setTimeLimit(10);
+        q.setQuestionNo(currQuestionNo++);
+        return q;
     }
 
 

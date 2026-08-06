@@ -3,12 +3,14 @@ package com.quizarena.controller;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.quizarena.dto.CreateRoomRequest;
 import com.quizarena.dto.JoinRoomRequest;
 import com.quizarena.dto.LeaveRoomRequest;
 import com.quizarena.game.GameManager;
 import com.quizarena.game.GameRoom;
+import com.quizarena.service.GameService;
 
 
 @Controller
@@ -16,6 +18,7 @@ public class GameController {
 
     private SimpMessagingTemplate messagingTemplate;
     private GameManager manager;
+    private GameService gameService;
 
     public GameController(SimpMessagingTemplate template,GameManager manager){
         this.messagingTemplate = template;
@@ -50,5 +53,11 @@ public class GameController {
             messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),room);
         }
          System.out.println("SERVER: Leave ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
+    }
+
+
+    @MessageMapping("/game/start/{roomCode}")
+    public void startRoom(@PathVariable String roomCode){
+        gameService.startRoom(roomCode);
     }
 }
