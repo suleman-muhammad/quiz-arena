@@ -1,7 +1,9 @@
 package com.quizarena.game;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import com.quizarena.dto.AnswerDTO;
 import com.quizarena.dto.QuestionDTO;
 import com.quizarena.entity.Question;
 
@@ -44,6 +46,22 @@ public class GameRoom {
         q.setTimeLimit(10);
         q.setQuestionNo(currQuestionNo++);
         return q;
+    }
+
+    public void finishRound(List<AnswerDTO> answers){
+        Question q = questions.get(currQuestionNo-1);
+        for(AnswerDTO ans: answers){ 
+            for (Player p : players){
+                if(p.getNickName().equalsIgnoreCase(ans.getPlayerNickName())){
+                    if(ans.getChoosenOption() == q.getCorrectOption()){
+                        double n = (ans.getTimeTaken()/1000);
+                        int dScores = (int) Math.ceil(1000 - ((n*(n-1))/2));
+                        p.setScore(p.getScore() + dScores);
+                    }
+                    
+                }
+            }
+        }
     }
 
 
