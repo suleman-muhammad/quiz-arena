@@ -1,10 +1,12 @@
 package com.quizarena.dto;
 
 public class AnswerDTO {
-    
+    private String roomCode;
+    private String playerNickName;
     private int questionNo;
     private int choosenOption;
-    private int timeTaken;
+    private int answeredAtMillis;
+
     public int getQuestionNo() {
         return questionNo;
     }
@@ -17,12 +19,26 @@ public class AnswerDTO {
     public void setChoosenOption(int choosenOption) {
         this.choosenOption = choosenOption;
     }
-    public int getTimeTaken() {
-        return timeTaken;
+    
+    public String getPlayerNickName() {
+        return playerNickName;
     }
-    public void setTimeTaken(int timeTaken) {
-        this.timeTaken = timeTaken;
+    public void setPlayerNickName(String playerNickName) {
+        this.playerNickName = playerNickName;
     }
+    public String getRoomCode() {
+        return roomCode;
+    }
+    public void setRoomCode(String roomCode) {
+        this.roomCode = roomCode;
+    }
+    public int getAnsweredAtMillis() {
+        return answeredAtMillis;
+    }
+    public void setAnsweredAtMillis(int answeredAtMillis) {
+        this.answeredAtMillis = answeredAtMillis;
+    }
+    
 
     
 }
