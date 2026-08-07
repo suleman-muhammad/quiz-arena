@@ -10,7 +10,7 @@ import com.quizarena.entity.Question;
 public class GameRoom {
     private long quizId;
     private String roomCode;
-    private GameState state;
+    private RoomState state;
     private List<Player> players;
     private String host;
     private List<Question> questions;
@@ -20,7 +20,7 @@ public class GameRoom {
         this.quizId = quizId;
         this.host = host;
         this.roomCode = code;
-        this.state = GameState.WAITING;
+        this.state = RoomState.WAITING;
         this.players = new ArrayList<>();
         this.questions = null;
     }
@@ -54,7 +54,7 @@ public class GameRoom {
             for (Player p : players){
                 if(p.getNickName().equalsIgnoreCase(ans.getPlayerNickName())){
                     if(ans.getChoosenOption() == q.getCorrectOption()){
-                        double n = (ans.getTimeTaken()/1000);
+                        double n = (ans.getAnsweredAtMillis()/1000);
                         int dScores = (int) Math.ceil(1000 - ((n*(n-1))/2));
                         p.setScore(p.getScore() + dScores);
                     }
@@ -64,6 +64,13 @@ public class GameRoom {
         }
     }
 
+    public List<Player> getLeaderBoard(){
+        Collections.sort(players,new ComparePlayersForPosition());
+        for(int i = 0; i<players.size(); i++){
+            players.get(i).setCurrentPos(i+1);
+        }
+        return players.subList(0, Math.min(5,players.size()));
+    }
 
     public boolean addPlayer(Player p){
         p.setCurrentPos(1);
@@ -106,10 +113,10 @@ public class GameRoom {
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
-    public GameState getState() {
+    public RoomState getState() {
         return state;
     }
-    public void setState(GameState state) {
+    public void setState(RoomState state) {
         this.state = state;
     }
     public String getHostId() {
