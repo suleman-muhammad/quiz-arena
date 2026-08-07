@@ -6,42 +6,43 @@
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2/lib/stomp.min.js"></script>
     <style>
         body { font-family: Arial; padding: 20px; }
-        button { margin: 5px; padding: 8px 16px; }
+        button { margin: 5px; padding: 8px 16px; cursor: pointer; }
         input { padding: 8px; margin: 5px; }
-        #output { background: #f0f0f0; padding: 15px; margin-top: 15px; white-space: pre-wrap; }
+        #output { background: #f0f0f0; padding: 15px; margin-top: 15px; white-space: pre-wrap; max-height: 400px; overflow-y: auto; }
+        .section { border: 1px solid #ccc; padding: 15px; margin: 10px 0; }
+        h3 { margin-top: 0; }
     </style>
 </head>
 <body>
-    <h1>WebSocket Test</h1>
+    <h1>QuizArena Test</h1>
 
-    <div>
+    <div class="section">
         <button onclick="connect()">Connect</button>
         <span id="status">Disconnected</span>
     </div>
 
-    <hr>
-
-    <div>
-        <h3>Create Room</h3>
-        <input id="quizId" placeholder="Quiz ID (number)" value="1">
+    <div class="section">
+        <h3>Host Controls</h3>
+        <input id="quizId" placeholder="Quiz ID" value="1">
         <input id="hostName" placeholder="Host nickname">
         <button onclick="createRoom()">Create Room</button>
+        <button onclick="startGame()">Start Game</button>
     </div>
 
-    <hr>
-
-    <div>
-        <h3>Join Room</h3>
+    <div class="section">
+        <h3>Player Controls</h3>
         <input id="roomCode" placeholder="Room code">
         <input id="playerName" placeholder="Your nickname">
         <button onclick="joinRoom()">Join Room</button>
+        <button onclick="leaveRoom()">Leave Room</button>
     </div>
 
-    <hr>
-
-    <div>
-        <h3>Leave Room</h3>
-        <button onclick="leaveRoom()">Leave Room</button>
+    <div class="section">
+        <h3>Answer</h3>
+        <button onclick="submitAnswer(0)">Option A</button>
+        <button onclick="submitAnswer(1)">Option B</button>
+        <button onclick="submitAnswer(2)">Option C</button>
+        <button onclick="submitAnswer(3)">Option D</button>
     </div>
 
     <div id="output"></div>
@@ -51,33 +52,32 @@
         let currentRoomCode = null;
 
         function log(msg) {
-            document.getElementById('output').innerHTML += msg + '\n';
+            const output = document.getElementById('output');
+            output.innerHTML += msg + '\n';
+            output.scrollTop = output.scrollHeight;
         }
 
         function connect() {
             const socket = new SockJS('http://localhost:8080/ws');
             stompClient = Stomp.over(socket);
+            stompClient.debug = null;
             stompClient.connect({}, function () {
                 document.getElementById('status').innerText = 'Connected';
                 log('Connected to server');
+            }, function (error) {
+                log('Connection error: ' + error);
             });
         }
 
         function createRoom() {
             const hostName = document.getElementById('hostName').value;
-            
-            // subscribe to personal topic BEFORE creating
             stompClient.subscribe('/topic/host/' + hostName, function (msg) {
                 const room = JSON.parse(msg.body);
                 currentRoomCode = room.roomCode;
                 log('Room created: ' + room.roomCode);
-                
-                // now subscribe to room updates
-                stompClient.subscribe('/topic/room/' + room.roomCode, function (update) {
-                    log('Room update: ' + JSON.stringify(JSON.parse(update.body), null, 2));
-                });
+                subscribeToRoom(room.roomCode);
             });
-            
+
             const quizId = parseInt(document.getElementById('quizId').value);
             stompClient.send('/app/game/create', {}, JSON.stringify({
                 quizId: quizId,
@@ -85,15 +85,18 @@
             }));
         }
 
+        function subscribeToRoom(code) {
+            stompClient.subscribe('/topic/room/' + code, function (msg) {
+                const data = JSON.parse(msg.body);
+                log('Room message: ' + JSON.stringify(data, null, 2));
+            });
+        }
+
         function joinRoom() {
             const code = document.getElementById('roomCode').value;
             const name = document.getElementById('playerName').value;
             currentRoomCode = code;
-
-            stompClient.subscribe('/topic/room/' + code, function (update) {
-                log('Room update: ' + JSON.stringify(JSON.parse(update.body), null, 2));
-            });
-
+            subscribeToRoom(code);
             stompClient.send('/app/game/join', {}, JSON.stringify({
                 roomCode: code,
                 playerNickName: name
@@ -101,15 +104,31 @@
         }
 
         function leaveRoom() {
-            if (!currentRoomCode) {
-                log('Not in a room');
-                return;
-            }
+            if (!currentRoomCode) { log('Not in a room'); return; }
             const name = document.getElementById('playerName').value || document.getElementById('hostName').value;
             stompClient.send('/app/game/leave', {}, JSON.stringify({
                 roomCode: currentRoomCode,
                 playerNickName: name
             }));
+        }
+
+        function startGame() {
+            if (!currentRoomCode) { log('No room to start'); return; }
+            stompClient.send('/app/game/start', {}, JSON.stringify({
+                roomCode: currentRoomCode
+            }));
+        }
+
+        function submitAnswer(option) {
+            if (!currentRoomCode) { log('Not in a room'); return; }
+            const name = document.getElementById('playerName').value || document.getElementById('hostName').value;
+            stompClient.send('/app/game/answer', {}, JSON.stringify({
+                roomCode: currentRoomCode,
+                playerNickName: name,
+                chosenOption: option,
+                answeredAtMillis: Date.now()
+            }));
+            log('Submitted answer: Option ' + ['A','B','C','D'][option]);
         }
     </script>
 </body>
