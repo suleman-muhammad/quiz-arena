@@ -50,22 +50,22 @@ public class GameService {
             return;
         }
 
-        System.out.println("Game Service: Passed the Room check for Room " + roomCode);
+        // System.out.println("Game Service: Passed the Room check for Room " + roomCode);
 
         Optional<Quiz> q = quizRepository.findById(room.getQuizId());
 
         if(!q.isPresent()){
-            System.out.println("Game Service: No Quiz Found with Code " + room.getQuizId());
+            // System.out.println("Game Service: No Quiz Found with Code " + room.getQuizId());
             messagingTemplate.convertAndSend("/topic/room/" + roomCode,"No Quiz Found with id " + room.getQuizId() + " Room ended.");
             return;
         }
 
 
-        System.out.println("Game Service: Passed quiz check for the Room  " + roomCode);
+        // System.out.println("Game Service: Passed quiz check for the Room  " + roomCode);
 
         room.startRoom(q.get().getQuestions());
 
-        System.out.println("Game Service: Passed statring checks for the Room  " + roomCode);
+        // System.out.println("Game Service: Passed statring checks for the Room  " + roomCode);
 
         this.roomThread.schedule(() -> {
             try{
@@ -76,11 +76,12 @@ public class GameService {
             }
         }, 5, TimeUnit.SECONDS);
         
-        System.out.println("Server: Scheduled Next Task.");
+        // System.out.println("Server: Scheduled Next Task.");
     
     }
 
     public void sendQuestion(GameRoom room){
+        // System.out.println("Server: entered Send Question.");
         if(room == null){
             return;
         }
@@ -90,14 +91,16 @@ public class GameService {
 
         currQuestion = room.getNextQuestion();
         if(currQuestion == null){
+            // System.out.println("Server: current Question is NUll to returning.");
+            messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),"ROOM Ended.");
             return;
         }
 
-        System.out.println("Server: Got a Question: " + currQuestion.getQuestionText());
+        // System.out.println("Server: Got a Question: " + currQuestion.getQuestionText());
 
         messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),currQuestion);
 
-        System.out.println("Server: send the  Question Succeccfully" );
+        // System.out.println("Server: send the  Question Succeccfully" );
 
         stopAcceptingAnswers.setAccepting(false);
         stopAcceptingAnswers.setQuestionNo(currQuestion.getQuestionNo());
@@ -112,7 +115,7 @@ public class GameService {
             
         }, currQuestion.getTimeLimit(), TimeUnit.SECONDS);
 
-        System.out.println("Server: Scheduled Next Task.");
+        // System.out.println("Server: Scheduled Next Task.");
 
     }
 
@@ -120,11 +123,11 @@ public class GameService {
 
         messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(), stopAcceptingAnswers);
 
-        System.out.println("Server: Send the  Stop Question Request Succeccfully");
+        // System.out.println("Server: Send the  Stop Question Request Succeccfully");
 
         List<Player> roundResult = room.finishRound();
 
-        System.out.println("Server: Got Round Result.");
+        // System.out.println("Server: Got Round Result.");
 
         messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(), roundResult);
 
@@ -138,15 +141,17 @@ public class GameService {
             }
         }, 5, TimeUnit.SECONDS);
 
-        System.out.println("Server: Scheduled Next Task.");
+        // System.out.println("Server: Scheduled Next Task.");
 
 
     }
 
     public void handleAnswer(String roomCode,AnswerDTO answer){
+        System.out.println("Service: Got an Answer Submission.");
         GameRoom room = manager.findRoomByCode(roomCode);
         if(room != null){
             room.submitAnswer(answer);
+            
         }
     }
 }
