@@ -1,12 +1,12 @@
 package com.quizarena.service;
 
-import java.util.ArrayList;
+
 
 import java.util.List;
-import java.util.Map;
+
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
+
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -29,14 +29,13 @@ public class GameService {
     private GameManager manager;
     private QuizRepository quizRepository;
     private SimpMessagingTemplate messagingTemplate;
-    private Map<String,List<AnswerDTO>> roomAnswers;
+
     private ScheduledExecutorService roomThread;
 
     @Autowired
     public GameService(GameManager manager,QuizRepository quizRepository, SimpMessagingTemplate template){
         this.manager = manager;
         this.quizRepository = quizRepository;
-        this.roomAnswers = new ConcurrentHashMap<>();
         this.messagingTemplate = template;
         this.roomThread = Executors.newScheduledThreadPool(1);
     }
@@ -65,7 +64,6 @@ public class GameService {
         System.out.println("Game Service: Passed quiz check for the Room  " + roomCode);
 
         room.startRoom(q.get().getQuestions());
-        roomAnswers.put(roomCode, new ArrayList<>());
 
         System.out.println("Game Service: Passed statring checks for the Room  " + roomCode);
 
@@ -124,7 +122,7 @@ public class GameService {
 
         System.out.println("Server: Send the  Stop Question Request Succeccfully");
 
-        List<Player> roundResult = room.finishRound(this.roomAnswers.get(room.getRoomCode()));
+        List<Player> roundResult = room.finishRound();
 
         System.out.println("Server: Got Round Result.");
 
@@ -146,8 +144,9 @@ public class GameService {
     }
 
     public void handleAnswer(String roomCode,AnswerDTO answer){
-        if(roomAnswers.containsKey(roomCode)){
-            roomAnswers.get(roomCode).add(answer);
+        GameRoom room = manager.findRoomByCode(roomCode);
+        if(room != null){
+            room.submitAnswer(answer);
         }
     }
 }
