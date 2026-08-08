@@ -34,7 +34,7 @@ public class GameController {
     public void createRoom(CreateRoomRequest request){
         GameRoom room = manager.createRoom(request.quizId(), request.hostNickName());
         // messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),room);
-        System.out.println("SERVER: Create ROOM Hit: " + request.quizId() + " , Room Code: " + room.getRoomCode());
+        // System.out.println("SERVER: Create ROOM Hit: " + request.quizId() + " , Room Code: " + room.getRoomCode());
         RoomInfo roomInfo = new RoomInfo();
         roomInfo.setPlayers(room.getPlayers());
         roomInfo.setRoomCode(room.getRoomCode());
@@ -56,7 +56,7 @@ public class GameController {
         if(room != null){
             messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),roomInfo);
         }
-        System.out.println("SERVER: Join ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
+        // System.out.println("SERVER: Join ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
 
     @MessageMapping("/game/leave")
@@ -69,19 +69,20 @@ public class GameController {
         if(room != null){
             messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),roomInfo);
         }
-         System.out.println("SERVER: Leave ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
+        //  System.out.println("SERVER: Leave ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
 
 
     @MessageMapping("/game/start")
     public void startRoom(@RequestBody StartRoomRequest request){
-        System.out.println("SERVER: Start ROOM Hit: " + request.getRoomCode());
+        // System.out.println("SERVER: Start ROOM Hit: " + request.getRoomCode());
 
         gameService.startRoom(request.getRoomCode());
     }
 
     @MessageMapping("/game/answer")
     public void handleAnswer(@RequestBody AnswerDTO answer){
+        System.out.println("Controller: Got an Answer Submission.");
         gameService.handleAnswer(answer.getRoomCode(),answer);
     }
 }
