@@ -13,6 +13,7 @@ public class GameRoom {
     private RoomState state;
     private String host;
     private int currQuestionNo;
+    private long previousQuestionSentTimeMillis;
 
     private List<Player> players;
     private List<Question> questions;
@@ -36,7 +37,7 @@ public class GameRoom {
     }
 
     public QuestionDTO getNextQuestion(){
-        if(questions == null || currQuestionNo > questions.size()){
+        if(questions == null || currQuestionNo >= questions.size()){
             return null;
         }
 
@@ -49,17 +50,26 @@ public class GameRoom {
         q.setOptionD(curr.getOptionD());
         q.setTimeLimit(10);
         q.setQuestionNo(currQuestionNo++);
+        this.previousQuestionSentTimeMillis = System.currentTimeMillis();
         return q;
     }
 
     public List<Player> finishRound(){
+        System.out.println("Game: Got a finish Round Request.");
         Question q = questions.get(currQuestionNo-1);
         for(AnswerDTO ans: answers){ 
+
+            System.out.println("Game: Checking answer from " + ans.getPlayerNickName() + 
+            " chose=" + ans.getChosenOption() + " correct=" + q.getCorrectOption());
+
             for (Player p : players){
                 if(p.getNickName().equalsIgnoreCase(ans.getPlayerNickName())){
-                    if(ans.getChoosenOption() == q.getCorrectOption()){
-                        double n = (ans.getAnsweredAtMillis()/1000);
-                        int dScores = (int) Math.ceil(1000 - ((n*(n-1))/2));
+                    System.out.println("Game: Player Matched.");
+                    if(ans.getChosenOption() == q.getCorrectOption()){
+                        System.out.println("Game: Answer Matched.");
+                        double n = ((ans.getAnsweredAtMillis()-this.previousQuestionSentTimeMillis)/1000);
+                        int dScores = (int) Math.ceil(1000 - ((10*n*(n+1))/2));
+                        System.out.println("Game: updating Scores " + dScores);
                         p.setScore(p.getScore() + dScores);
                     }
                     
@@ -67,6 +77,7 @@ public class GameRoom {
             }
         }
         this.answers.clear();
+        System.out.println("Serivce: Sending LeaderBoard.");
         return this.getLeaderBoard();
     }
 
@@ -101,6 +112,7 @@ public class GameRoom {
     }
 
     public void submitAnswer(AnswerDTO answer){
+        System.out.println("Game: Got an Answer Submission.");
         synchronized(this.answers){
             this.answers.add(answer);
         }
