@@ -1,7 +1,7 @@
 package com.quizarena.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,6 +21,7 @@ import com.quizarena.dto.AnswerDTO;
 import com.quizarena.entity.Quiz;
 import com.quizarena.game.GameManager;
 import com.quizarena.game.GameRoom;
+import com.quizarena.game.Player;
 import com.quizarena.repository.QuizRepository;
 
 @Service
@@ -29,6 +30,7 @@ public class GameService {
     private QuizRepository quizRepository;
     private SimpMessagingTemplate messagingTemplate;
     private Map<String,List<AnswerDTO>> roomAnswers;
+    private ScheduledExecutorService roomThread;
 
     @Autowired
     public GameService(GameManager manager,QuizRepository quizRepository, SimpMessagingTemplate template){
@@ -36,16 +38,20 @@ public class GameService {
         this.quizRepository = quizRepository;
         this.roomAnswers = new ConcurrentHashMap<>();
         this.messagingTemplate = template;
+        this.roomThread = Executors.newScheduledThreadPool(1);
     }
 
 
     public void startRoom(String roomCode){
         System.out.println("Game Service: Starting the Room " + roomCode);
+
         GameRoom room = manager.findRoomByCode(roomCode);
         if(room == null){
             System.out.println("Game Service: No Room Found with Code " + roomCode);
             return;
         }
+
+        System.out.println("Game Service: Passed the Room check for Room " + roomCode);
 
         Optional<Quiz> q = quizRepository.findById(room.getQuizId());
 
@@ -55,36 +61,88 @@ public class GameService {
             return;
         }
 
+
+        System.out.println("Game Service: Passed quiz check for the Room  " + roomCode);
+
         room.startRoom(q.get().getQuestions());
-        ExecutorService roomThread = Executors.newSingleThreadScheduledExecutor();
         roomAnswers.put(roomCode, new ArrayList<>());
 
-        roomThread.submit(() -> {  
-            QuestionDTO currQuestion;
-            StopAcceptingAnswers stopAcceptingAnswers = new StopAcceptingAnswers(); 
+        System.out.println("Game Service: Passed statring checks for the Room  " + roomCode);
 
-            while((currQuestion = room.getNextQuestion()) != null){
-    
-                try{
-                    System.out.println("Game Service: Sending First Question to Room " + roomCode);
-                    stopAcceptingAnswers.setQuestionNo(currQuestion.getQuestionNo());
-                    stopAcceptingAnswers.setAccepting(false);
-
-                    messagingTemplate.convertAndSend("/topic/room/" + roomCode,currQuestion);
-
-                    Thread.sleep(currQuestion.getTimeLimit()*1000);
-                    messagingTemplate.convertAndSend("/topic/room/" + roomCode, stopAcceptingAnswers);
-                    room.finishRound(roomAnswers.get(roomCode));
-                    roomAnswers.put(roomCode, new ArrayList<>());
-                    messagingTemplate.convertAndSend("/topic/room/" + roomCode, room.getLeaderBoard());
-                    Thread.sleep(3000);
-                }catch (Exception e){
-                    System.out.println("Server: Error in Room " + roomCode);
-                    e.printStackTrace();
-                }
-
+        this.roomThread.schedule(() -> {
+            try{
+                this.sendQuestion(room);
+            }catch (Exception e){
+                System.err.println("Sever: in Send next Question.");
+                e.printStackTrace();
             }
-        });
+        }, 5, TimeUnit.SECONDS);
+        
+        System.out.println("Server: Scheduled Next Task.");
+    
+    }
+
+    public void sendQuestion(GameRoom room){
+        if(room == null){
+            return;
+        }
+
+        QuestionDTO currQuestion;
+        StopAcceptingAnswers stopAcceptingAnswers = new StopAcceptingAnswers(); 
+
+        currQuestion = room.getNextQuestion();
+        if(currQuestion == null){
+            return;
+        }
+
+        System.out.println("Server: Got a Question: " + currQuestion.getQuestionText());
+
+        messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),currQuestion);
+
+        System.out.println("Server: send the  Question Succeccfully" );
+
+        stopAcceptingAnswers.setAccepting(false);
+        stopAcceptingAnswers.setQuestionNo(currQuestion.getQuestionNo());
+
+        this.roomThread.schedule(() -> {
+            try{
+                this.endRound(room,stopAcceptingAnswers);
+            }catch (Exception e){
+                System.err.println("Sever: in Send next Question.");
+                e.printStackTrace();
+            }
+            
+        }, currQuestion.getTimeLimit(), TimeUnit.SECONDS);
+
+        System.out.println("Server: Scheduled Next Task.");
+
+    }
+
+    public void endRound(GameRoom room,StopAcceptingAnswers stopAcceptingAnswers){
+
+        messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(), stopAcceptingAnswers);
+
+        System.out.println("Server: Send the  Stop Question Request Succeccfully");
+
+        List<Player> roundResult = room.finishRound(this.roomAnswers.get(room.getRoomCode()));
+
+        System.out.println("Server: Got Round Result.");
+
+        messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(), roundResult);
+
+
+        this.roomThread.schedule(() -> {
+            try{
+                this.sendQuestion(room);
+            }catch (Exception e){
+                System.err.println("Sever: in Send next Question.");
+                e.printStackTrace();
+            }
+        }, 5, TimeUnit.SECONDS);
+
+        System.out.println("Server: Scheduled Next Task.");
+
+
     }
 
     public void handleAnswer(String roomCode,AnswerDTO answer){
