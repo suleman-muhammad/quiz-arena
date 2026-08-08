@@ -4,8 +4,8 @@ public class AnswerDTO {
     private String roomCode;
     private String playerNickName;
     private int questionNo;
-    private int choosenOption;
-    private int answeredAtMillis;
+    private int chosenOption;
+    private long answeredAtMillis;
 
     public int getQuestionNo() {
         return questionNo;
@@ -13,11 +13,11 @@ public class AnswerDTO {
     public void setQuestionNo(int questionNo) {
         this.questionNo = questionNo;
     }
-    public int getChoosenOption() {
-        return choosenOption;
+    public int getChosenOption() {
+        return chosenOption;
     }
-    public void setChoosenOption(int choosenOption) {
-        this.choosenOption = choosenOption;
+    public void setChosenOption(int chosenOption) {
+        this.chosenOption = chosenOption;
     }
     
     public String getPlayerNickName() {
@@ -32,10 +32,10 @@ public class AnswerDTO {
     public void setRoomCode(String roomCode) {
         this.roomCode = roomCode;
     }
-    public int getAnsweredAtMillis() {
+    public long getAnsweredAtMillis() {
         return answeredAtMillis;
     }
-    public void setAnsweredAtMillis(int answeredAtMillis) {
+    public void setAnsweredAtMillis(long answeredAtMillis) {
         this.answeredAtMillis = answeredAtMillis;
     }
     
