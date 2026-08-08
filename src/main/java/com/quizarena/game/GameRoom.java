@@ -48,7 +48,7 @@ public class GameRoom {
         return q;
     }
 
-    public void finishRound(List<AnswerDTO> answers){
+    public List<Player> finishRound(List<AnswerDTO> answers){
         Question q = questions.get(currQuestionNo-1);
         for(AnswerDTO ans: answers){ 
             for (Player p : players){
@@ -62,9 +62,10 @@ public class GameRoom {
                 }
             }
         }
+        return this.getLeaderBoard();
     }
 
-    public List<Player> getLeaderBoard(){
+    private List<Player> getLeaderBoard(){
         Collections.sort(players,new ComparePlayersForPosition());
         for(int i = 0; i<players.size(); i++){
             players.get(i).setCurrentPos(i+1);
