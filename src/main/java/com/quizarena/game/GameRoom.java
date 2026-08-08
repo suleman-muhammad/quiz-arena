@@ -11,10 +11,13 @@ public class GameRoom {
     private long quizId;
     private String roomCode;
     private RoomState state;
-    private List<Player> players;
     private String host;
-    private List<Question> questions;
     private int currQuestionNo;
+
+    private List<Player> players;
+    private List<Question> questions;
+    private List<AnswerDTO> answers;
+    
     
     public GameRoom(String code,Long quizId,String host){
         this.quizId = quizId;
@@ -23,6 +26,7 @@ public class GameRoom {
         this.state = RoomState.WAITING;
         this.players = new ArrayList<>();
         this.questions = null;
+        this.answers = new ArrayList<>();
     }
 
 
@@ -48,7 +52,7 @@ public class GameRoom {
         return q;
     }
 
-    public List<Player> finishRound(List<AnswerDTO> answers){
+    public List<Player> finishRound(){
         Question q = questions.get(currQuestionNo-1);
         for(AnswerDTO ans: answers){ 
             for (Player p : players){
@@ -62,6 +66,7 @@ public class GameRoom {
                 }
             }
         }
+        this.answers.clear();
         return this.getLeaderBoard();
     }
 
@@ -93,6 +98,12 @@ public class GameRoom {
             }
         }
         return false;
+    }
+
+    public void submitAnswer(AnswerDTO answer){
+        synchronized(this.answers){
+            this.answers.add(answer);
+        }
     }
 
 
