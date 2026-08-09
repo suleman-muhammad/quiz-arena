@@ -3,7 +3,7 @@ package com.quizarena.controller;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.quizarena.dto.AnswerDTO;
@@ -48,26 +48,38 @@ public class GameController {
 
     @MessageMapping("/game/join")
     public void joinRoom(JoinRoomRequest request){
+        if(!manager.roomExists(request.roomCode())){
+            messagingTemplate.convertAndSend("/topic/player/" + request.playerNickName(), "NO ROOM available with provided Code. Kindly check the Code again.");
+            return;
+        }
+
         GameRoom room = manager.addPlayerToRoom(request.roomCode(),request.playerNickName());
+        if(room == null){
+            messagingTemplate.convertAndSend("/topic/player/" + request.playerNickName(), "Player with Given Name already Exists.");
+            return;
+        }
+
         RoomInfo roomInfo = new RoomInfo();
         roomInfo.setPlayers(room.getPlayers());
         roomInfo.setRoomCode(room.getRoomCode());
         roomInfo.setState(room.getState());
-        if(room != null){
-            messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),roomInfo);
-        }
+        messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),roomInfo);
+        
         // System.out.println("SERVER: Join ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
 
     @MessageMapping("/game/leave")
     public void leaveRoom(LeaveRoomRequest request){
         GameRoom room = manager.removePlayerFromRoom(request.roomCode(), request.playerNickName());
-        RoomInfo roomInfo = new RoomInfo();
-        roomInfo.setPlayers(room.getPlayers());
-        roomInfo.setRoomCode(room.getRoomCode());
-        roomInfo.setState(room.getState());
+        
         if(room != null){
+            RoomInfo roomInfo = new RoomInfo();
+            roomInfo.setPlayers(room.getPlayers());
+            roomInfo.setRoomCode(room.getRoomCode());
+            roomInfo.setState(room.getState());
             messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),roomInfo);
+            messagingTemplate.convertAndSend("/topic/player/" + request.playerNickName(), "Out of the ROOM.");
+            
         }
         //  System.out.println("SERVER: Leave ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
