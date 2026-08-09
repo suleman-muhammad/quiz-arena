@@ -97,6 +97,10 @@ public class GameRoom {
     }
 
     public boolean addPlayer(Player p){
+        if(this.state != RoomState.WAITING){
+            return false;
+        }
+        
         p.setCurrentPos(1);
         p.setScore(0);
         for(Player player: players){
@@ -104,6 +108,7 @@ public class GameRoom {
                 return false;
             }
         }
+        
 
         this.players.add(p);
         return true;
@@ -121,7 +126,10 @@ public class GameRoom {
     public void submitAnswer(AnswerDTO answer){
         System.out.println("Game: Got an Answer Submission.");
         synchronized(this.answers){
-            this.answers.add(answer);
+            if(((answer.getAnsweredAtMillis() - this.previousQuestionSentTimeMillis)/1000) <= questions.get(answer.getQuestionNo()-1).getTimeLimitSeconds()){
+                this.answers.add(answer);
+            }
+            
         }
     }
 
