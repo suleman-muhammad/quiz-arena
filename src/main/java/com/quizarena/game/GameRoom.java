@@ -34,6 +34,7 @@ public class GameRoom {
     public void startRoom(List<Question> questions){
         this.questions = questions;
         currQuestionNo = 1;
+        this.state = RoomState.In_PROGRESS;
     }
 
     public QuestionDTO getNextQuestion(){
@@ -51,6 +52,7 @@ public class GameRoom {
         q.setTimeLimit(10);
         q.setQuestionNo(currQuestionNo++);
         this.previousQuestionSentTimeMillis = System.currentTimeMillis();
+        this.state = RoomState.In_PROGRESS;
         return q;
     }
 
@@ -78,6 +80,11 @@ public class GameRoom {
         }
         this.answers.clear();
         System.out.println("Serivce: Sending LeaderBoard.");
+        if(currQuestionNo >= this.questions.size()){
+            this.state = RoomState.FINISHED;
+        }else{
+            this.state = RoomState.BETWEEN_QUESTIONS;
+        }
         return this.getLeaderBoard();
     }
 
