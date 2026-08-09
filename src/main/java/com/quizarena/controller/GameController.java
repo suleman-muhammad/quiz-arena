@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.quizarena.dto.AnswerDTO;
 import com.quizarena.dto.CreateRoomRequest;
+import com.quizarena.dto.JoinRequestAnswer;
 import com.quizarena.dto.JoinRoomRequest;
 import com.quizarena.dto.LeaveRoomRequest;
 import com.quizarena.dto.RoomInfo;
@@ -48,22 +49,14 @@ public class GameController {
 
     @MessageMapping("/game/join")
     public void joinRoom(JoinRoomRequest request){
-        if(!manager.roomExists(request.roomCode())){
-            messagingTemplate.convertAndSend("/topic/player/" + request.playerNickName(), "NO ROOM available with provided Code. Kindly check the Code again.");
+        JoinRequestAnswer requestAnswer = manager.addPlayerToRoom(request.roomCode(), request.playerNickName());
+
+        if(requestAnswer.roomInfo() == null){
+            messagingTemplate.convertAndSend("/topic/join_request/" + request.playerNickName() + "/" + request.requestId(), requestAnswer.message());
             return;
         }
-
-        GameRoom room = manager.addPlayerToRoom(request.roomCode(),request.playerNickName());
-        if(room == null){
-            messagingTemplate.convertAndSend("/topic/player/" + request.playerNickName(), "Player with Given Name already Exists.");
-            return;
-        }
-
-        RoomInfo roomInfo = new RoomInfo();
-        roomInfo.setPlayers(room.getPlayers());
-        roomInfo.setRoomCode(room.getRoomCode());
-        roomInfo.setState(room.getState());
-        messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),roomInfo);
+        
+        messagingTemplate.convertAndSend("/topic/room/" + request.roomCode(),requestAnswer.roomInfo());
         
         // System.out.println("SERVER: Join ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
