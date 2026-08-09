@@ -75,4 +75,8 @@ public class GameManager {
             rooms.remove(code);
         }
     }
+
+    public boolean roomExists(String roomCode){
+        return this.rooms.containsKey(roomCode);
+    }
 }
