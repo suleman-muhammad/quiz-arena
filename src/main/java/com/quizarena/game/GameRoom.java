@@ -158,10 +158,10 @@ public class GameRoom {
     public void setState(RoomState state) {
         this.state = state;
     }
-    public String getHostId() {
+    public String getHost() {
         return host;
     }
-    public void setHostId(String host) {
+    public void setHost(String host) {
         this.host = host;
     }
     
