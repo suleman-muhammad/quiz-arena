@@ -16,8 +16,10 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.quizarena.dto.QuestionDTO;
+import com.quizarena.dto.RoomInfo;
 import com.quizarena.dto.StopAcceptingAnswers;
 import com.quizarena.dto.AnswerDTO;
+import com.quizarena.dto.LeaveRoomRequest;
 import com.quizarena.entity.Quiz;
 import com.quizarena.game.GameManager;
 import com.quizarena.game.GameRoom;
@@ -153,5 +155,27 @@ public class GameService {
             room.submitAnswer(answer);
             
         }
+    }
+
+    public void handleRemovePlayer(LeaveRoomRequest request){
+        if(!manager.roomExists(request.roomCode())){
+            return;
+        }
+
+        GameRoom room = manager.findRoomByCode(request.roomCode());
+
+        if(request.playerNickName().equalsIgnoreCase(room.getHost())){
+            messagingTemplate.convertAndSend("/topic/player/" + request.playerNickName(), "Out of the ROOM.");
+            messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),"Host Disconnected.");
+            manager.removeRoom(room.getRoomCode());
+            return;
+        }
+
+        RoomInfo roomInfo = new RoomInfo();
+        roomInfo.setPlayers(room.getPlayers());
+        roomInfo.setRoomCode(room.getRoomCode());
+        roomInfo.setState(room.getState());
+        messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),roomInfo);
+        messagingTemplate.convertAndSend("/topic/player/" + request.playerNickName(), "Out of the ROOM.");
     }
 }
