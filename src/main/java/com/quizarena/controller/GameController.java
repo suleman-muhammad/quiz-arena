@@ -12,6 +12,7 @@ import com.quizarena.dto.JoinRequestAnswer;
 import com.quizarena.dto.JoinRoomRequest;
 import com.quizarena.dto.LeaveRoomRequest;
 import com.quizarena.dto.RoomInfo;
+import com.quizarena.dto.SimpleMessage;
 import com.quizarena.dto.StartRoomRequest;
 import com.quizarena.game.GameManager;
 import com.quizarena.game.GameRoom;
@@ -52,7 +53,7 @@ public class GameController {
         JoinRequestAnswer requestAnswer = manager.addPlayerToRoom(request.roomCode(), request.playerNickName());
 
         if(requestAnswer.roomInfo() == null){
-            messagingTemplate.convertAndSend("/topic/join_request/" + request.playerNickName() + "/" + request.requestId(), requestAnswer.message());
+            messagingTemplate.convertAndSend("/topic/join_request/" + request.playerNickName() + "/" + request.requestId(), new SimpleMessage("ERROR",requestAnswer.message()));
             return;
         }
         
@@ -72,7 +73,7 @@ public class GameController {
     public void startRoom(@RequestBody StartRoomRequest request){
         // System.out.println("SERVER: Start ROOM Hit: " + request.getRoomCode());
 
-        gameService.startRoom(request.getRoomCode());
+        gameService.startRoom(request);
     }
 
     @MessageMapping("/game/answer")
