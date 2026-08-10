@@ -63,17 +63,7 @@ public class GameController {
 
     @MessageMapping("/game/leave")
     public void leaveRoom(LeaveRoomRequest request){
-        GameRoom room = manager.removePlayerFromRoom(request.roomCode(), request.playerNickName());
-        
-        if(room != null){
-            RoomInfo roomInfo = new RoomInfo();
-            roomInfo.setPlayers(room.getPlayers());
-            roomInfo.setRoomCode(room.getRoomCode());
-            roomInfo.setState(room.getState());
-            messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),roomInfo);
-            messagingTemplate.convertAndSend("/topic/player/" + request.playerNickName(), "Out of the ROOM.");
-            
-        }
+        gameService.handleRemovePlayer(request);
         //  System.out.println("SERVER: Leave ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
 
