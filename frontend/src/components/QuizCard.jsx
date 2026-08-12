@@ -1,5 +1,29 @@
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import SockJS from 'sockjs-client'
+import { Client } from 'stompjs'
+
+
+
 function QuizCard({ quiz }) {
     // logic here
+
+    const navigate = useNavigate();
+    const [showModal, setShowModel] = useState(false)
+    const [hostName, setHostName] = useState('')
+    const [willPlay, setWillPlay] = useState(true)
+    const [error, setError] = useState('')
+
+
+    function closeModal(){
+        setError('')
+        setShowModel(false)
+    }
+
+    
+
+
+
 
     return (
         <>
