@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Explore from './pages/Explore'
 import CreateQuiz from './pages/CreateQuiz'
 import JoinGame from './pages/JoinGame'
+import WaitingRoom from './pages/WaitingRoom'
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
                 <Route path="/explore" element={<Explore />} />
                 <Route path="/create" element={<CreateQuiz />} />
                 <Route path="/join" element={<JoinGame />} />
+                <Route path='/room/:roomCode' element={<WaitingRoom />} />
             </Routes>
         </BrowserRouter>
     )
