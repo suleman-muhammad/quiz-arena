@@ -25,9 +25,11 @@ public class GameRoom {
         this.host = host;
         this.roomCode = code;
         this.state = RoomState.WAITING;
+
         this.players = new ArrayList<>();
-        this.questions = null;
         this.answers = new ArrayList<>();
+
+        this.questions = null;
     }
 
 
