@@ -11,7 +11,7 @@ function QuizCard({ quiz }) {
     const navigate = useNavigate();
     const [showModal, setShowModel] = useState(false)
     const [hostName, setHostName] = useState('')
-    const [willPlay, setWillPlay] = useState(true)
+    const [willPlay, setWillPlay] = useState(false)
     const [error, setError] = useState('')
 
 
@@ -43,7 +43,8 @@ function QuizCard({ quiz }) {
             client.send('/app/game/create',{}, JSON.stringify(
                 {
                     quizId:quiz.id,
-                    hostNickName:hostName
+                    hostNickName:hostName,
+                    hostIsPlaying:willPlay
                 }
             ))
 
@@ -109,6 +110,7 @@ function QuizCard({ quiz }) {
                             <input
                                 type="checkbox"
                                 id="willPlay"
+                                onChange={(e)=> setWillPlay(e.target.checked)}
                                 className="w-4 h-4 accent-orange-500 cursor-pointer"
                             />
                             <label htmlFor="willPlay" className="text-neutral-600 text-sm cursor-pointer">
