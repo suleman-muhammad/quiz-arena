@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import SockJS from 'sockjs-client'
-import { Client } from 'stompjs'
+import Stomp from 'stompjs'
 
 
 
@@ -20,8 +20,36 @@ function QuizCard({ quiz }) {
         setShowModel(false)
     }
 
-    
 
+
+    function handleHostGame(){
+        if(hostName.length === 0){
+            setError("Nick Name cannot be empty");
+            return;
+        }
+
+        setError('')
+        const socket = new SockJS('http://localhost:8080/ws')
+        const client = Stomp.over(socket)
+        client.debug = null
+
+        client.connect({},()=>{
+            client.subscribe(`/topic/host/${hostName}`, (msg) => {
+                const room = JSON.parse(msg.body)
+                client.disconnect()
+                navigate(`/room/${room.roomCode}?nickname=${hostName}&host=true&playing=${willPlay}`)
+            })
+
+            client.send('/app/game/create',{}, JSON.stringify(
+                {
+                    quizId:quiz.id,
+                    hostNickName:hostName
+                }
+            ))
+
+        })
+
+    }
 
 
 
@@ -42,7 +70,7 @@ function QuizCard({ quiz }) {
                         {quiz.createdAt ? new Date(quiz.createdAt).toLocaleDateString() : ""}
                     </span>
                     <button
-                        onClick={() => {/* your handler */}}
+                        onClick={() => {setShowModel(true)}}
                         className="bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-400 hover:to-orange-300 text-white text-sm font-semibold px-4 py-2 rounded-lg transition"
                     >
                         Host Game
@@ -51,7 +79,7 @@ function QuizCard({ quiz }) {
             </div>
 
             {/* Modal - shown when showModal is true */}
-            {/* showModal condition here */ false && (
+            {showModal && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div className="bg-white rounded-2xl p-8 w-full max-w-sm shadow-xl">
                         <h2 className="text-xl font-bold text-neutral-800 mb-6 text-center">Host a Game</h2>
@@ -59,7 +87,11 @@ function QuizCard({ quiz }) {
                             Quiz: <span className="font-semibold text-neutral-700">{quiz.title}</span>
                         </p>
 
-                        {/* error message here */}
+                        {error && (
+                            <p className="text-red-500 text-sm text-center mb-4">
+                                {error}
+                            </p>
+                        )}
 
                         <div className="mb-4">
                             <label className="block text-neutral-600 text-sm font-semibold mb-2">Your Nickname</label>
@@ -67,6 +99,8 @@ function QuizCard({ quiz }) {
                                 type="text"
                                 placeholder="Enter a nickname"
                                 maxLength={20}
+                                value={hostName}
+                                onChange={(e)=>{setHostName(e.target.value)}}
                                 className="w-full border border-neutral-300 text-neutral-800 rounded-lg px-4 py-3 focus:border-orange-400 focus:outline-none"
                             />
                         </div>
@@ -84,13 +118,13 @@ function QuizCard({ quiz }) {
 
                         <div className="flex gap-3">
                             <button
-                                onClick={() => {/* close modal */}}
+                                onClick={closeModal}
                                 className="flex-1 border border-neutral-300 text-neutral-600 hover:border-rose-400 hover:text-rose-500 py-3 rounded-lg font-semibold transition"
                             >
                                 Cancel
                             </button>
                             <button
-                                onClick={() => {/* create room */}}
+                                onClick={handleHostGame}
                                 className="flex-1 bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-400 hover:to-orange-300 text-white py-3 rounded-lg font-semibold transition"
                             >
                                 Create Room
