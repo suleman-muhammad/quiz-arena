@@ -3,6 +3,52 @@ import { useNavigate } from 'react-router-dom'
 
 function CreateQuiz() {
     
+    const navigate = useNavigate()
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
+    const [questions, setQuestions] = useState([emptyQuestion()])
+
+    function emptyQuestion() {
+        return {
+            questionText: '',
+            optionA: '',
+            optionB: '',
+            optionC: '',
+            optionD: '',
+            correctOption: 0,
+            timeLimitSeconds: 10
+        }
+    }
+
+    function updateQuestion(index, field, value) {
+        const updated = [...questions]
+        updated[index] = { ...updated[index], [field]: value }
+        setQuestions(updated)
+    }
+
+    function addQuestion() {
+        setQuestions([...questions, emptyQuestion()])
+    }
+
+    function removeQuestion(index) {
+        if (questions.length <= 1) return
+        setQuestions(questions.filter((_, i) => i !== index))
+    }
+
+    function handleSubmit() {
+        const quiz = { title, description, questions }
+        fetch('http://localhost:8080/api/quizzes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(quiz)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log('Quiz created:', data)
+                navigate('/')
+            })
+            .catch(err => console.error('Failed:', err))
+    }
 
     return (
         <div className="max-w-3xl mx-auto p-8">
