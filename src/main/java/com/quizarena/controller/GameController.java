@@ -36,7 +36,7 @@ public class GameController {
     public void createRoom(CreateRoomRequest request){
         GameRoom room = manager.createRoom(request.quizId(), request.hostNickName());
         // messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),room);
-        // System.out.println("SERVER: Create ROOM Hit: " + request.quizId() + " , Room Code: " + room.getRoomCode());
+        System.out.println("SERVER: Create ROOM Hit: " + request.quizId() + " , Room Code: " + room.getRoomCode());
         RoomInfo roomInfo = new RoomInfo();
         roomInfo.setPlayers(room.getPlayers());
         roomInfo.setRoomCode(room.getRoomCode());
@@ -59,19 +59,19 @@ public class GameController {
         
         messagingTemplate.convertAndSend("/topic/room/" + request.roomCode(),requestAnswer.roomInfo());
         
-        // System.out.println("SERVER: Join ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
+        System.out.println("SERVER: Join ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
 
     @MessageMapping("/game/leave")
     public void leaveRoom(LeaveRoomRequest request){
         gameService.handleRemovePlayer(request);
-        //  System.out.println("SERVER: Leave ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
+         System.out.println("SERVER: Leave ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
 
 
     @MessageMapping("/game/start")
     public void startRoom(@RequestBody StartRoomRequest request){
-        // System.out.println("SERVER: Start ROOM Hit: " + request.getRoomCode());
+        System.out.println("SERVER: Start ROOM Hit: " + request.roomCode());
 
         gameService.startRoom(request);
     }
