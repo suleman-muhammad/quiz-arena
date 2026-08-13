@@ -34,7 +34,7 @@ public class GameController {
 
     @MessageMapping("/game/create")
     public void createRoom(CreateRoomRequest request){
-        GameRoom room = manager.createRoom(request.quizId(), request.hostNickName());
+        GameRoom room = manager.createRoom(request);
         // messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),room);
         System.out.println("SERVER: Create ROOM Hit: " + request.quizId() + " , Room Code: " + room.getRoomCode());
         RoomInfo roomInfo = new RoomInfo();
