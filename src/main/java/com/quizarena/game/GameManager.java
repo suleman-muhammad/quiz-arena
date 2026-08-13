@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
 
+import com.quizarena.dto.CreateRoomRequest;
 import com.quizarena.dto.JoinRequestAnswer;
 import com.quizarena.dto.RoomInfo;
 
@@ -14,13 +15,18 @@ public class GameManager {
     
     private final Map<String,GameRoom> rooms = new ConcurrentHashMap<>();
 
-    public GameRoom createRoom(Long quizId,String hostNickName){
+    public GameRoom createRoom(CreateRoomRequest request){
+        Long quizId = request.quizId();
+        String hostNickName = request.hostNickName();
         String code = generateCode();
+
         Player p = new Player();
         p.setNickName(hostNickName);
+
         GameRoom room = new GameRoom(code,quizId,hostNickName);
-        room.addPlayer(p);
+        if(request.hostIsPlaying()) room.addPlayer(p);
         rooms.put(code, room);
+        
         return room;
     }
 
