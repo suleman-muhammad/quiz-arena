@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import SockJS from "sockjs-client"
+import Stomp from 'stompjs'
 
 function JoinGame() {
     
@@ -9,7 +11,46 @@ function JoinGame() {
     const [nickname, setNickname] = useState('')
     const [error, setError] = useState('')
 
-    
+    function handleJoin(){
+        if(roomCode.length == 0){
+            setError("Room Code cannot be empty.");
+            return
+        }
+        if(!nickname.trim()){
+            setError("NickName cannot be empty.")
+            return;
+        }
+        setError('')
+
+        const socket = new SockJS("http://localhost:8080/ws")
+        const client = Stomp.over(socket);
+
+        client.debug = null
+
+        client.connect({},() =>{
+            const requestId = Date.now().toString()
+            client.subscribe(`/topic/join_request/${nickname}/${requestId}`, (msg) => {
+                const data = JSON.parse(msg.body)
+                console.log(data)
+                if(data.roomInfo === null){
+                    setError(data.message);
+                    client.disconnect()
+                    return;
+                }                
+                client.disconnect()
+                navigate(`/room/${roomCode}?nickname=${nickname}&host=false`)
+            })
+
+            client.send(`/app/game/join`,{},JSON.stringify({
+                roomCode: roomCode,
+                playerNickName: nickname,
+                requestId: requestId
+            }))
+        })
+
+
+        
+    }
 
     return (
         <div className="max-w-md mx-auto p-8 mt-16">
@@ -45,7 +86,7 @@ function JoinGame() {
                 </div>
 
                 <button
-                    onClick={}
+                    onClick={handleJoin}
                     disabled={roomCode.length !== 6 || !nickname.trim()}
                     className={`w-full py-3 rounded-lg font-semibold transition text-lg ${
                         roomCode.length !== 6 || !nickname.trim()
