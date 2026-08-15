@@ -4,6 +4,13 @@ import { useNavigate } from 'react-router-dom'
 function JoinGame() {
     
 
+    const navigate = useNavigate()
+    const [roomCode, setRoomCode] = useState('')
+    const [nickname, setNickname] = useState('')
+    const [error, setError] = useState('')
+
+    
+
     return (
         <div className="max-w-md mx-auto p-8 mt-16">
             <h1 className="text-3xl font-bold text-neutral-800 mb-8 text-center">Join a Game</h1>
@@ -18,8 +25,8 @@ function JoinGame() {
                     <input
                         type="text"
                         placeholder="e.g. 4L1N8U"
-                        value={}  // value assignment here
-                        onChange={}  // change on update
+                        value={roomCode}  // value assignment here
+                        onChange={(e) => setRoomCode(e.target.value)}  // change on update
                         maxLength={6}
                         className="w-full border border-neutral-300 text-neutral-800 rounded-lg px-4 py-3 text-center text-2xl tracking-widest font-mono focus:border-orange-400 focus:outline-none"
                     />
@@ -31,7 +38,7 @@ function JoinGame() {
                         type="text"
                         placeholder="Enter a nickname"
                         value={nickname}
-                        onChange={}  // change value on update
+                        onChange={(e) => setNickname(e.target.value)}  // change value on update
                         maxLength={20}
                         className="w-full border border-neutral-300 text-neutral-800 rounded-lg px-4 py-3 focus:border-orange-400 focus:outline-none"
                     />
