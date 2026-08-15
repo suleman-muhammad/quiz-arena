@@ -45,8 +45,13 @@ function JoinGame() {
                 </div>
 
                 <button
-                    onClick={} // call function to handle the funcitonality
-                    className="w-full bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-400 hover:to-orange-300 text-white py-3 rounded-lg font-semibold transition text-lg"
+                    onClick={}
+                    disabled={roomCode.length !== 6 || !nickname.trim()}
+                    className={`w-full py-3 rounded-lg font-semibold transition text-lg ${
+                        roomCode.length !== 6 || !nickname.trim()
+                            ? 'bg-neutral-200 text-neutral-400 cursor-not-allowed'
+                            : 'bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-400 hover:to-orange-300 text-white'
+                    }`}
                 >
                     Join Game
                 </button>
