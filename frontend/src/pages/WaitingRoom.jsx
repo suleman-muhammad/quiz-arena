@@ -14,9 +14,18 @@ function WaitingRoom(){
     const isHost = searchParams.get('host') === 'true'
     const isHostPlaying = searchParams.get('playing') === 'true'
     
+    const [players, setPlayers] = useState([])
 
-
-    const { players, setPlayers } = useState([]) 
+    const socket = new SockJS('http://localhost:8080/ws')
+    const client = Stomp.over(socket)
+    client.debug = null
+    client.connect({},() =>{
+        client.subscribe(`/topic/room/${roomCode}`, (msg) =>{
+            const data = JSON.parse(msg.body)
+            console.log(data)
+            setPlayers(data.players)
+        })
+    })
 
     
 
@@ -49,16 +58,20 @@ function WaitingRoom(){
                 <p className="text-neutral-400 text-center py-4">Waiting for players to join...</p>
 
                 {/* Player list items - render these when players exist */}
-                <div className="space-y-2" >
-                    <div className="flex items-center justify-between bg-neutral-50 rounded-lg px-4 py-3">
-                        <div className="flex items-center gap-3" >
-                            <span className="bg-gradient-to-r from-rose-500 to-orange-400 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">
-                                S
-                            </span>
-                            <span className="text-neutral-700 font-medium">Suleman</span>
+                <div className="space-y-2">
+                    {players.map((p, index) => (
+                        <div key={index} className="flex items-center justify-between bg-neutral-50 rounded-lg px-4 py-3">
+                            <div className="flex items-center gap-3">
+                                <span className="bg-gradient-to-r from-rose-500 to-orange-400 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">
+                                    {p.nickName?.charAt(0).toUpperCase()}
+                                </span>
+                                <span className="text-neutral-700 font-medium">{p.nickName}</span>
+                            </div>
+                            {index === 0 && (
+                                <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full font-semibold">Host</span>
+                            )}
                         </div>
-                        <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full font-semibold">Host</span>
-                    </div>
+                    ))}
                 </div>
             </div>
 
