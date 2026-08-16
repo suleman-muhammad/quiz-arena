@@ -48,7 +48,7 @@ public class GameController {
         
     }
 
-    @MessageMapping("/game/join")
+    @MessageMapping("/game/room/join")
     public void joinRoom(JoinRoomRequest request){
         JoinRequestAnswer requestAnswer = manager.addPlayerToRoom(request.roomCode(), request.playerNickName());
 
