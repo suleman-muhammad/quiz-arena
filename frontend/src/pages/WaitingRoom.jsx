@@ -13,8 +13,28 @@ function WaitingRoom(){
     const nickName = searchParams.get('nickname')
     const isHost = searchParams.get('host') === 'true'
     const isHostPlaying = searchParams.get('playing') === 'true'
+
+    const [connected, setConnected] = useState(true)
     
     const [players, setPlayers] = useState([])
+
+    const [quizId, setQuizId] = useState(-1)
+    const [quizTitle, setQuizTitle] = useState('')
+    const [quizDescription, setQuizDescription] = useState('')
+    const [questionCount, setQuestionCount] = useState(0)
+
+    const quotes = [
+        "Knowledge is power. — Francis Bacon",
+        "The more you know, the more you realize you don't know. — Aristotle",
+        "It does not matter how slowly you go as long as you do not stop. — Confucius",
+        "The only true wisdom is in knowing you know nothing. — Socrates",
+        "An investment in knowledge pays the best interest. — Benjamin Franklin",
+        "The beautiful thing about learning is that no one can take it away from you. — B.B. King",
+        "Tell me and I forget. Teach me and I remember. — Benjamin Franklin",
+        "The expert in anything was once a beginner. — Helen Hayes"
+    ]
+
+    const [quoteIndex] = useState(Math.floor(Math.random() * quotes.length))
 
     useEffect(() => {
         fetch(`http://localhost:8080/api/rooms/${roomCode}`)
@@ -27,6 +47,40 @@ function WaitingRoom(){
                 }        
             })
             .catch(err => console.log(err))
+        
+        fetch(`http://localhost:8080/api/rooms/${roomCode}/quiz`)
+            .then(res => {
+                if(!res.ok){
+                    return null
+                }
+                return res.json()
+            })
+            .then((quizId) => {
+                if(quizId == null){
+                    console.log(`Room with code ${roomCode} does not have quiz.`);
+                    navigate("/")
+                }
+                
+                fetch(`http://localhost:8080/api/quizzes/${quizId}`)
+                .then(res => {
+                    if(!res.ok){
+                        return null
+                    }
+                    return res.json()
+                })
+                .then((data) => {
+                    if(data == null){
+                        console.log(`No quiz found with Id ${quizId}`)
+                        navigate("/")
+                    }
+                    setQuizId(quizId)
+                    setQuizTitle(data.title)
+                    setQuizDescription(data.description)
+                    setQuestionCount(data.questions.length)
+                })
+                
+            })
+
     },[])
 
     const socket = new SockJS('http://localhost:8080/ws')
@@ -39,6 +93,10 @@ function WaitingRoom(){
             setPlayers(data.players)
         })
     })
+
+    function startGame(){
+        
+    }
 
     
 
@@ -121,7 +179,7 @@ function WaitingRoom(){
                     {/* Start button - host only */}
                     {isHost && (
                         <button
-                            onClick={startGame}
+                            onClick={startGame} 
                             disabled={players.length < 2}
                             className={`w-full py-4 rounded-xl font-bold text-lg transition ${
                                 players.length < 2
