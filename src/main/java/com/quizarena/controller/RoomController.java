@@ -1,20 +1,20 @@
 package com.quizarena.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.quizarena.dto.RoomInfo;
+import com.quizarena.entity.Quiz;
 import com.quizarena.game.GameManager;
 import com.quizarena.game.GameRoom;
-import com.quizarena.service.GameService;
 
 @RestController
 @RequestMapping("/api/rooms")
 public class RoomController {
-    
     
     private final GameManager gameManager;
 
@@ -38,6 +38,18 @@ public class RoomController {
         info.setState(room.getState());
         return info;
 
+    }
+
+    @GetMapping("{roomCode}/quiz")
+    public ResponseEntity<Long> getRoomQuiz(@PathVariable String roomCode){
+
+        GameRoom room = gameManager.findRoomByCode(roomCode);
+        if(room == null){
+            return ResponseEntity.ok(Long.valueOf(-1));
+        }
+        long quizId = room.getQuizId();
+        return ResponseEntity.ok(quizId);
+        
     }
 
 }
