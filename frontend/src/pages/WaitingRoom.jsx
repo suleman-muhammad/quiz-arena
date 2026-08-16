@@ -17,6 +17,7 @@ function WaitingRoom(){
     const [connected, setConnected] = useState(true)
     
     const [players, setPlayers] = useState([])
+    const [myMsgs, setMyMsgs] = useState('')
 
     const [quizId, setQuizId] = useState(-1)
     const [quizTitle, setQuizTitle] = useState('')
@@ -91,6 +92,10 @@ function WaitingRoom(){
             const data = JSON.parse(msg.body)
             console.log(data)
             setPlayers(data.players)
+        })
+        client.subscribe(`/topic/player/${nickName}`, (msg) =>{
+            const data = JSON.parse(msg.body)
+            setMyMsgs(data.message)
         })
     })
 
@@ -192,6 +197,19 @@ function WaitingRoom(){
                     )}
                 </div>
             </div>
+            {myMsgs && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-2xl p-8 w-full max-w-sm shadow-xl text-center">
+                        <p className="text-neutral-800 font-medium text-lg mb-6">{myMsgs}</p>
+                        <button
+                            onClick={() => setMyMsgs('')}
+                            className="bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-400 hover:to-orange-300 text-white px-8 py-3 rounded-lg font-semibold transition"
+                        >
+                            OK
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
