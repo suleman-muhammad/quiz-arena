@@ -62,21 +62,21 @@ public class GameController {
         System.out.println("SERVER: Join ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
 
-    @MessageMapping("/game/leave")
+    @MessageMapping("/game/room/leave")
     public void leaveRoom(LeaveRoomRequest request){
         gameService.handleRemovePlayer(request);
          System.out.println("SERVER: Leave ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
 
 
-    @MessageMapping("/game/start")
+    @MessageMapping("/game/room/start")
     public void startRoom(@RequestBody StartRoomRequest request){
         System.out.println("SERVER: Start ROOM Hit: " + request.roomCode());
 
         gameService.startRoom(request);
     }
 
-    @MessageMapping("/game/answer")
+    @MessageMapping("/game/room/answer")
     public void handleAnswer(@RequestBody AnswerDTO answer){
         System.out.println("Controller: Got an Answer Submission.");
         gameService.handleAnswer(answer.getRoomCode(),answer);
