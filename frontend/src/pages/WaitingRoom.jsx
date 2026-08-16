@@ -97,6 +97,10 @@ function WaitingRoom(){
             const data = JSON.parse(msg.body)
             setMyMsgs(data.message)
         })
+        client.subscribe(`/topic/room/waiting/start/${roomCode}`, (msg)=>{
+            client.disconnect()
+            navigate(`/room/${roomCode}?nickName=${nickName}`)
+        })
     })
 
     function startGame(){
