@@ -69,7 +69,7 @@ public class GameService {
 
         // System.out.println("Game Service: Passed the Room check for Room " + roomCode);
 
-        messagingTemplate.convertAndSend("topic/room/waiting/start/" + roomCode, ResponseEntity.ok("let's Go"));
+        messagingTemplate.convertAndSend("/topic/room/waiting/start/" + roomCode, ResponseEntity.ok("let's Go"));
         Optional<Quiz> q = quizRepository.findById(room.getQuizId());
 
         if(!q.isPresent()){
