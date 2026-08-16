@@ -87,7 +87,7 @@ function WaitingRoom(){
     const client = Stomp.over(socket)
     client.debug = null
     client.connect({},() =>{
-        client.subscribe(`/topic/room/${roomCode}`, (msg) =>{
+        client.subscribe(`/topic/room/waiting/${roomCode}`, (msg) =>{
             const data = JSON.parse(msg.body)
             console.log(data)
             setPlayers(data.players)
@@ -95,7 +95,7 @@ function WaitingRoom(){
     })
 
     function startGame(){
-        
+
     }
 
     
