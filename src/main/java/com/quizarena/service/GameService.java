@@ -12,6 +12,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +69,7 @@ public class GameService {
 
         // System.out.println("Game Service: Passed the Room check for Room " + roomCode);
 
-        
+        messagingTemplate.convertAndSend("topic/room/waiting/start/" + roomCode, ResponseEntity.ok("let's Go"));
         Optional<Quiz> q = quizRepository.findById(room.getQuizId());
 
         if(!q.isPresent()){
@@ -193,7 +194,7 @@ public class GameService {
         //     manager.removeRoom(room.getRoomCode());
         //     return;
         // }
-        
+
         Player p = new Player();
         p.setNickName(request.playerNickName());
         room.removePlayer(p);
