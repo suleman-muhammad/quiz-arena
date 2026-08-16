@@ -15,7 +15,7 @@ function App() {
                 <Route path="/explore" element={<Explore />} />
                 <Route path="/create" element={<CreateQuiz />} />
                 <Route path="/join" element={<JoinGame />} />
-                <Route path='/room/:roomCode' element={<WaitingRoom />} />
+                <Route path='/waitingRoom/:roomCode' element={<WaitingRoom />} />
             </Routes>
         </BrowserRouter>
     )
