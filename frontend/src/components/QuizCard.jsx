@@ -37,7 +37,7 @@ function QuizCard({ quiz }) {
             client.subscribe(`/topic/host/${hostName}`, (msg) => {
                 const room = JSON.parse(msg.body)
                 client.disconnect()
-                navigate(`/room/${room.roomCode}?nickname=${hostName}&host=true&playing=${willPlay}`)
+                navigate(`/waitingRoom/${room.roomCode}?nickname=${hostName}&host=true&playing=${willPlay}`)
             })
 
             client.send('/app/game/room/create',{}, JSON.stringify(
