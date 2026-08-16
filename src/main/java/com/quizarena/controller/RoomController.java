@@ -45,7 +45,7 @@ public class RoomController {
 
         GameRoom room = gameManager.findRoomByCode(roomCode);
         if(room == null){
-            return ResponseEntity.ok(Long.valueOf(-1));
+            return ResponseEntity.notFound().build();
         }
         long quizId = room.getQuizId();
         return ResponseEntity.ok(quizId);
