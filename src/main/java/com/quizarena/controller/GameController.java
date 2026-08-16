@@ -32,7 +32,7 @@ public class GameController {
         this.manager = manager;
     }
 
-    @MessageMapping("/game/create")
+    @MessageMapping("/game/room/create")
     public void createRoom(CreateRoomRequest request){
         GameRoom room = manager.createRoom(request);
         // messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),room);
