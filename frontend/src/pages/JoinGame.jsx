@@ -38,7 +38,7 @@ function JoinGame() {
                     return;
                 }                
                 client.disconnect()
-                navigate(`/room/${roomCode}?nickname=${nickname}&host=false`)
+                navigate(`/waitingRoom/${roomCode}?nickname=${nickname}&host=false`)
             })
 
             client.send(`/app/game/room/join`,{},JSON.stringify({
@@ -47,9 +47,6 @@ function JoinGame() {
                 requestId: requestId
             }))
         })
-
-
-        
     }
 
     return (
