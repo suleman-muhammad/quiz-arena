@@ -68,6 +68,7 @@ public class GameService {
 
         // System.out.println("Game Service: Passed the Room check for Room " + roomCode);
 
+        
         Optional<Quiz> q = quizRepository.findById(room.getQuizId());
 
         if(!q.isPresent()){
@@ -179,12 +180,20 @@ public class GameService {
 
         GameRoom room = manager.findRoomByCode(request.roomCode());
 
-        if(request.playerNickName().equalsIgnoreCase(room.getHost())){
-            messagingTemplate.convertAndSend("/topic/player/" + request.playerNickName(), new SimpleMessage("INFO","Out of the ROOM."));
-            messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),new SimpleMessage("GAME_OVER","Host Disconnected."));
-            manager.removeRoom(room.getRoomCode());
-            return;
+        String roomEndPoint;
+        if(room.getState() == RoomState.WAITING){
+            roomEndPoint = "/topic/room/waiting/";
+        }else{
+            roomEndPoint = "/topic/room/";
         }
+
+        // if(request.playerNickName().equalsIgnoreCase(room.getHost())){
+        //     messagingTemplate.convertAndSend("/topic/player/" + request.playerNickName(), new SimpleMessage("INFO","Out of the ROOM."));
+        //     messagingTemplate.convertAndSend(roomEndPoint + "end/" + room.getRoomCode(),new SimpleMessage("GAME_OVER","Host Disconnected."));
+        //     manager.removeRoom(room.getRoomCode());
+        //     return;
+        // }
+        
         Player p = new Player();
         p.setNickName(request.playerNickName());
         room.removePlayer(p);
@@ -193,7 +202,7 @@ public class GameService {
         roomInfo.setPlayers(room.getPlayers());
         roomInfo.setRoomCode(room.getRoomCode());
         roomInfo.setState(room.getState());
-        messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),roomInfo);
+        messagingTemplate.convertAndSend(roomEndPoint + room.getRoomCode(),roomInfo);
         messagingTemplate.convertAndSend("/topic/player/" + request.playerNickName(), new SimpleMessage("INFO","Out of the ROOM."));
     }
 }
