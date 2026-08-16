@@ -100,7 +100,17 @@ function WaitingRoom(){
     })
 
     function startGame(){
-
+        if(!connected){
+            setMyMsgs("Not Connected to server. Try Refreshing.")
+            return;
+        }
+        setMyMsgs('')
+        client.connect({},() => {
+            client.send("/app/game/room/start", JSON.stringify({
+                roomCode : roomCode,
+                hostNickName: nickName
+            }))
+        })
     }
 
     
