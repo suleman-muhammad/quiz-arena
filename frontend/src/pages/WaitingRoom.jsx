@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import SockJS from "sockjs-client"
 import Stomp from 'stompjs'
@@ -15,6 +15,19 @@ function WaitingRoom(){
     const isHostPlaying = searchParams.get('playing') === 'true'
     
     const [players, setPlayers] = useState([])
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/api/rooms/${roomCode}`)
+            .then(res => res.json())
+            .then((data) => {
+                if(data === null){
+                    navigate("/")
+                }else{
+                    setPlayers(data.players)
+                }        
+            })
+            .catch(err => console.log(err))
+    },[])
 
     const socket = new SockJS('http://localhost:8080/ws')
     const client = Stomp.over(socket)
