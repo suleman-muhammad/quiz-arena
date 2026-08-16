@@ -20,14 +20,9 @@ public class QuizController {
     
     private final QuizService quizService;
     
-
     public QuizController(QuizService quizService){
         this.quizService = quizService;
     }
-
-
-    
-
 
     // this method handles the Post mapping on the class' original url
     @PostMapping
@@ -49,8 +44,6 @@ public class QuizController {
     public ResponseEntity<Quiz> quizWithId(@PathVariable Long id){
         return quizService.findQuizWithId(id);
     }
-
-
     // delete mapping with main + sub url
     @DeleteMapping("/{id}")
     public ResponseEntity<Quiz> delteQuiz(@PathVariable Long id){
