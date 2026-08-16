@@ -40,7 +40,7 @@ function QuizCard({ quiz }) {
                 navigate(`/room/${room.roomCode}?nickname=${hostName}&host=true&playing=${willPlay}`)
             })
 
-            client.send('/app/game/create',{}, JSON.stringify(
+            client.send('/app/game/room/create',{}, JSON.stringify(
                 {
                     quizId:quiz.id,
                     hostNickName:hostName,
