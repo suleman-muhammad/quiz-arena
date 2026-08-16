@@ -57,7 +57,7 @@ public class GameController {
             return;
         }
         
-        messagingTemplate.convertAndSend("/topic/room/" + request.roomCode(),requestAnswer.roomInfo());
+        messagingTemplate.convertAndSend("/topic/room/waiting/" + request.roomCode(),requestAnswer.roomInfo());
         
         System.out.println("SERVER: Join ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
