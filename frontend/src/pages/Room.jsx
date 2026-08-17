@@ -83,6 +83,11 @@ function Room(){
         })
 
     })
+
+    function handleAnswerClick(){
+
+    }
+    
     return (
         <div>
             <p>You are In the Room</p>
