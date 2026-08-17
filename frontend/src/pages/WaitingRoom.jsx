@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import SockJS from "sockjs-client"
 import Stomp from 'stompjs'
@@ -37,6 +37,7 @@ function WaitingRoom(){
 
     const [quoteIndex] = useState(Math.floor(Math.random() * quotes.length))
 
+    const stompClient = useRef(null)
     useEffect(() => {
         fetch(`http://localhost:8080/api/rooms/${roomCode}`)
             .then(res => res.json())
@@ -82,26 +83,31 @@ function WaitingRoom(){
                 
             })
 
-    },[])
+        const socket = new SockJS('http://localhost:8080/ws')
+        const client = Stomp.over(socket)
+        client.debug = null
+        client.connect({},() =>{
+            stompClient.current = client
+            client.subscribe(`/topic/room/waiting/${roomCode}`, (msg) =>{
+                const data = JSON.parse(msg.body)
+                console.log(data)
+                setPlayers(data.players)
+            })
+            client.subscribe(`/topic/player/${nickName}`, (msg) =>{
+                const data = JSON.parse(msg.body)
+                setMyMsgs(data.message)
+            })
+            client.subscribe(`/topic/room/waiting/start/${roomCode}`, (msg)=>{
+                client.disconnect()
+                navigate(`/room/${roomCode}?nickname=${nickName}`)
+            })
+        })
 
-    const socket = new SockJS('http://localhost:8080/ws')
-    const client = Stomp.over(socket)
-    client.debug = null
-    client.connect({},() =>{
-        client.subscribe(`/topic/room/waiting/${roomCode}`, (msg) =>{
-            const data = JSON.parse(msg.body)
-            console.log(data)
-            setPlayers(data.players)
-        })
-        client.subscribe(`/topic/player/${nickName}`, (msg) =>{
-            const data = JSON.parse(msg.body)
-            setMyMsgs(data.message)
-        })
-        client.subscribe(`/topic/room/waiting/start/${roomCode}`, (msg)=>{
-            client.disconnect()
-            navigate(`/room/${roomCode}?nickname=${nickName}`)
-        })
-    })
+        return () => {
+            if (stompClient.current) stompClient.current.disconnect()
+        }
+
+    },[])
 
     function startGame(){
         if(!connected){
@@ -109,12 +115,13 @@ function WaitingRoom(){
             return;
         }
         setMyMsgs('')
-        client.connect({},() => {
-            client.send("/app/game/room/start", JSON.stringify({
+        console.log("Start Room Hit.")
+        if(stompClient.current){
+            stompClient.current.send("/app/game/room/start",{}, JSON.stringify({
                 roomCode : roomCode,
                 hostNickName: nickName
             }))
-        })
+        }
     }
 
     
