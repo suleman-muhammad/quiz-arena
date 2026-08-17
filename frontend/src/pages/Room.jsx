@@ -65,8 +65,24 @@ function Room(){
             })
     },[])
 
-    
+    const socket = new SockJS('http://localhost:8080/ws')
+    const client = Stomp.over(socket)
+    client.debug = null
+    client.connect({},() =>{
+        client.subscribe(`/topic/room/update/${roomCode}`, (msg) =>{
+            const data = JSON.parse(msg.body)
+            console.log(data)
+        })
+        client.subscribe(`/topic/room/play/leaderboard/${roomCode}`, (msg) =>{
+            const data = JSON.parse(msg.body)
+            console.log(data)
+        })
+        client.subscribe(`/topic/room/play/question/${roomCode}`, (msg) =>{
+            const data = JSON.parse(msg.body)
+            console.log(data)
+        })
 
+    })
     return (
         <div>
             <p>You are In the Room</p>
