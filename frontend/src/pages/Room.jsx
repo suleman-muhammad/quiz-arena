@@ -1,15 +1,17 @@
-import { useState } from "react"
+import { useState,useEffect, useRef } from "react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import SockJS from "sockjs-client"
 import Stomp from 'stompjs'
 
 function Room(){
 
-    const [roomCode] = useParams()
+    const navigate = useNavigate()
+
+    const { roomCode } = useParams()
     const [searchParams] = useSearchParams()
     const nickName = searchParams.get('nickname')
 
-    const [connected, setConnected] = useState(true)
+    const [connected, setConnected] = useState(false)
     
     const [players, setPlayers] = useState([])
     const [myMsgs, setMyMsgs] = useState('')
@@ -20,6 +22,7 @@ function Room(){
     const [questionCount, setQuestionCount] = useState(0)
 
 
+    const stompClient = useRef(null)
     useEffect(() => {
         fetch(`http://localhost:8080/api/rooms/${roomCode}`)
             .then(res => res.json())
@@ -63,26 +66,32 @@ function Room(){
                     setQuestionCount(data.questions.length)
                 })
             })
+
+        const socket = new SockJS('http://localhost:8080/ws')
+        const client = Stomp.over(socket)
+        client.debug = null
+        client.connect({},() =>{
+            stompClient.current = client;
+            setConnected(true)
+            client.subscribe(`/topic/room/update/${roomCode}`, (msg) =>{
+                const data = JSON.parse(msg.body)
+                console.log(data)
+            })
+            client.subscribe(`/topic/room/play/leaderboard/${roomCode}`, (msg) =>{
+                const data = JSON.parse(msg.body)
+                console.log(data)
+            })
+            client.subscribe(`/topic/room/play/question/${roomCode}`, (msg) =>{
+                const data = JSON.parse(msg.body)
+                console.log(data)
+            })
+        })
+        return () => {
+            if (stompClient.current) stompClient.current.disconnect()
+        }
     },[])
 
-    const socket = new SockJS('http://localhost:8080/ws')
-    const client = Stomp.over(socket)
-    client.debug = null
-    client.connect({},() =>{
-        client.subscribe(`/topic/room/update/${roomCode}`, (msg) =>{
-            const data = JSON.parse(msg.body)
-            console.log(data)
-        })
-        client.subscribe(`/topic/room/play/leaderboard/${roomCode}`, (msg) =>{
-            const data = JSON.parse(msg.body)
-            console.log(data)
-        })
-        client.subscribe(`/topic/room/play/question/${roomCode}`, (msg) =>{
-            const data = JSON.parse(msg.body)
-            console.log(data)
-        })
-
-    })
+    
 
     function handleAnswerClick(){
 
@@ -104,3 +113,5 @@ function Room(){
         </div>
     )
 }
+
+export default Room;
