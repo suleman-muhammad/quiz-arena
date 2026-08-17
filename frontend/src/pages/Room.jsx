@@ -87,10 +87,20 @@ function Room(){
     function handleAnswerClick(){
 
     }
-    
+
     return (
-        <div>
-            <p>You are In the Room</p>
+        <div className="max-w-5xl mx-auto p-8 mt-8">
+            {/* Top bar - Room code + Connection status */}
+            <div className="flex items-center justify-between mb-10">
+                <div>
+                    <p className="text-neutral-400 text-xs uppercase tracking-widest mb-1">Room Code</p>
+                    <h1 className="text-4xl font-bold text-neutral-800 tracking-widest font-mono">{roomCode}</h1>
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-400' : 'bg-red-400'}`}></div>
+                    <span className="text-neutral-500 text-sm">{connected ? 'Connected' : 'Connecting...'}</span>
+                </div>
+            </div>
         </div>
     )
 }
