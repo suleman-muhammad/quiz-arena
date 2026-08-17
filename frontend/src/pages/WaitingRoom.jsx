@@ -99,7 +99,7 @@ function WaitingRoom(){
         })
         client.subscribe(`/topic/room/waiting/start/${roomCode}`, (msg)=>{
             client.disconnect()
-            navigate(`/room/${roomCode}?nickName=${nickName}`)
+            navigate(`/room/${roomCode}?nickname=${nickName}`)
         })
     })
 
