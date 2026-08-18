@@ -21,6 +21,7 @@ function Room(){
     const [quizDescription, setQuizDescription] = useState('')
     const [questionCount, setQuestionCount] = useState(0)
 
+    const [currQuestion, setCurrQuestion] = useState(0)
 
     const stompClient = useRef(null)
     useEffect(() => {
@@ -84,6 +85,7 @@ function Room(){
             client.subscribe(`/topic/room/play/question/${roomCode}`, (msg) =>{
                 const data = JSON.parse(msg.body)
                 console.log(data)
+                setCurrQuestion(data.questionNo)
             })
         })
         return () => {
@@ -108,7 +110,7 @@ function Room(){
                 <div className="flex items-center gap-2">
                     <span className="text-neutral-500 text-sm font-medium">Question</span>
                     <span className="bg-gradient-to-r from-rose-500 to-orange-400 text-white text-sm font-bold px-3 py-1 rounded-full">
-                        3 / 10
+                        {currQuestion} / {questionCount} 
                     </span>
                 </div>
             </div>
