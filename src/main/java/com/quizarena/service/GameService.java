@@ -112,7 +112,7 @@ public class GameService {
         currQuestion = room.getNextQuestion();
         if(currQuestion == null){
             // System.out.println("Server: current Question is NUll to returning.");
-            messagingTemplate.convertAndSend("/topic/room/play/question/" + room.getRoomCode(),new SimpleMessage("GAME_OVER","ROOM Ended."));
+            messagingTemplate.convertAndSend("/topic/room/play/question/end" + room.getRoomCode(),new SimpleMessage("GAME_OVER","ROOM Ended."));
             return;
         }
 
@@ -164,7 +164,7 @@ public class GameService {
 
     public void endRound(GameRoom room,StopAcceptingAnswers stopAcceptingAnswers){
 
-        messagingTemplate.convertAndSend("/topic/room/play/question/" + room.getRoomCode(), stopAcceptingAnswers);
+        messagingTemplate.convertAndSend("/topic/room/play/question/stop/" + room.getRoomCode(), stopAcceptingAnswers);
 
         // System.out.println("Server: Send the  Stop Question Request Succeccfully");
 
