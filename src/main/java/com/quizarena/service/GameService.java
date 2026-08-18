@@ -17,6 +17,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.quizarena.dto.QuestionDTO;
+import com.quizarena.dto.QuestionTextDTO;
 import com.quizarena.dto.RoomInfo;
 import com.quizarena.dto.StopAcceptingAnswers;
 import com.quizarena.dto.AnswerDTO;
@@ -88,7 +89,7 @@ public class GameService {
 
         this.roomThread.schedule(() -> {
             try{
-                this.sendQuestion(room);
+                this.sendQuestionText(room);
             }catch (Exception e){
                 System.err.println("Sever: in Send next Question.");
                 e.printStackTrace();
@@ -99,7 +100,7 @@ public class GameService {
     
     }
 
-    public void sendQuestion(GameRoom room){
+    public void sendQuestionText(GameRoom room){
         // System.out.println("Server: entered Send Question.");
         if(room == null){
             return;
@@ -117,7 +118,8 @@ public class GameService {
 
         // System.out.println("Server: Got a Question: " + currQuestion.getQuestionText());
 
-        messagingTemplate.convertAndSend("/topic/room/play/question/" + room.getRoomCode(),currQuestion);
+        QuestionTextDTO questionTextDTO = new QuestionTextDTO(currQuestion.getQuestionText(),currQuestion.getQuestionNo());
+        messagingTemplate.convertAndSend("/topic/room/play/question/text/" + room.getRoomCode(),questionTextDTO);
 
         // System.out.println("Server: send the  Question Succeccfully" );
 
@@ -126,15 +128,37 @@ public class GameService {
 
         this.roomThread.schedule(() -> {
             try{
-                this.endRound(room,stopAcceptingAnswers);
+                this.sendQuestionOptions(room, currQuestion, stopAcceptingAnswers);
             }catch (Exception e){
-                System.err.println("Sever: in Send next Question.");
+                System.err.println("Sever: in Send Question Text.");
                 e.printStackTrace();
             }
             
-        }, currQuestion.getTimeLimit(), TimeUnit.SECONDS);
+        }, 5, TimeUnit.SECONDS);
 
         // System.out.println("Server: Scheduled Next Task.");
+
+    }
+
+    public void sendQuestionOptions(GameRoom room,QuestionDTO questionDTO, StopAcceptingAnswers stopAcceptingAnswers){
+        if(room == null){
+            return;
+        }
+
+
+        messagingTemplate.convertAndSend("/topic/room/play/question/options/" + room.getRoomCode(),questionDTO);
+
+
+        this.roomThread.schedule(() -> {
+            try{
+                this.endRound(room,stopAcceptingAnswers);
+            }catch (Exception e){
+                System.err.println("Sever: in Send Question options.");
+                e.printStackTrace();
+            }
+            
+        }, questionDTO.getTimeLimit(), TimeUnit.SECONDS);
+
 
     }
 
@@ -153,7 +177,7 @@ public class GameService {
 
         this.roomThread.schedule(() -> {
             try{
-                this.sendQuestion(room);
+                this.sendQuestionText(room);
             }catch (Exception e){
                 System.err.println("Sever: in Send next Question.");
                 e.printStackTrace();
