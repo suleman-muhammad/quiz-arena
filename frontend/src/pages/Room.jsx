@@ -21,6 +21,11 @@ function Room(){
     const [quizDescription, setQuizDescription] = useState('')
     const [questionCount, setQuestionCount] = useState(0)
 
+    const [startState, setStartState] = useState(true)
+    const [questionState, setquestionState] = useState(false)
+    const [leaderBoardState, setLeaderBoardState] = useState(false)
+    const [endState, setEndState] = useState(false)
+
     const [currQuestionNo, setCurrQuestionNo] = useState(0)
     const [questionText, setQuestionText] = useState('')
     const [optionA, setOptionA] = useState('')
@@ -87,16 +92,22 @@ function Room(){
                 const data = JSON.parse(msg.body)
                 console.log(data)
             })
-            client.subscribe(`/topic/room/play/question/${roomCode}`, (msg) =>{
+            client.subscribe(`/topic/room/play/question/text/${roomCode}`, (msg) =>{
                 const data = JSON.parse(msg.body)
                 console.log(data)
                 setCurrQuestionNo(data.questionNo)
                 setQuestionText(data.questionText)
+            })
+            client.subscribe(`/topic/room/play/question/options/${roomCode}`, (msg) =>{
+                const data = JSON.parse(msg.body)
+                console.log(data)
                 setOptionA(data.optionA)
                 setOptionB(data.optionB)
                 setOptionC(data.optionC)
                 setOptionD(data.optionD)
+                //TODO time setting.
             })
+
         })
         return () => {
             if (stompClient.current) stompClient.current.disconnect()
@@ -147,11 +158,13 @@ function Room(){
                         </div>
 
                         {/* Question card */}
-                        <div className="bg-white border border-neutral-200 rounded-xl p-8 mb-6 shadow-sm">
-                            <p className="text-2xl font-bold text-neutral-800 text-center leading-relaxed">
-                                {questionText}
-                            </p>
-                        </div>
+                        {questionText && (
+                            <div className="bg-white border border-neutral-200 rounded-xl p-8 mb-6 shadow-sm">
+                                <p className="text-2xl font-bold text-neutral-800 text-center leading-relaxed">
+                                    {questionText}
+                                </p>
+                            </div>
+                        )}
 
                         {/* Options grid - 2x2 colored buttons */}
                         <div className="grid grid-cols-2 gap-4">
