@@ -98,18 +98,231 @@ function Room(){
     }
 
     return (
-        <div className="max-w-5xl mx-auto p-8 mt-8">
-            {/* Top bar - Room code + Connection status */}
-            <div className="flex items-center justify-between mb-10">
-                <div>
-                    <p className="text-neutral-400 text-xs uppercase tracking-widest mb-1">Room Code</p>
-                    <h1 className="text-4xl font-bold text-neutral-800 tracking-widest font-mono">{roomCode}</h1>
+        <div className="min-h-screen bg-neutral-50">
+            {/* Top bar */}
+            <div className="bg-white border-b border-neutral-200 px-8 py-4 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                    <span className="text-neutral-400 text-sm font-semibold uppercase tracking-wide">Room</span>
+                    <span className="font-mono font-bold text-neutral-800 tracking-widest">{roomCode}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-400' : 'bg-red-400'}`}></div>
-                    <span className="text-neutral-500 text-sm">{connected ? 'Connected' : 'Connecting...'}</span>
+                    <span className="text-neutral-500 text-sm font-medium">Question</span>
+                    <span className="bg-gradient-to-r from-rose-500 to-orange-400 text-white text-sm font-bold px-3 py-1 rounded-full">
+                        3 / 10
+                    </span>
                 </div>
             </div>
+
+            {/* Main content - two columns */}
+            <div className="max-w-6xl mx-auto p-8">
+                <div className="grid grid-cols-3 gap-8">
+
+                    {/* Left column - Question + Options (2/3) */}
+                    <div className="col-span-2">
+
+                        {/* Timer bar */}
+                        <div className="mb-6">
+                            <div className="flex items-center justify-between mb-2">
+                                <span className="text-neutral-500 text-sm font-medium">Time remaining</span>
+                                <span className="text-neutral-800 font-bold text-lg">8s</span>
+                            </div>
+                            <div className="w-full bg-neutral-200 rounded-full h-3">
+                                <div 
+                                    className="bg-gradient-to-r from-rose-500 to-orange-400 h-3 rounded-full transition-all duration-1000"
+                                    style={{ width: '53%' }}
+                                ></div>
+                            </div>
+                        </div>
+
+                        {/* Question card */}
+                        <div className="bg-white border border-neutral-200 rounded-xl p-8 mb-6 shadow-sm">
+                            <p className="text-2xl font-bold text-neutral-800 text-center leading-relaxed">
+                                Which collection is thread-safe?
+                            </p>
+                        </div>
+
+                        {/* Options grid - 2x2 colored buttons */}
+                        <div className="grid grid-cols-2 gap-4">
+                            <button className="bg-rose-500 hover:bg-rose-400 text-white rounded-xl p-6 text-lg font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
+                                <div className="flex items-center gap-3">
+                                    <span className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black">A</span>
+                                    <span>ArrayList</span>
+                                </div>
+                            </button>
+
+                            <button className="bg-blue-500 hover:bg-blue-400 text-white rounded-xl p-6 text-lg font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
+                                <div className="flex items-center gap-3">
+                                    <span className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black">B</span>
+                                    <span>HashMap</span>
+                                </div>
+                            </button>
+
+                            <button className="bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl p-6 text-lg font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
+                                <div className="flex items-center gap-3">
+                                    <span className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black">C</span>
+                                    <span>ConcurrentHashMap</span>
+                                </div>
+                            </button>
+
+                            <button className="bg-amber-500 hover:bg-amber-400 text-white rounded-xl p-6 text-lg font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
+                                <div className="flex items-center gap-3">
+                                    <span className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black">D</span>
+                                    <span>LinkedList</span>
+                                </div>
+                            </button>
+                        </div>
+
+                        {/* After answering - shows instead of options */}
+                        {/* 
+                        <div className="bg-white border border-neutral-200 rounded-xl p-8 text-center shadow-sm">
+                            <div className="text-5xl mb-4">✅</div>
+                            <p className="text-emerald-600 font-bold text-xl mb-2">Correct!</p>
+                            <p className="text-neutral-500">+850 points</p>
+                        </div>
+                        */}
+
+                        {/* Wrong answer version */}
+                        {/*
+                        <div className="bg-white border border-neutral-200 rounded-xl p-8 text-center shadow-sm">
+                            <div className="text-5xl mb-4">❌</div>
+                            <p className="text-rose-600 font-bold text-xl mb-2">Wrong!</p>
+                            <p className="text-neutral-500">Correct answer: ConcurrentHashMap</p>
+                        </div>
+                        */}
+
+                        {/* Waiting for results - shows after player answers before timer ends */}
+                        {/*
+                        <div className="bg-white border border-neutral-200 rounded-xl p-8 text-center shadow-sm">
+                            <div className="text-4xl mb-4 animate-bounce">⏳</div>
+                            <p className="text-neutral-600 font-medium text-lg">Answer locked in!</p>
+                            <p className="text-neutral-400 text-sm mt-2">Waiting for other players...</p>
+                        </div>
+                        */}
+                    </div>
+
+                    {/* Right column - Leaderboard (1/3) */}
+                    <div className="col-span-1">
+                        <div className="bg-white border border-neutral-200 rounded-xl shadow-sm sticky top-8">
+                            <div className="p-4 border-b border-neutral-100">
+                                <h2 className="font-bold text-neutral-700 text-center">Leaderboard</h2>
+                            </div>
+
+                            <div className="p-4 space-y-2">
+                                {/* 1st place */}
+                                <div className="flex items-center justify-between bg-amber-50 border border-amber-100 rounded-lg px-4 py-3">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-lg">🥇</span>
+                                        <div>
+                                            <p className="text-neutral-800 font-semibold text-sm">Alice</p>
+                                        </div>
+                                    </div>
+                                    <span className="font-bold text-amber-600 text-sm">2,400</span>
+                                </div>
+
+                                {/* 2nd place */}
+                                <div className="flex items-center justify-between bg-neutral-50 rounded-lg px-4 py-3">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-lg">🥈</span>
+                                        <div>
+                                            <p className="text-neutral-800 font-semibold text-sm">Bob</p>
+                                        </div>
+                                    </div>
+                                    <span className="font-bold text-neutral-600 text-sm">1,800</span>
+                                </div>
+
+                                {/* 3rd place */}
+                                <div className="flex items-center justify-between bg-neutral-50 rounded-lg px-4 py-3">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-lg">🥉</span>
+                                        <div>
+                                            <p className="text-neutral-800 font-semibold text-sm">You</p>
+                                        </div>
+                                    </div>
+                                    <span className="font-bold text-neutral-600 text-sm">1,200</span>
+                                </div>
+
+                                {/* 4th+ place */}
+                                <div className="flex items-center justify-between bg-neutral-50 rounded-lg px-4 py-3">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-neutral-400 font-bold text-sm w-7 text-center">4</span>
+                                        <div>
+                                            <p className="text-neutral-800 font-semibold text-sm">Eve</p>
+                                        </div>
+                                    </div>
+                                    <span className="font-bold text-neutral-600 text-sm">800</span>
+                                </div>
+                            </div>
+
+                            {/* Your position highlight - if scrolled out of view */}
+                            <div className="p-4 border-t border-neutral-100 bg-gradient-to-r from-rose-50 to-orange-50">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <span className="bg-gradient-to-r from-rose-500 to-orange-400 text-white w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold">
+                                            S
+                                        </span>
+                                        <div>
+                                            <p className="text-neutral-800 font-semibold text-sm">You</p>
+                                            <p className="text-neutral-400 text-xs">#3rd place</p>
+                                        </div>
+                                    </div>
+                                    <span className="font-bold text-rose-500">1,200</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Game countdown overlay - shows before first question */}
+            {/*
+            <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                <div className="text-center">
+                    <p className="text-white text-2xl font-medium mb-4">Get Ready!</p>
+                    <span className="text-9xl font-black text-white animate-pulse">3</span>
+                </div>
+            </div>
+            */}
+
+            {/* Final results overlay - shows when game ends */}
+            {/*
+            <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                <div className="bg-white rounded-2xl p-10 max-w-md w-full text-center shadow-2xl">
+                    <div className="text-6xl mb-4">🏆</div>
+                    <h2 className="text-2xl font-black text-neutral-800 mb-2">Game Over!</h2>
+                    <p className="text-neutral-500 mb-8">Final Results</p>
+                    
+                    <div className="space-y-3 mb-8">
+                        <div className="flex items-center justify-between bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+                            <div className="flex items-center gap-3">
+                                <span className="text-2xl">🥇</span>
+                                <span className="font-bold text-neutral-800">Alice</span>
+                            </div>
+                            <span className="font-bold text-amber-600">4,200</span>
+                        </div>
+                        <div className="flex items-center justify-between bg-neutral-50 rounded-lg px-4 py-3">
+                            <div className="flex items-center gap-3">
+                                <span className="text-2xl">🥈</span>
+                                <span className="font-bold text-neutral-800">Bob</span>
+                            </div>
+                            <span className="font-bold text-neutral-600">3,600</span>
+                        </div>
+                        <div className="flex items-center justify-between bg-neutral-50 rounded-lg px-4 py-3">
+                            <div className="flex items-center gap-3">
+                                <span className="text-2xl">🥉</span>
+                                <span className="font-bold text-neutral-800">You</span>
+                            </div>
+                            <span className="font-bold text-neutral-600">2,800</span>
+                        </div>
+                    </div>
+
+                    <button
+                        className="w-full bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-400 hover:to-orange-300 text-white py-4 rounded-xl font-bold text-lg transition"
+                    >
+                        Back to Home
+                    </button>
+                </div>
+            </div>
+            */}
         </div>
     )
 }
