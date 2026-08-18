@@ -88,25 +88,64 @@ function Room(){
                 const data = JSON.parse(msg.body)
                 console.log(data)
             })
-            client.subscribe(`/topic/room/play/leaderboard/${roomCode}`, (msg) =>{
-                const data = JSON.parse(msg.body)
-                console.log(data)
-            })
+
             client.subscribe(`/topic/room/play/question/text/${roomCode}`, (msg) =>{
                 const data = JSON.parse(msg.body)
                 console.log(data)
+
+                setStartState(false)
+                setquestionState(true)
+
                 setCurrQuestionNo(data.questionNo)
                 setQuestionText(data.questionText)
             })
+
             client.subscribe(`/topic/room/play/question/options/${roomCode}`, (msg) =>{
                 const data = JSON.parse(msg.body)
                 console.log(data)
+
                 setOptionA(data.optionA)
                 setOptionB(data.optionB)
                 setOptionC(data.optionC)
                 setOptionD(data.optionD)
                 //TODO time setting.
             })
+
+            client.subscribe(`/topic/room/play/question/stop/${roomCode}`, (msg) =>{
+                const data = JSON.parse(msg.body)
+                console.log(data)
+
+                setquestionState(false)
+
+                setCurrQuestionNo('')
+                setOptionA('')
+                setOptionB('')
+                setOptionC('')
+                setOptionD('')
+                //TODO time setting.
+            })
+
+            client.subscribe(`/topic/room/play/leaderboard/${roomCode}`, (msg) =>{
+                const data = JSON.parse(msg.body)
+                console.log(data)
+
+                setLeaderBoardState(true)
+
+                // set leader Board to updated one.
+            })
+
+            client.subscribe(`/topic/room/end/${roomCode}`, (msg) =>{
+                const data = JSON.parse(msg.body)
+                console.log(data)
+
+                setLeaderBoardState(false)
+                setEndState(true)
+
+                // show Results.
+            })
+
+            
+            
 
         })
         return () => {
