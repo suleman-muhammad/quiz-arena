@@ -21,7 +21,12 @@ function Room(){
     const [quizDescription, setQuizDescription] = useState('')
     const [questionCount, setQuestionCount] = useState(0)
 
-    const [currQuestion, setCurrQuestion] = useState(0)
+    const [currQuestionNo, setCurrQuestionNo] = useState(0)
+    const [questionText, setQuestionText] = useState('')
+    const [optionA, setOptionA] = useState('')
+    const [optionB, setOptionB] = useState('')
+    const [optionC, setOptionC] = useState('')
+    const [optionD, setOptionD] = useState('')
 
     const stompClient = useRef(null)
     useEffect(() => {
@@ -85,7 +90,12 @@ function Room(){
             client.subscribe(`/topic/room/play/question/${roomCode}`, (msg) =>{
                 const data = JSON.parse(msg.body)
                 console.log(data)
-                setCurrQuestion(data.questionNo)
+                setCurrQuestionNo(data.questionNo)
+                setQuestionText(data.questionText)
+                setOptionA(data.optionA)
+                setOptionB(data.optionB)
+                setOptionC(data.optionC)
+                setOptionD(data.optionD)
             })
         })
         return () => {
@@ -110,7 +120,7 @@ function Room(){
                 <div className="flex items-center gap-2">
                     <span className="text-neutral-500 text-sm font-medium">Question</span>
                     <span className="bg-gradient-to-r from-rose-500 to-orange-400 text-white text-sm font-bold px-3 py-1 rounded-full">
-                        {currQuestion} / {questionCount} 
+                        {currQuestionNo} / {questionCount} 
                     </span>
                 </div>
             </div>
@@ -139,7 +149,7 @@ function Room(){
                         {/* Question card */}
                         <div className="bg-white border border-neutral-200 rounded-xl p-8 mb-6 shadow-sm">
                             <p className="text-2xl font-bold text-neutral-800 text-center leading-relaxed">
-                                Which collection is thread-safe?
+                                {questionText}
                             </p>
                         </div>
 
@@ -148,28 +158,28 @@ function Room(){
                             <button className="bg-rose-500 hover:bg-rose-400 text-white rounded-xl p-6 text-lg font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
                                 <div className="flex items-center gap-3">
                                     <span className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black">A</span>
-                                    <span>ArrayList</span>
+                                    <span>{optionA}</span>
                                 </div>
                             </button>
 
                             <button className="bg-blue-500 hover:bg-blue-400 text-white rounded-xl p-6 text-lg font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
                                 <div className="flex items-center gap-3">
                                     <span className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black">B</span>
-                                    <span>HashMap</span>
+                                    <span>{optionB}</span>
                                 </div>
                             </button>
 
                             <button className="bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl p-6 text-lg font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
                                 <div className="flex items-center gap-3">
                                     <span className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black">C</span>
-                                    <span>ConcurrentHashMap</span>
+                                    <span>{optionC}</span>
                                 </div>
                             </button>
 
                             <button className="bg-amber-500 hover:bg-amber-400 text-white rounded-xl p-6 text-lg font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
                                 <div className="flex items-center gap-3">
                                     <span className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black">D</span>
-                                    <span>LinkedList</span>
+                                    <span>{optionD}</span>
                                 </div>
                             </button>
                         </div>
