@@ -245,6 +245,15 @@ function Room(){
                             </div>
                         )}
                         
+                        {gameState === 'RESULT_CORRECT' && (
+                            <div className="flex items-center justify-center min-h-[400px]">
+                                <div className="bg-white border border-emerald-200 rounded-xl p-10 text-center shadow-sm w-full">
+                                    <div className="text-5xl mb-4">✅</div>
+                                    <p className="text-emerald-600 font-bold text-xl mb-2">Correct!</p>
+                                    <p className="text-neutral-500">+{pointsEarned} points</p>
+                                </div>
+                            </div>
+                        )}
 
                     </div>
 
