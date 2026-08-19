@@ -254,6 +254,15 @@ function Room(){
                                 </div>
                             </div>
                         )}
+                        {gamePhase === 'RESULT_WRONG' && (
+                            <div className="flex items-center justify-center min-h-[400px]">
+                                <div className="bg-white border border-rose-200 rounded-xl p-10 text-center shadow-sm w-full">
+                                    <div className="text-5xl mb-4">❌</div>
+                                    <p className="text-rose-600 font-bold text-xl mb-2">Wrong!</p>
+                                    <p className="text-neutral-500">Correct answer: {correctAnswer}</p>
+                                </div>
+                            </div>
+                        )}
 
                     </div>
 
