@@ -193,7 +193,7 @@ function Room(){
 
                         {/* Question card */}
                         {/* State 2: Question only - centered, big */}
-                        {gamePhase === 'QUESTION' && (
+                        {gameState === 'QUESTION' && (
                             <div className="flex items-center justify-center min-h-[400px]">
                                 <div className="bg-white border border-neutral-200 rounded-xl p-12 shadow-sm w-full">
                                     <p className="text-3xl font-bold text-neutral-800 text-center leading-relaxed">
@@ -205,7 +205,7 @@ function Room(){
                         )}
 
                         {/* State 3: Question + Options */}
-                        {gamePhase === 'ANSWERING' && (
+                        {gameState === 'ANSWERING' && (
                             <>
                                 <div className="bg-white border border-neutral-200 rounded-xl p-8 mb-6 shadow-sm">
                                     <p className="text-2xl font-bold text-neutral-800 text-center leading-relaxed">
@@ -235,7 +235,7 @@ function Room(){
                             </>
                         )}
 
-                        {gamePhase === 'SUBMITTED' && (
+                        {gameState === 'SUBMITTED' && (
                             <div className="flex items-center justify-center min-h-[400px]">
                                 <div className="bg-white border border-neutral-200 rounded-xl p-10 text-center shadow-sm w-full">
                                     <div className="text-4xl mb-4 animate-bounce">⏳</div>
@@ -254,7 +254,7 @@ function Room(){
                                 </div>
                             </div>
                         )}
-                        {gamePhase === 'RESULT_WRONG' && (
+                        {gameState === 'RESULT_WRONG' && (
                             <div className="flex items-center justify-center min-h-[400px]">
                                 <div className="bg-white border border-rose-200 rounded-xl p-10 text-center shadow-sm w-full">
                                     <div className="text-5xl mb-4">❌</div>
@@ -340,14 +340,14 @@ function Room(){
             </div>
 
             {/* Game countdown overlay - shows before first question */}
-            {/*
-            <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-                <div className="text-center">
-                    <p className="text-white text-2xl font-medium mb-4">Get Ready!</p>
-                    <span className="text-9xl font-black text-white animate-pulse">3</span>
+            {gameState === 'START' && (
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                    <div className="text-center">
+                        <p className="text-white text-2xl font-medium mb-4">Get Ready!</p>
+                        <span className="text-9xl font-black text-white animate-pulse">3</span>
+                    </div>
                 </div>
-            </div>
-            */}
+            )}
 
             {/* Final results overlay - shows when game ends */}
             {/*
