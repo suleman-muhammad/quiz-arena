@@ -350,7 +350,7 @@ function Room(){
             )}
 
             {/* Final results overlay - shows when game ends */}
-            {/*
+            { gameState === 'ENDED' && (
             <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
                 <div className="bg-white rounded-2xl p-10 max-w-md w-full text-center shadow-2xl">
                     <div className="text-6xl mb-4">🏆</div>
@@ -388,7 +388,7 @@ function Room(){
                     </button>
                 </div>
             </div>
-            */}
+            )}
         </div>
     )
 }
