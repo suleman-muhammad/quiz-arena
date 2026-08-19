@@ -21,10 +21,7 @@ function Room(){
     const [quizDescription, setQuizDescription] = useState('')
     const [questionCount, setQuestionCount] = useState(0)
 
-    const [startState, setStartState] = useState(true)
-    const [questionState, setquestionState] = useState(false)
-    const [leaderBoardState, setLeaderBoardState] = useState(false)
-    const [endState, setEndState] = useState(false)
+    const [gameState, setGameState] = useState('START')
 
     const [currQuestionNo, setCurrQuestionNo] = useState(0)
     const [questionText, setQuestionText] = useState('')
@@ -93,8 +90,7 @@ function Room(){
                 const data = JSON.parse(msg.body)
                 console.log(data)
 
-                setStartState(false)
-                setquestionState(true)
+                setGameState("QUESTION")
 
                 setCurrQuestionNo(data.questionNo)
                 setQuestionText(data.questionText)
@@ -103,6 +99,8 @@ function Room(){
             client.subscribe(`/topic/room/play/question/options/${roomCode}`, (msg) =>{
                 const data = JSON.parse(msg.body)
                 console.log(data)
+
+                setGameState("ANSWERING")
 
                 setOptionA(data.optionA)
                 setOptionB(data.optionB)
@@ -115,7 +113,7 @@ function Room(){
                 const data = JSON.parse(msg.body)
                 console.log(data)
 
-                setquestionState(false)
+                setGameState('STOPPED')
 
                 setCurrQuestionNo('')
                 setOptionA('')
@@ -129,7 +127,7 @@ function Room(){
                 const data = JSON.parse(msg.body)
                 console.log(data)
 
-                setLeaderBoardState(true)
+                setGameState("LEADERBOARD")
 
                 // set leader Board to updated one.
             })
@@ -138,14 +136,10 @@ function Room(){
                 const data = JSON.parse(msg.body)
                 console.log(data)
 
-                setLeaderBoardState(false)
-                setEndState(true)
+                setGameState('ENDED')
 
                 // show Results.
             })
-
-            
-            
 
         })
         return () => {
@@ -197,44 +191,48 @@ function Room(){
                         </div>
 
                         {/* Question card */}
-                        {questionText && (
-                            <div className="bg-white border border-neutral-200 rounded-xl p-8 mb-6 shadow-sm">
-                                <p className="text-2xl font-bold text-neutral-800 text-center leading-relaxed">
-                                    {questionText}
-                                </p>
+                        {/* State 2: Question only - centered, big */}
+                        {gamePhase === 'QUESTION' && (
+                            <div className="flex items-center justify-center min-h-[400px]">
+                                <div className="bg-white border border-neutral-200 rounded-xl p-12 shadow-sm w-full">
+                                    <p className="text-3xl font-bold text-neutral-800 text-center leading-relaxed">
+                                        {questionText}
+                                    </p>
+                                    <p className="text-neutral-400 text-sm text-center mt-4">Options coming soon...</p>
+                                </div>
                             </div>
                         )}
 
-                        {/* Options grid - 2x2 colored buttons */}
-                        <div className="grid grid-cols-2 gap-4">
-                            <button className="bg-rose-500 hover:bg-rose-400 text-white rounded-xl p-6 text-lg font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
-                                <div className="flex items-center gap-3">
-                                    <span className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black">A</span>
-                                    <span>{optionA}</span>
+                        {/* State 3: Question + Options */}
+                        {gamePhase === 'ANSWERING' && (
+                            <>
+                                <div className="bg-white border border-neutral-200 rounded-xl p-8 mb-6 shadow-sm">
+                                    <p className="text-2xl font-bold text-neutral-800 text-center leading-relaxed">
+                                        {questionText}
+                                    </p>
                                 </div>
-                            </button>
 
-                            <button className="bg-blue-500 hover:bg-blue-400 text-white rounded-xl p-6 text-lg font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
-                                <div className="flex items-center gap-3">
-                                    <span className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black">B</span>
-                                    <span>{optionB}</span>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {[
+                                        { label: 'A', text: optionA, color: 'bg-rose-500 hover:bg-rose-400', value: 0 },
+                                        { label: 'B', text: optionB, color: 'bg-blue-500 hover:bg-blue-400', value: 1 },
+                                        { label: 'C', text: optionC, color: 'bg-emerald-500 hover:bg-emerald-400', value: 2 },
+                                        { label: 'D', text: optionD, color: 'bg-amber-500 hover:bg-amber-400', value: 3 },
+                                    ].map(opt => (
+                                        <button
+                                            key={opt.label}
+                                            onClick={() => submitAnswer(opt.value)}
+                                            className={`${opt.color} text-white rounded-xl p-6 text-lg font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md`}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <span className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black">{opt.label}</span>
+                                                <span>{opt.text}</span>
+                                            </div>
+                                        </button>
+                                    ))}
                                 </div>
-                            </button>
-
-                            <button className="bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl p-6 text-lg font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
-                                <div className="flex items-center gap-3">
-                                    <span className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black">C</span>
-                                    <span>{optionC}</span>
-                                </div>
-                            </button>
-
-                            <button className="bg-amber-500 hover:bg-amber-400 text-white rounded-xl p-6 text-lg font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
-                                <div className="flex items-center gap-3">
-                                    <span className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black">D</span>
-                                    <span>{optionD}</span>
-                                </div>
-                            </button>
-                        </div>
+                            </>
+                        )}
 
                         {/* After answering - shows instead of options */}
                         {/* 
