@@ -29,6 +29,8 @@ function Room(){
     const [optionB, setOptionB] = useState('')
     const [optionC, setOptionC] = useState('')
     const [optionD, setOptionD] = useState('')
+    const [correctOption,setCorrectOption] = useState(0)
+    const [playerChoice, setPlayersChoice] = useState(-1)
 
     const stompClient = useRef(null)
     useEffect(() => {
