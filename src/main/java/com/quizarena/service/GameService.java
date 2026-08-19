@@ -112,7 +112,7 @@ public class GameService {
         currQuestion = room.getNextQuestion();
         if(currQuestion == null){
             // System.out.println("Server: current Question is NUll to returning.");
-            messagingTemplate.convertAndSend("/topic/room/play/question/end" + room.getRoomCode(),new SimpleMessage("GAME_OVER","ROOM Ended."));
+            messagingTemplate.convertAndSend("/topic/room/end/" + room.getRoomCode(),new SimpleMessage("GAME_OVER","ROOM Ended."));
             return;
         }
 
@@ -130,7 +130,7 @@ public class GameService {
             try{
                 this.sendQuestionOptions(room, currQuestion, stopAcceptingAnswers);
             }catch (Exception e){
-                System.err.println("Sever: in Send Question Text.");
+                System.err.println("Sever: in Sending Question options.");
                 e.printStackTrace();
             }
             
@@ -153,7 +153,7 @@ public class GameService {
             try{
                 this.endRound(room,stopAcceptingAnswers);
             }catch (Exception e){
-                System.err.println("Sever: in Send Question options.");
+                System.err.println("Sever: in Sending Stop request.");
                 e.printStackTrace();
             }
             
@@ -168,18 +168,11 @@ public class GameService {
 
         // System.out.println("Server: Send the  Stop Question Request Succeccfully");
 
-        List<Player> roundResult = room.finishRound();
-
-        // System.out.println("Server: Got Round Result.");
-
-        messagingTemplate.convertAndSend("/topic/room/play/leaderboard/" + room.getRoomCode(), roundResult);
-
-
         this.roomThread.schedule(() -> {
             try{
-                this.sendQuestionText(room);
+                this.sendLeaderBoard(room);
             }catch (Exception e){
-                System.err.println("Sever: in Send next Question.");
+                System.err.println("Sever: in Sending LeaderBoard.");
                 e.printStackTrace();
             }
         }, 5, TimeUnit.SECONDS);
@@ -187,6 +180,22 @@ public class GameService {
         // System.out.println("Server: Scheduled Next Task.");
 
 
+    }
+
+    public void sendLeaderBoard(GameRoom room){
+        List<Player> roundResult = room.finishRound();
+
+        // System.out.println("Server: Got Round Result.");
+
+        messagingTemplate.convertAndSend("/topic/room/play/leaderboard/" + room.getRoomCode(), roundResult);
+        this.roomThread.schedule(() -> {
+            try{
+                this.sendQuestionText(room);
+            }catch (Exception e){
+                System.err.println("Sever: in Send next Question.");
+                e.printStackTrace();
+            }
+        }, 10, TimeUnit.SECONDS);
     }
 
     public void handleAnswer(String roomCode,AnswerDTO answer){
