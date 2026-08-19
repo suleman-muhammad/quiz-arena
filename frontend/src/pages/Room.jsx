@@ -149,8 +149,9 @@ function Room(){
 
     
 
-    function handleAnswerClick(){
-
+    function submitAnswer(val){
+        setGameState('SUBMITTED');
+        //TODO
     }
 
     return (
@@ -234,32 +235,17 @@ function Room(){
                             </>
                         )}
 
-                        {/* After answering - shows instead of options */}
-                        {/* 
-                        <div className="bg-white border border-neutral-200 rounded-xl p-8 text-center shadow-sm">
-                            <div className="text-5xl mb-4">✅</div>
-                            <p className="text-emerald-600 font-bold text-xl mb-2">Correct!</p>
-                            <p className="text-neutral-500">+850 points</p>
-                        </div>
-                        */}
+                        {gamePhase === 'SUBMITTED' && (
+                            <div className="flex items-center justify-center min-h-[400px]">
+                                <div className="bg-white border border-neutral-200 rounded-xl p-10 text-center shadow-sm w-full">
+                                    <div className="text-4xl mb-4 animate-bounce">⏳</div>
+                                    <p className="text-neutral-600 font-medium text-lg">Answer locked in!</p>
+                                    <p className="text-neutral-400 text-sm mt-2">Waiting for other players...</p>
+                                </div>
+                            </div>
+                        )}
+                        
 
-                        {/* Wrong answer version */}
-                        {/*
-                        <div className="bg-white border border-neutral-200 rounded-xl p-8 text-center shadow-sm">
-                            <div className="text-5xl mb-4">❌</div>
-                            <p className="text-rose-600 font-bold text-xl mb-2">Wrong!</p>
-                            <p className="text-neutral-500">Correct answer: ConcurrentHashMap</p>
-                        </div>
-                        */}
-
-                        {/* Waiting for results - shows after player answers before timer ends */}
-                        {/*
-                        <div className="bg-white border border-neutral-200 rounded-xl p-8 text-center shadow-sm">
-                            <div className="text-4xl mb-4 animate-bounce">⏳</div>
-                            <p className="text-neutral-600 font-medium text-lg">Answer locked in!</p>
-                            <p className="text-neutral-400 text-sm mt-2">Waiting for other players...</p>
-                        </div>
-                        */}
                     </div>
 
                     {/* Right column - Leaderboard (1/3) */}
