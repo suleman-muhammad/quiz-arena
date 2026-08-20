@@ -144,11 +144,19 @@ public class GameRoom {
         return 0;
     }
 
-    public int getRightAnswer(int questionNo){
+    public String getRightAnswer(int questionNo){
         if(questionNo < questions.size()){
-            return questions.get(questionNo).getCorrectOption();
+            Question q = questions.get(questionNo);
+            int correct = q.getCorrectOption();
+            return switch (correct) {
+                case 0 -> q.getOptionA();
+                case 1 -> q.getOptionB();
+                case 2 -> q.getOptionC();
+                case 3 -> q.getOptionD();
+                default -> "unKnown";
+            };
         }
-        return -1;
+        return "unKnown";
     }
 
 
