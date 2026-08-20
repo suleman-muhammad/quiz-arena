@@ -107,7 +107,7 @@ public class GameService {
         }
 
         QuestionDTO currQuestion;
-        StopAcceptingAnswers stopAcceptingAnswers = new StopAcceptingAnswers(); 
+        StopAcceptingAnswers stopAcceptingAnswers;
 
         currQuestion = room.getNextQuestion();
         if(currQuestion == null){
@@ -123,8 +123,7 @@ public class GameService {
 
         // System.out.println("Server: send the  Question Succeccfully" );
 
-        stopAcceptingAnswers.setAccepting(false);
-        stopAcceptingAnswers.setQuestionNo(currQuestion.getQuestionNo());
+        stopAcceptingAnswers = new StopAcceptingAnswers(currQuestion.getQuestionNo(),room.getRightAnswer(currQuestion.getQuestionNo()));
 
         this.roomThread.schedule(() -> {
             try{
@@ -202,7 +201,8 @@ public class GameService {
         System.out.println("Service: Got an Answer Submission.");
         GameRoom room = manager.findRoomByCode(roomCode);
         if(room != null){
-            room.submitAnswer(answer);  
+            int result = room.submitAnswer(answer);  
+            messagingTemplate.convertAndSend("/topic/room/" + roomCode + "/player/" + answer.getPlayerNickName() + "/scores",ResponseEntity.ok(Integer.valueOf(result)));
         }
     }
 
