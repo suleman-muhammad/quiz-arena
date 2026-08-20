@@ -2,6 +2,8 @@ package com.quizarena.game;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.quizarena.dto.AnswerDTO;
 import com.quizarena.dto.QuestionDTO;
@@ -17,7 +19,7 @@ public class GameRoom {
 
     private List<Player> players;
     private List<Question> questions;
-    private List<AnswerDTO> answers;
+    private Map<AnswerDTO,Integer> answers;
     
     
     public GameRoom(String code,Long quizId,String host){
@@ -27,7 +29,7 @@ public class GameRoom {
         this.state = RoomState.WAITING;
 
         this.players = new ArrayList<>();
-        this.answers = new ArrayList<>();
+        this.answers = new ConcurrentHashMap<>();
 
         this.questions = null;
     }
@@ -61,7 +63,7 @@ public class GameRoom {
     public List<Player> finishRound(){
         System.out.println("Game: Got a finish Round Request.");
         Question q = questions.get(currQuestionNo-1);
-        for(AnswerDTO ans: answers){ 
+        for(AnswerDTO ans: answers.keySet()){ 
 
             System.out.println("Game: Checking answer from " + ans.getPlayerNickName() + 
             " chose=" + ans.getChosenOption() + " correct=" + q.getCorrectOption());
@@ -69,13 +71,7 @@ public class GameRoom {
             for (Player p : players){
                 if(p.getNickName().equalsIgnoreCase(ans.getPlayerNickName())){
                     System.out.println("Game: Player Matched.");
-                    if(ans.getChosenOption() == q.getCorrectOption()){
-                        System.out.println("Game: Answer Matched.");
-                        double n = ((ans.getAnsweredAtMillis()-this.previousQuestionSentTimeMillis)/1000);
-                        int dScores = (int) Math.ceil(1000 - ((10*n*(n+1))/2));
-                        System.out.println("Game: updating Scores " + dScores);
-                        p.setScore(p.getScore() + dScores);
-                    }
+                    p.setScore(p.getScore() + answers.get(ans));
                     
                 }
             }
@@ -125,14 +121,34 @@ public class GameRoom {
         return false;
     }
 
-    public void submitAnswer(AnswerDTO answer){
+    public int submitAnswer(AnswerDTO answer){
         System.out.println("Game: Got an Answer Submission.");
         synchronized(this.answers){
             if(((answer.getAnsweredAtMillis() - this.previousQuestionSentTimeMillis)/1000) <= questions.get(answer.getQuestionNo()-1).getTimeLimitSeconds()){
-                this.answers.add(answer);
+                int dScores = calScores(answer);
+                this.answers.put(answer,dScores);
+                return dScores;
             }
-            
+            return 0;
         }
+    }
+
+    public int calScores(AnswerDTO ans){
+        Question q = questions.get(currQuestionNo-1);
+        if(ans.getChosenOption() == q.getCorrectOption()){
+            System.out.println("Game: Answer Matched.");
+            double n = ((ans.getAnsweredAtMillis()-this.previousQuestionSentTimeMillis)/1000);
+            int dScores = (int) Math.ceil(1000 - ((10*n*(n+1))/2));
+            return dScores;
+        }
+        return 0;
+    }
+
+    public int getRightAnswer(int questionNo){
+        if(questionNo < questions.size()){
+            return questions.get(questionNo).getCorrectOption();
+        }
+        return -1;
     }
 
 
