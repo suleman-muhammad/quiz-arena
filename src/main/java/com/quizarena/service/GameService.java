@@ -202,7 +202,7 @@ public class GameService {
         GameRoom room = manager.findRoomByCode(roomCode);
         if(room != null){
             int result = room.submitAnswer(answer);  
-            messagingTemplate.convertAndSend("/topic/room/" + roomCode + "/player/" + answer.getPlayerNickName() + "/scores",ResponseEntity.ok(Integer.valueOf(result)));
+            messagingTemplate.convertAndSend("/topic/room/" + roomCode + "/player/" + answer.getPlayerNickName() + "/scores",result);
         }
     }
 
