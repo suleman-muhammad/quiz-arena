@@ -30,6 +30,9 @@ function Room(){
     const [optionC, setOptionC] = useState('')
     const [optionD, setOptionD] = useState('')
     const [answer, setAnswer] = useState('')
+
+
+    const [leaderboard, setLeaderBoard]  = useState([])
     const currectScore = useRef(0)
     
 
@@ -77,6 +80,13 @@ function Room(){
                     setQuestionCount(data.questions.length)
                 })
             })
+        fetch(`http://localhost:8080/api/rooms/${roomCode}/leaderboard`)
+            .then(res => res.json())
+            .then((players) => {
+                console.log(players)
+                setLeaderBoard(players.slice(0,5));
+            })
+
 
         const socket = new SockJS('http://localhost:8080/ws')
         const client = Stomp.over(socket)
@@ -134,8 +144,9 @@ function Room(){
             })
 
             client.subscribe(`/topic/room/play/leaderboard/${roomCode}`, (msg) =>{
-                const data = JSON.parse(msg.body)
-                console.log(data)
+                const players = JSON.parse(msg.body)
+                console.log(players)
+                setLeaderBoard(players.slice(0,5));
 
                 setGameState("LEADERBOARD")
                 // set leader Board to updated one.
@@ -301,49 +312,30 @@ function Room(){
                             </div>
 
                             <div className="p-4 space-y-2">
-                                {/* 1st place */}
-                                <div className="flex items-center justify-between bg-amber-50 border border-amber-100 rounded-lg px-4 py-3">
-                                    <div className="flex items-center gap-3">
-                                        <span className="text-lg">🥇</span>
-                                        <div>
-                                            <p className="text-neutral-800 font-semibold text-sm">Alice</p>
+                                {leaderboard.map((p, index) => {
+                                    const medals = ['🥇', '🥈', '🥉']
+                                    const isTop3 = index < 3
+                                    
+                                    return (
+                                        <div key={index} className={`flex items-center justify-between rounded-lg px-4 py-3 ${
+                                            index === 0 ? 'bg-amber-50 border border-amber-100' : 'bg-neutral-50'
+                                        }`}>
+                                            <div className="flex items-center gap-3">
+                                                {isTop3 ? (
+                                                    <span className="text-lg">{medals[index]}</span>
+                                                ) : (
+                                                    <span className="text-neutral-400 font-bold text-sm w-7 text-center">{index + 1}</span>
+                                                )}
+                                                <p className="text-neutral-800 font-semibold text-sm">
+                                                    {p.nickName === nickName ? 'You' : p.nickName}
+                                                </p>
+                                            </div>
+                                            <span className={`font-bold text-sm ${index === 0 ? 'text-amber-600' : 'text-neutral-600'}`}>
+                                                {p.score.toLocaleString()}
+                                            </span>
                                         </div>
-                                    </div>
-                                    <span className="font-bold text-amber-600 text-sm">2,400</span>
-                                </div>
-
-                                {/* 2nd place */}
-                                <div className="flex items-center justify-between bg-neutral-50 rounded-lg px-4 py-3">
-                                    <div className="flex items-center gap-3">
-                                        <span className="text-lg">🥈</span>
-                                        <div>
-                                            <p className="text-neutral-800 font-semibold text-sm">Bob</p>
-                                        </div>
-                                    </div>
-                                    <span className="font-bold text-neutral-600 text-sm">1,800</span>
-                                </div>
-
-                                {/* 3rd place */}
-                                <div className="flex items-center justify-between bg-neutral-50 rounded-lg px-4 py-3">
-                                    <div className="flex items-center gap-3">
-                                        <span className="text-lg">🥉</span>
-                                        <div>
-                                            <p className="text-neutral-800 font-semibold text-sm">You</p>
-                                        </div>
-                                    </div>
-                                    <span className="font-bold text-neutral-600 text-sm">1,200</span>
-                                </div>
-
-                                {/* 4th+ place */}
-                                <div className="flex items-center justify-between bg-neutral-50 rounded-lg px-4 py-3">
-                                    <div className="flex items-center gap-3">
-                                        <span className="text-neutral-400 font-bold text-sm w-7 text-center">4</span>
-                                        <div>
-                                            <p className="text-neutral-800 font-semibold text-sm">Eve</p>
-                                        </div>
-                                    </div>
-                                    <span className="font-bold text-neutral-600 text-sm">800</span>
-                                </div>
+                                    )
+                                })}
                             </div>
 
                             {/* Your position highlight - if scrolled out of view */}
