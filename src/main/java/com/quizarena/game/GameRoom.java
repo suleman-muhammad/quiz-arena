@@ -55,7 +55,6 @@ public class GameRoom {
         q.setOptionD(curr.getOptionD());
         q.setTimeLimit(10);
         q.setQuestionNo(currQuestionNo++);
-        this.previousQuestionSentTimeMillis = System.currentTimeMillis();
         this.state = RoomState.In_PROGRESS;
         return q;
     }
@@ -190,6 +189,28 @@ public class GameRoom {
     public void setHost(String host) {
         this.host = host;
     }
+
+
+    public int getCurrQuestionNo() {
+        return currQuestionNo;
+    }
+
+
+    public void setCurrQuestionNo(int currQuestionNo) {
+        this.currQuestionNo = currQuestionNo;
+    }
+
+
+    public long getPreviousQuestionSentTimeMillis() {
+        return previousQuestionSentTimeMillis;
+    }
+
+
+    public void setPreviousQuestionSentTimeMillis(long previousQuestionSentTimeMillis) {
+        this.previousQuestionSentTimeMillis = previousQuestionSentTimeMillis;
+    }
+
+    
     
     
 }
