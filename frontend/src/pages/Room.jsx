@@ -29,8 +29,9 @@ function Room(){
     const [optionB, setOptionB] = useState('')
     const [optionC, setOptionC] = useState('')
     const [optionD, setOptionD] = useState('')
-    const [correctOption,setCorrectOption] = useState(0)
-    const [playerChoice, setPlayersChoice] = useState(-1)
+    const [answer, setAnswer] = useState('')
+    const currectScore = useRef(0)
+    
 
     const stompClient = useRef(null)
     useEffect(() => {
@@ -108,6 +109,7 @@ function Room(){
                 setOptionB(data.optionB)
                 setOptionC(data.optionC)
                 setOptionD(data.optionD)
+                
                 //TODO time setting.
             })
 
@@ -115,8 +117,14 @@ function Room(){
                 const data = JSON.parse(msg.body)
                 console.log(data)
 
-                setGameState('STOPPED')
+                setAnswer(data.answer);
+                setGameState('STOPPED') // not needed.
 
+                if(currectScore.current > 0){
+                    setGameState('RESULT_CORRECT');
+                }else{
+                    setGameState("RESULT_WRONG")
+                }
                 setCurrQuestionNo('')
                 setOptionA('')
                 setOptionB('')
@@ -130,9 +138,16 @@ function Room(){
                 console.log(data)
 
                 setGameState("LEADERBOARD")
-
                 // set leader Board to updated one.
             })
+
+            client.subscribe(`/topic/room/${roomCode}/player/${nickName}/scores`, (msg) =>{
+                const result = JSON.parse(msg.body)
+                console.log(result)
+                currectScore.current = result;
+            })
+
+
 
             client.subscribe(`/topic/room/end/${roomCode}`, (msg) =>{
                 const data = JSON.parse(msg.body)
@@ -153,7 +168,17 @@ function Room(){
 
     function submitAnswer(val){
         setGameState('SUBMITTED');
-        //TODO
+        console.log(val);
+        stompClient.current.send("/app/game/room/answer",{},JSON.stringify({
+            roomCode:roomCode,
+            playerNickName:nickName,
+            questionNo:currQuestionNo,
+            chosenOption:val,
+            answeredAtMillis:Date.now()
+        }))
+    }
+    function handleHomeButton(){
+        navigate("/")
     }
 
     return (
@@ -252,7 +277,7 @@ function Room(){
                                 <div className="bg-white border border-emerald-200 rounded-xl p-10 text-center shadow-sm w-full">
                                     <div className="text-5xl mb-4">✅</div>
                                     <p className="text-emerald-600 font-bold text-xl mb-2">Correct!</p>
-                                    <p className="text-neutral-500">+{pointsEarned} points</p>
+                                    <p className="text-neutral-500">+{currectScore.current} points</p>
                                 </div>
                             </div>
                         )}
@@ -261,7 +286,7 @@ function Room(){
                                 <div className="bg-white border border-rose-200 rounded-xl p-10 text-center shadow-sm w-full">
                                     <div className="text-5xl mb-4">❌</div>
                                     <p className="text-rose-600 font-bold text-xl mb-2">Wrong!</p>
-                                    <p className="text-neutral-500">Correct answer: {correctAnswer}</p>
+                                    <p className="text-neutral-500">Correct answer: {answer}</p>
                                 </div>
                             </div>
                         )}
@@ -385,6 +410,7 @@ function Room(){
 
                     <button
                         className="w-full bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-400 hover:to-orange-300 text-white py-4 rounded-xl font-bold text-lg transition"
+                        onClick={handleHomeButton}
                     >
                         Back to Home
                     </button>
