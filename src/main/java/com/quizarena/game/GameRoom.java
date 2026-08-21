@@ -90,7 +90,7 @@ public class GameRoom {
         for(int i = 0; i<players.size(); i++){
             players.get(i).setCurrentPos(i+1);
         }
-        return players.subList(0, Math.min(5,players.size()));
+        return players;
     }
 
     public boolean addPlayer(Player p){
@@ -209,8 +209,5 @@ public class GameRoom {
     public void setPreviousQuestionSentTimeMillis(long previousQuestionSentTimeMillis) {
         this.previousQuestionSentTimeMillis = previousQuestionSentTimeMillis;
     }
-
-    
-    
-    
+   
 }
