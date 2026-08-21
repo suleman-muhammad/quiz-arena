@@ -1,16 +1,17 @@
 package com.quizarena.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.quizarena.dto.RoomInfo;
-import com.quizarena.entity.Quiz;
 import com.quizarena.game.GameManager;
 import com.quizarena.game.GameRoom;
+import com.quizarena.game.Player;
 
 @RestController
 @RequestMapping("/api/rooms")
@@ -40,7 +41,7 @@ public class RoomController {
 
     }
 
-    @GetMapping("{roomCode}/quiz")
+    @GetMapping("/{roomCode}/quiz")
     public ResponseEntity<Long> getRoomQuiz(@PathVariable String roomCode){
 
         GameRoom room = gameManager.findRoomByCode(roomCode);
@@ -52,4 +53,15 @@ public class RoomController {
         
     }
 
+    @GetMapping("/{roomCode}/leaderboard")
+    public ResponseEntity<List<Player>> getleaderBoard(@PathVariable String roomCode){
+
+        System.out.println("Server: Got a get Request for Players.");
+        GameRoom room = gameManager.findRoomByCode(roomCode);
+        if(room == null){
+            return ResponseEntity.notFound().build();
+        }
+        List<Player> players = room.getPlayers();
+        return ResponseEntity.ok(players);
+    }
 }
