@@ -146,7 +146,7 @@ public class GameService {
 
 
         messagingTemplate.convertAndSend("/topic/room/play/question/options/" + room.getRoomCode(),questionDTO);
-
+        room.setPreviousQuestionSentTimeMillis(System.currentTimeMillis());
 
         this.roomThread.schedule(() -> {
             try{
