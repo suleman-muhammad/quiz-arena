@@ -13,7 +13,7 @@ function Room(){
 
     const [connected, setConnected] = useState(false)
     
-    const [players, setPlayers] = useState([])
+    // const [players, setPlayers] = useState([])
     const [myMsgs, setMyMsgs] = useState('')
 
     const [quizId, setQuizId] = useState(-1)
@@ -34,6 +34,8 @@ function Room(){
 
     const [leaderboard, setLeaderBoard]  = useState([])
     const currectScore = useRef(0)
+    const [totalScore, setTotalScore] = useState(0);
+    const [position, setPosition] = useState(0);
     
 
     const stompClient = useRef(null)
@@ -44,7 +46,15 @@ function Room(){
                 if(data === null){
                     navigate("/")
                 }else{
-                    setPlayers(data.players)
+                    // setPlayers(data.players)
+                    setLeaderBoard(data.players.slice(0,5));
+
+                    const me = data.players.find(p => p.nickName === nickName)
+                    if (me){
+                        setTotalScore(me.score)
+                        setPosition(me.currentPos);
+                    }
+                    
                 }        
             })
             .catch(err => console.log(err))
@@ -80,12 +90,12 @@ function Room(){
                     setQuestionCount(data.questions.length)
                 })
             })
-        fetch(`http://localhost:8080/api/rooms/${roomCode}/leaderboard`)
-            .then(res => res.json())
-            .then((players) => {
-                console.log(players)
-                setLeaderBoard(players.slice(0,5));
-            })
+        // fetch(`http://localhost:8080/api/rooms/${roomCode}/leaderboard`)
+        //     .then(res => res.json())
+        //     .then((players) => {
+        //         console.log(players)
+        //         setLeaderBoard(players.slice(0,5));
+        //     })
 
 
         const socket = new SockJS('http://localhost:8080/ws')
@@ -147,6 +157,12 @@ function Room(){
                 const players = JSON.parse(msg.body)
                 console.log(players)
                 setLeaderBoard(players.slice(0,5));
+
+                const me = players.find(p => p.nickName === nickName)
+                    if (me){
+                        setTotalScore(me.score)
+                        setPosition(me.currentPos);
+                    }
 
                 setGameState("LEADERBOARD")
                 // set leader Board to updated one.
@@ -343,14 +359,14 @@ function Room(){
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
                                         <span className="bg-gradient-to-r from-rose-500 to-orange-400 text-white w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold">
-                                            S
+                                            {nickName.charAt(0).toUpperCase()}
                                         </span>
                                         <div>
                                             <p className="text-neutral-800 font-semibold text-sm">You</p>
-                                            <p className="text-neutral-400 text-xs">#3rd place</p>
+                                            <p className="text-neutral-400 text-xs">{position} place</p>
                                         </div>
                                     </div>
-                                    <span className="font-bold text-rose-500">1,200</span>
+                                    <span className="font-bold text-rose-500">{totalScore}</span>
                                 </div>
                             </div>
                         </div>
