@@ -22,6 +22,7 @@ public class GameManager {
 
         Player p = new Player();
         p.setNickName(hostNickName);
+        p.setCurrentPos(1);
 
         GameRoom room = new GameRoom(code,quizId,hostNickName);
         if(request.hostIsPlaying()) room.addPlayer(p);
@@ -68,6 +69,7 @@ public class GameManager {
 
             Player p = new Player();
             p.setNickName(playernickName);
+            p.setCurrentPos(1);
             boolean result = room.addPlayer(p);
 
             if(result){
