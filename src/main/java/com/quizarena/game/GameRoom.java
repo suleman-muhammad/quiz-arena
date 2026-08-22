@@ -37,7 +37,7 @@ public class GameRoom {
 
     public void startRoom(List<Question> questions){
         this.questions = questions;
-        currQuestionNo = 1;
+        currQuestionNo = 0;
         this.state = RoomState.In_PROGRESS;
     }
 
@@ -54,7 +54,7 @@ public class GameRoom {
         q.setOptionC(curr.getOptionC());
         q.setOptionD(curr.getOptionD());
         q.setTimeLimit(10);
-        q.setQuestionNo(currQuestionNo++);
+        q.setQuestionNo(++currQuestionNo);
         this.state = RoomState.In_PROGRESS;
         return q;
     }
