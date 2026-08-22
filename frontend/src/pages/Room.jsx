@@ -179,7 +179,7 @@ function Room(){
                 const data = JSON.parse(msg.body)
                 console.log(data)
 
-                setGameState('ENDED')
+                setGameState('GAME_OVER')
 
                 // show Results.
             })
@@ -203,10 +203,6 @@ function Room(){
             answeredAtMillis:Date.now()
         }))
     }
-    function handleHomeButton(){
-        navigate("/")
-    }
-
     function getPosition(pos){
         const places = ['st','nd','rd']
         if(pos <= 3){
@@ -393,45 +389,51 @@ function Room(){
             )}
 
             {/* Final results overlay - shows when game ends */}
-            { gameState === 'ENDED' && (
-            <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-                <div className="bg-white rounded-2xl p-10 max-w-md w-full text-center shadow-2xl">
-                    <div className="text-6xl mb-4">🏆</div>
-                    <h2 className="text-2xl font-black text-neutral-800 mb-2">Game Over!</h2>
-                    <p className="text-neutral-500 mb-8">Final Results</p>
-                    
-                    <div className="space-y-3 mb-8">
-                        <div className="flex items-center justify-between bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
-                            <div className="flex items-center gap-3">
-                                <span className="text-2xl">🥇</span>
-                                <span className="font-bold text-neutral-800">Alice</span>
-                            </div>
-                            <span className="font-bold text-amber-600">4,200</span>
+            {(gameState === 'LEADERBOARD' || gameState === 'GAME_OVER') && (
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-2xl p-10 max-w-md w-full text-center shadow-2xl">
+                        <div className="text-6xl mb-4">{gameState === 'GAME_OVER' ? '🏆' : '📊'}</div>
+                        <h2 className="text-2xl font-black text-neutral-800 mb-2">
+                            {gameState === 'GAME_OVER' ? 'Game Over!' : 'Standings'}
+                        </h2>
+                        <p className="text-neutral-500 mb-6">
+                            {gameState === 'GAME_OVER' ? 'Final Results' : `After Question ${currQuestionNo}`}
+                        </p>
+                        <div className="space-y-3 mb-8">
+                            {leaderboard.map((p, index) => {
+                                const medals = ['🥇', '🥈', '🥉']
+                                const isTop3 = p.currentPos < 3
+                                return (
+                                    <div key={p.currentPos} className={`flex items-center justify-between rounded-lg px-4 py-3 ${
+                                        p.currentPos === 1 ? 'bg-amber-50 border border-amber-100' : 'bg-neutral-50'
+                                        }`}>
+                                        <div className="flex items-center gap-3">
+                                            {isTop3 ? (
+                                                <span className="text-lg">{medals[p.currentPos - 1]}</span>
+                                            ) : (
+                                                <span className="text-neutral-400 font-bold text-sm w-7 text-center">{p.currentPos}</span>
+                                            )}
+                                            <p className="text-neutral-800 font-semibold text-sm">
+                                                {p.nickName === nickName ? 'You' : p.nickName}
+                                            </p>
+                                        </div>
+                                        <span className={`font-bold text-sm ${p.currentPos === 1 ? 'text-amber-600' : 'text-neutral-600'}`}>
+                                            {p.score.toLocaleString()}
+                                        </span>
+                                    </div>
+                                )
+                            })}
                         </div>
-                        <div className="flex items-center justify-between bg-neutral-50 rounded-lg px-4 py-3">
-                            <div className="flex items-center gap-3">
-                                <span className="text-2xl">🥈</span>
-                                <span className="font-bold text-neutral-800">Bob</span>
-                            </div>
-                            <span className="font-bold text-neutral-600">3,600</span>
-                        </div>
-                        <div className="flex items-center justify-between bg-neutral-50 rounded-lg px-4 py-3">
-                            <div className="flex items-center gap-3">
-                                <span className="text-2xl">🥉</span>
-                                <span className="font-bold text-neutral-800">You</span>
-                            </div>
-                            <span className="font-bold text-neutral-600">2,800</span>
-                        </div>
+                        {gameState === 'GAME_OVER' && (
+                            <button
+                                onClick={() => navigate('/')}
+                                className="w-full bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-400 hover:to-orange-300 text-white py-4 rounded-xl font-bold text-lg transition"
+                            >
+                                Back to Home
+                            </button>
+                        )}
                     </div>
-
-                    <button
-                        className="w-full bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-400 hover:to-orange-300 text-white py-4 rounded-xl font-bold text-lg transition"
-                        onClick={handleHomeButton}
-                    >
-                        Back to Home
-                    </button>
                 </div>
-            </div>
             )}
         </div>
     )
