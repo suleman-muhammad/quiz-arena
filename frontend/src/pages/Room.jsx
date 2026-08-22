@@ -145,7 +145,6 @@ function Room(){
                 }else{
                     setGameState("RESULT_WRONG")
                 }
-                setCurrQuestionNo('')
                 setOptionA('')
                 setOptionB('')
                 setOptionC('')
@@ -206,6 +205,15 @@ function Room(){
     }
     function handleHomeButton(){
         navigate("/")
+    }
+
+    function getPosition(pos){
+        const places = ['st','nd','rd']
+        if(pos <= 3){
+            return pos + places[pos-1]
+        }else{
+            return pos + 'th';
+        }
     }
 
     return (
@@ -330,23 +338,23 @@ function Room(){
                             <div className="p-4 space-y-2">
                                 {leaderboard.map((p, index) => {
                                     const medals = ['🥇', '🥈', '🥉']
-                                    const isTop3 = index < 3
+                                    const isTop3 = p.currentPos < 3
                                     
                                     return (
-                                        <div key={index} className={`flex items-center justify-between rounded-lg px-4 py-3 ${
-                                            index === 0 ? 'bg-amber-50 border border-amber-100' : 'bg-neutral-50'
+                                        <div key={p.currentPos} className={`flex items-center justify-between rounded-lg px-4 py-3 ${
+                                            p.currentPos === 1 ? 'bg-amber-50 border border-amber-100' : 'bg-neutral-50'
                                         }`}>
                                             <div className="flex items-center gap-3">
                                                 {isTop3 ? (
-                                                    <span className="text-lg">{medals[index]}</span>
+                                                    <span className="text-lg">{medals[p.currentPos - 1]}</span>
                                                 ) : (
-                                                    <span className="text-neutral-400 font-bold text-sm w-7 text-center">{index + 1}</span>
+                                                    <span className="text-neutral-400 font-bold text-sm w-7 text-center">{p.currentPos}</span>
                                                 )}
                                                 <p className="text-neutral-800 font-semibold text-sm">
                                                     {p.nickName === nickName ? 'You' : p.nickName}
                                                 </p>
                                             </div>
-                                            <span className={`font-bold text-sm ${index === 0 ? 'text-amber-600' : 'text-neutral-600'}`}>
+                                            <span className={`font-bold text-sm ${p.currentPos === 1 ? 'text-amber-600' : 'text-neutral-600'}`}>
                                                 {p.score.toLocaleString()}
                                             </span>
                                         </div>
@@ -363,7 +371,7 @@ function Room(){
                                         </span>
                                         <div>
                                             <p className="text-neutral-800 font-semibold text-sm">You</p>
-                                            <p className="text-neutral-400 text-xs">{position} place</p>
+                                            <p className="text-neutral-400 text-xs">{getPosition(position)} place</p>
                                         </div>
                                     </div>
                                     <span className="font-bold text-rose-500">{totalScore}</span>
