@@ -12,6 +12,9 @@ function Room(){
     const nickName = searchParams.get('nickname')
 
     const [connected, setConnected] = useState(false)
+    const [timeLeft, setTimeLeft] = useState(0)
+    const [totalTime, setTotalTime] = useState(0)
+    const [countdown, setCountdown] = useState(3)
     
     // const [players, setPlayers] = useState([])
     const [myMsgs, setMyMsgs] = useState('')
@@ -129,7 +132,8 @@ function Room(){
                 setOptionB(data.optionB)
                 setOptionC(data.optionC)
                 setOptionD(data.optionD)
-                
+                setTimeLeft(data.timeLimit || 10)
+                setTotalTime(data.timeLimit || 10)
                 //TODO time setting.
             })
 
@@ -137,6 +141,8 @@ function Room(){
                 const data = JSON.parse(msg.body)
                 console.log(data)
 
+                setTimeLeft(0)
+                setTotalTime(0)
                 setAnswer(data.answer);
                 setGameState('STOPPED') // not needed.
 
@@ -190,6 +196,32 @@ function Room(){
         }
     },[])
 
+
+    useEffect(() => {
+        if (timeLeft <= 0) return
+        const timer = setInterval(() => {
+            setTimeLeft(prev => {
+                if (prev <= 1) {
+                    clearInterval(timer)
+                    return 0
+                }
+                return prev - 1
+            })
+        }, 1000)
+        return () => clearInterval(timer)
+    }, [timeLeft])
+
+
+    useEffect(() => {
+        if (gameState !== 'START' || countdown <= 0) return
+
+        const timer = setInterval(() => {
+            setCountdown(prev => prev - 1)
+        }, 1000)
+
+        return () => clearInterval(timer)
+    }, [gameState, countdown])
+
     
 
     function submitAnswer(val){
@@ -239,12 +271,12 @@ function Room(){
                         <div className="mb-6">
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-neutral-500 text-sm font-medium">Time remaining</span>
-                                <span className="text-neutral-800 font-bold text-lg">8s</span>
+                                <span className="text-neutral-800 font-bold text-lg">{timeLeft}s</span>
                             </div>
                             <div className="w-full bg-neutral-200 rounded-full h-3">
                                 <div 
                                     className="bg-gradient-to-r from-rose-500 to-orange-400 h-3 rounded-full transition-all duration-1000"
-                                    style={{ width: '53%' }}
+                                    style={{ width: `${(timeLeft / totalTime) * 100}%` }}
                                 ></div>
                             </div>
                         </div>
@@ -383,7 +415,7 @@ function Room(){
                 <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
                     <div className="text-center">
                         <p className="text-white text-2xl font-medium mb-4">Get Ready!</p>
-                        <span className="text-9xl font-black text-white animate-pulse">3</span>
+                        <span className="text-9xl font-black text-white animate-pulse">{countdown}</span>
                     </div>
                 </div>
             )}
