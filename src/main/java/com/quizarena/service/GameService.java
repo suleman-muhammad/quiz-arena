@@ -123,7 +123,7 @@ public class GameService {
 
         // System.out.println("Server: send the  Question Succeccfully" );
 
-        stopAcceptingAnswers = new StopAcceptingAnswers(currQuestion.getQuestionNo(),room.getRightAnswer(currQuestion.getQuestionNo()));
+        stopAcceptingAnswers = new StopAcceptingAnswers(currQuestion.getQuestionNo(),room.getRightAnswer(currQuestion.getQuestionNo()-1));
 
         this.roomThread.schedule(() -> {
             try{
