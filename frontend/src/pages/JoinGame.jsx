@@ -64,7 +64,7 @@ function JoinGame() {
                         type="text"
                         placeholder="e.g. 4L1N8U"
                         value={roomCode}  // value assignment here
-                        onChange={(e) => setRoomCode(e.target.value)}  // change on update
+                        onChange={(e) => setRoomCode(e.target.value.toUpperCase())}  // change on update
                         maxLength={6}
                         className="w-full border border-neutral-300 text-neutral-800 rounded-lg px-4 py-3 text-center text-2xl tracking-widest font-mono focus:border-orange-400 focus:outline-none"
                     />
