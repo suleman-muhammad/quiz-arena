@@ -113,6 +113,7 @@ public class GameService {
         if(currQuestion == null){
             // System.out.println("Server: current Question is NUll to returning.");
             messagingTemplate.convertAndSend("/topic/room/end/" + room.getRoomCode(),new SimpleMessage("GAME_OVER","ROOM Ended."));
+            manager.removeRoom(room.getRoomCode());
             return;
         }
 
