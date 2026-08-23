@@ -50,16 +50,20 @@ public class GameController {
 
     @MessageMapping("/game/room/join")
     public void joinRoom(JoinRoomRequest request){
+        System.out.println("SERVER: Join ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
+
+
         JoinRequestAnswer requestAnswer = manager.addPlayerToRoom(request.roomCode(), request.playerNickName());
 
-        if(requestAnswer.roomInfo() == null){
-            messagingTemplate.convertAndSend("/topic/join_request/" + request.playerNickName() + "/" + request.requestId(), new SimpleMessage("ERROR",requestAnswer.message()));
-            return;
-        }
+        // if(requestAnswer.roomInfo() == null){
+        //     messagingTemplate.convertAndSend("/topic/join_request/" + request.playerNickName() + "/" + request.requestId(), new SimpleMessage("ERROR",requestAnswer.message()));
+        //     return;
+        // }
+        messagingTemplate.convertAndSend("/topic/join_request/" + request.playerNickName() + "/" + request.requestId(), requestAnswer);
+
         
         messagingTemplate.convertAndSend("/topic/room/waiting/" + request.roomCode(),requestAnswer.roomInfo());
         
-        System.out.println("SERVER: Join ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
 
     @MessageMapping("/game/room/leave")
