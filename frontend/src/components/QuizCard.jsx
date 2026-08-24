@@ -97,15 +97,60 @@ function QuizCard({ quiz }) {
                     </button>
                 </div>
             </div>
-
-            {/* Modal Logic Remains the Same (Updated to Match Dark Theme) */}
+            
+            {/* Modal - shown when showModal is true */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
                     <div className="bg-slate-900 border border-purple-500 rounded-2xl p-8 w-full max-w-sm shadow-2xl">
-                        <h2 className="text-xl font-bold text-white mb-6 text-center">Host a Game</h2>
-                        <div className="flex gap-3 mt-6">
-                            <button onClick={closeModal} className="flex-1 border border-slate-600 text-white py-3 rounded-lg font-bold">Cancel</button>
-                            <button onClick={handleHostGame} className="flex-1 bg-yellow-500 text-black py-3 rounded-lg font-extrabold">Create Room</button>
+                        <h2 className="text-xl font-bold text-white mb-2 text-center">Host a Game</h2>
+                        
+                        <p className="text-gray-400 text-sm text-center mb-6">
+                            Quiz: <span className="font-semibold text-purple-400">{quiz.title}</span>
+                        </p>
+
+                        {error && (
+                            <p className="text-red-400 bg-red-900/20 border border-red-900/50 p-2 rounded-lg text-sm text-center mb-4">
+                                {error}
+                            </p>
+                        )}
+
+                        <div className="mb-4">
+                            <label className="block text-gray-300 text-sm font-bold mb-2">Your Nickname</label>
+                            <input
+                                type="text"
+                                placeholder="Enter a nickname"
+                                maxLength={20}
+                                value={hostName}
+                                onChange={(e)=>{setHostName(e.target.value)}}
+                                className="w-full bg-slate-950 border border-slate-700 text-white rounded-lg px-4 py-3 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 focus:outline-none placeholder-gray-500 transition-colors"
+                            />
+                        </div>
+
+                        <div className="flex items-center gap-3 mb-6 px-1">
+                            <input
+                                type="checkbox"
+                                id="willPlay"
+                                onChange={(e)=> setWillPlay(e.target.checked)}
+                                className="w-4 h-4 accent-purple-500 cursor-pointer bg-slate-950 border-slate-700 rounded"
+                            />
+                            <label htmlFor="willPlay" className="text-gray-300 text-sm cursor-pointer select-none">
+                                I want to play too (not just spectate)
+                            </label>
+                        </div>
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={closeModal}
+                                className="flex-1 border border-slate-600 hover:bg-slate-800 text-white py-3 rounded-lg font-bold transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleHostGame}
+                                className="flex-1 bg-yellow-500 hover:bg-yellow-400 text-black py-3 rounded-lg font-extrabold transition-colors"
+                            >
+                                Create Room
+                            </button>
                         </div>
                     </div>
                 </div>
