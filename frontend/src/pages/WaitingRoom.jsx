@@ -3,6 +3,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import SockJS from "sockjs-client"
 import Stomp from 'stompjs'
 import { HostAvatar, PlayerAvatar } from "../components/CyberAvatar"
+import prepGalleryBg from "../assets/prep_gallery_bg.jpg"
 
 function WaitingRoom() {
     const navigate = useNavigate()
@@ -252,10 +253,15 @@ function WaitingRoom() {
     return (
         <div className="min-h-screen bg-[#070a18] text-white relative overflow-hidden flex flex-col justify-between selection:bg-purple-500 selection:text-white font-sans">
             
-            {/* Ambient Nebula Glows */}
-            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-purple-700/15 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute top-1/3 right-10 w-[400px] h-[400px] bg-cyan-600/10 rounded-full blur-[100px] pointer-events-none" />
-            <div className="absolute bottom-0 inset-x-0 h-64 cyber-grid opacity-30 pointer-events-none [mask-image:linear-gradient(to_bottom,transparent,black)]" />
+            {/* Authentic Gladiator Armory & Preparation Gallery Backdrop */}
+            <div 
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-70 transform scale-100"
+                style={{ backgroundImage: `url(${prepGalleryBg})` }}
+            />
+            {/* Cinematic Vignette & Ambient Warm Glows */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#070a18]/75 via-[#070a18]/50 to-[#070a18]/85 pointer-events-none" />
+            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-amber-600/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/3 right-10 w-[400px] h-[400px] bg-purple-700/10 rounded-full blur-[100px] pointer-events-none" />
 
             {/* Main Content Arena */}
             <div className="max-w-7xl mx-auto w-full px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10 my-auto">
