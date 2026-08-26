@@ -32,6 +32,97 @@
   }
 }
 
+/* ========================================================= */
+/* LIVING ARENA AMBIENT & CROWD ANIMATIONS (100% GPU / CSS)  */
+/* ========================================================= */
+
+/* Torchlight Living Flicker */
+@keyframes torchFlicker {
+  0%, 100% { opacity: 0.55; transform: scale(1); filter: brightness(1); }
+  25% { opacity: 0.7; transform: scale(1.02); filter: brightness(1.15); }
+  50% { opacity: 0.48; transform: scale(0.99); filter: brightness(0.95); }
+  75% { opacity: 0.65; transform: scale(1.01); filter: brightness(1.1); }
+}
+
+.animate-torch-flicker {
+  animation: torchFlicker 3.5s ease-in-out infinite alternate;
+}
+
+/* Slow Arena Parallax Breath */
+@keyframes arenaBreath {
+  0% { transform: scale(1.0); }
+  50% { transform: scale(1.03) translateY(-4px); }
+  100% { transform: scale(1.0); }
+}
+
+.animate-arena-breath {
+  animation: arenaBreath 14s ease-in-out infinite;
+}
+
+/* Floating Fire Embers Rising */
+@keyframes emberDrift {
+  0% {
+    transform: translateY(100vh) translateX(0) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-20vh) translateX(40px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+.ember-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, #fde047 20%, #f97316 60%, transparent 100%);
+  animation: emberDrift var(--duration, 6s) linear infinite;
+  animation-delay: var(--delay, 0s);
+  left: var(--x, 50%);
+  width: var(--size, 6px);
+  height: var(--size, 6px);
+}
+
+/* Fog & Sand Mist Drift */
+@keyframes mistDrift {
+  0% { transform: translateX(-10%); }
+  50% { transform: translateX(10%); }
+  100% { transform: translateX(-10%); }
+}
+
+.animate-mist {
+  animation: mistDrift 18s ease-in-out infinite;
+}
+
+/* Cheering Crowd Jumping & Arms Raising on Correct Answer */
+@keyframes crowdCheer {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  25% { transform: translateY(-16px) scaleY(1.15); }
+  50% { transform: translateY(-6px) scaleY(1.05); }
+  75% { transform: translateY(-22px) scaleY(1.2) rotate(1deg); }
+}
+
+.animate-crowd-cheer {
+  animation: crowdCheer 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite;
+}
+
+/* Victory Screen Flash Banner */
+@keyframes victoryBurst {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-victory-burst {
+  animation: victoryBurst 0.5s ease-out forwards;
+}
+
 /* Custom Sleek Dark Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
