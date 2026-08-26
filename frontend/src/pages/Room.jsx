@@ -231,32 +231,54 @@ function Room() {
         return (pos || 1) + 'th'
     }
 
-    // Circular Countdown math (circumference = 2 * PI * r)
+    
     const radius = 40
     const circumference = 2 * Math.PI * radius
     const strokeDashoffset = totalTime > 0 ? circumference - (timeLeft / totalTime) * circumference : circumference
 
     return (
         <div className="min-h-screen bg-[#070a18] text-white relative overflow-hidden flex flex-col justify-between selection:bg-purple-500 selection:text-white font-sans">
-            
-            {/* Gothic Colosseum Arena Photographic Backdrop with Cheering Spectators */}
             <div 
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-50 transform scale-105"
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-75 animate-arena-breath"
                 style={{ backgroundImage: `url(${colosseumBg})` }}
             />
-            {/* Dark Vignette & Ambient Glows Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#070a18]/85 via-[#070a18]/65 to-[#070a18]/90 pointer-events-none" />
-            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-purple-700/15 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute top-1/3 right-10 w-[400px] h-[400px] bg-cyan-600/10 rounded-full blur-[100px] pointer-events-none" />
+
+            {/* Living Torchlight & Fire Braziers Flicker Effect */}
+            <div className="absolute inset-0 bg-gradient-to-t from-amber-600/15 via-transparent to-amber-500/10 pointer-events-none animate-torch-flicker" />
+
+            {/* Floating Fire Embers / Sparks Rising from Arena Sand */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <span className="ember-particle" style={{ '--x': '15%', '--delay': '0s', '--duration': '7s', '--size': '5px' }} />
+                <span className="ember-particle" style={{ '--x': '28%', '--delay': '2.5s', '--duration': '8.5s', '--size': '6px' }} />
+                <span className="ember-particle" style={{ '--x': '45%', '--delay': '1s', '--duration': '6s', '--size': '4px' }} />
+                <span className="ember-particle" style={{ '--x': '62%', '--delay': '3.2s', '--duration': '9s', '--size': '7px' }} />
+                <span className="ember-particle" style={{ '--x': '78%', '--delay': '0.5s', '--duration': '6.5s', '--size': '5px' }} />
+                <span className="ember-particle" style={{ '--x': '90%', '--delay': '4s', '--duration': '8s', '--size': '4px' }} />
+            </div>
+
+            {/* Atmospheric Sand Mist Drift */}
+            <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-amber-950/20 to-transparent pointer-events-none animate-mist" />
+
+            {/* Cinematic Vignette Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#070a18]/70 via-[#070a18]/45 to-[#070a18]/85 pointer-events-none" />
+
+            {/* Ambient Nebula Glows */}
+            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/3 right-10 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none" />
+
+            {/* RADIANT ARENA FLARE & VICTORY BURST ON CORRECT ANSWER    */}
+            {gameState === 'RESULT_CORRECT' && (
+                <div className="absolute inset-0 pointer-events-none z-15">
+                    <div className="absolute inset-0 bg-radial from-emerald-500/20 via-amber-500/10 to-transparent animate-pulse" />
+                    <div className="absolute bottom-0 inset-x-0 h-80 bg-gradient-to-t from-emerald-500/30 via-amber-500/15 to-transparent" />
+                </div>
+            )}
             <div className="absolute bottom-0 inset-x-0 h-64 cyber-grid opacity-20 pointer-events-none [mask-image:linear-gradient(to_bottom,transparent,black)]" />
 
-            {/* ========================================================= */}
             {/* TOP TACTICAL HUD BAR                                      */}
-            {/* ========================================================= */}
             <header className="relative z-20 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md px-6 py-3">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     
-                    {/* Room Code Badge */}
                     <div className="flex items-center gap-3">
                         <div className="bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-1.5 flex items-center gap-2">
                             <span className="text-[10px] font-extrabold tracking-widest uppercase text-slate-400">Room</span>
@@ -268,7 +290,6 @@ function Room() {
                         </div>
                     </div>
 
-                    {/* Question Tracker Badge */}
                     <div className="flex items-center gap-2">
                         <span className="text-xs font-bold text-slate-400 uppercase tracking-wider hidden sm:inline">Progress</span>
                         <div className="bg-gradient-to-r from-purple-900/80 to-indigo-900/80 border border-purple-400/50 text-purple-200 text-xs font-black px-4 py-1.5 rounded-full shadow-[0_0_12px_rgba(168,85,247,0.4)]">
@@ -297,17 +318,13 @@ function Room() {
                 </div>
             </header>
 
-            {/* ========================================================= */}
             {/* MAIN BATTLE ARENA GRID (Left: 8 cols, Right: 4 cols)      */}
-            {/* ========================================================= */}
             <main className="max-w-7xl mx-auto w-full px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10 my-auto">
                 
-                {/* --------------------------------------------------------- */}
                 {/* LEFT ARENA: Question Card, Timer & Answer Pads (8 cols)   */}
-                {/* --------------------------------------------------------- */}
                 <div className="lg:col-span-8 flex flex-col justify-between">
                     
-                    {/* Circular Countdown Timer */}
+                    {/* Countdown Timer */}
                     <div className="flex justify-center mb-4">
                         <div className="relative flex items-center justify-center">
                             <svg className="w-24 h-24 transform -rotate-90">
@@ -347,7 +364,6 @@ function Room() {
                         </div>
                     </div>
 
-                    {/* Question Card Container */}
                     <div className="bg-slate-900/90 border-2 border-purple-500/60 rounded-2xl p-6 sm:p-8 glow-purple backdrop-blur-md relative overflow-hidden mb-6 text-center">
                         <span className="bg-purple-950/80 border border-purple-400/50 text-purple-200 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-3 inline-block">
                             Question {currQuestionNo} of {questionCount || 5}
@@ -364,7 +380,6 @@ function Room() {
                         )}
                     </div>
 
-                    {/* State 3: Active 4 Combat Answer Pads (2x2 Grid) */}
                     {gameState === 'ANSWERING' && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {[
@@ -417,7 +432,6 @@ function Room() {
                         </div>
                     )}
 
-                    {/* State 4: Answer Submitted / Locked in */}
                     {gameState === 'SUBMITTED' && (
                         <div className="bg-slate-900/90 border-2 border-cyan-500/80 rounded-2xl p-8 glow-cyan text-center backdrop-blur-md">
                             <div className="text-4xl mb-3 animate-bounce">🔒</div>
@@ -428,18 +442,21 @@ function Room() {
                         </div>
                     )}
 
-                    {/* State 5: Correct Answer Result */}
                     {gameState === 'RESULT_CORRECT' && (
-                        <div className="bg-slate-900/90 border-2 border-emerald-500/80 rounded-2xl p-8 glow-emerald text-center backdrop-blur-md animate-fade-in">
-                            <div className="text-5xl mb-2">✅</div>
-                            <h3 className="text-2xl font-black text-emerald-400">CORRECT!</h3>
-                            <div className="mt-3 inline-flex items-center gap-2 bg-emerald-950/80 border border-emerald-400/60 px-4 py-1.5 rounded-full text-emerald-200 text-sm font-black shadow-[0_0_15px_rgba(52,211,153,0.5)]">
+                        <div className="bg-slate-900/95 border-2 border-emerald-400 rounded-3xl p-8 glow-emerald text-center backdrop-blur-md animate-victory-burst shadow-[0_0_40px_rgba(52,211,153,0.4)]">
+                            <div className="text-6xl mb-2 animate-bounce">👑</div>
+                            <h3 className="text-3xl font-black text-emerald-400 tracking-wide drop-shadow-md">
+                                CORRECT!
+                            </h3>
+                            <p className="text-xs font-black text-amber-300 uppercase tracking-widest mt-1 mb-3">
+                                👏 THE ARENA STANDS UP & ROARS FOR YOU!
+                            </p>
+                            <div className="inline-flex items-center gap-2 bg-emerald-950 border border-emerald-400 px-5 py-2 rounded-full text-emerald-200 text-base font-black shadow-[0_0_20px_rgba(52,211,153,0.6)]">
                                 <span>⚡</span> +{currectScore.current || 940} PTS
                             </div>
                         </div>
                     )}
 
-                    {/* State 6: Wrong Answer Result */}
                     {gameState === 'RESULT_WRONG' && (
                         <div className="bg-slate-900/90 border-2 border-rose-500/80 rounded-2xl p-8 text-center backdrop-blur-md animate-fade-in">
                             <div className="text-5xl mb-2">❌</div>
@@ -451,14 +468,11 @@ function Room() {
                     )}
                 </div>
 
-                {/* --------------------------------------------------------- */}
                 {/* RIGHT ARENA: Live Rival Mini-Leaderboard (4 cols)         */}
-                {/* --------------------------------------------------------- */}
                 <div className="lg:col-span-4 flex flex-col gap-4">
                     <div className="bg-slate-900/85 border border-slate-700/80 rounded-2xl p-5 shadow-xl backdrop-blur-md flex flex-col h-full justify-between">
                         
                         <div>
-                            {/* Leaderboard Header */}
                             <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
                                 <span className="text-xs font-extrabold tracking-wider uppercase text-purple-400 flex items-center gap-1.5">
                                     <span>⚔️</span> Live Arena Standings
@@ -468,7 +482,6 @@ function Room() {
                                 </span>
                             </div>
 
-                            {/* Competitor List */}
                             <div className="space-y-2.5">
                                 {leaderboard.map((p, index) => {
                                     const isMe = p.nickName === nickName
@@ -485,12 +498,10 @@ function Room() {
                                             }`}
                                         >
                                             <div className="flex items-center gap-3">
-                                                {/* Medal / Rank Tag */}
                                                 <span className="w-5 text-center text-sm font-black">
                                                     {isTop3 ? medals[p.currentPos] : `#${p.currentPos}`}
                                                 </span>
 
-                                                {/* Warrior Avatar */}
                                                 <PlayerAvatar index={p.currentPos} name={p.nickName} className="w-8 h-8" />
 
                                                 <div>
@@ -500,7 +511,6 @@ function Room() {
                                                 </div>
                                             </div>
 
-                                            {/* Score & Submission Status Indicator */}
                                             <div className="flex items-center gap-2">
                                                 <span className="text-xs font-black text-amber-400 font-mono">
                                                     {p.score.toLocaleString() || 0}
@@ -521,7 +531,6 @@ function Room() {
                             </div>
                         </div>
 
-                        {/* Pinned Your Stats Card */}
                         <div className="mt-4 pt-3 border-t border-slate-800 bg-slate-950/80 rounded-xl p-3 flex items-center justify-between border border-slate-800">
                             <div className="flex items-center gap-2.5">
                                 <PlayerAvatar name={nickName} className="w-8 h-8" />
@@ -538,9 +547,7 @@ function Room() {
                 </div>
             </main>
 
-            {/* ========================================================= */}
             {/* OVERLAY: PRE-ROUND COUNTDOWN (Get Ready)                  */}
-            {/* ========================================================= */}
             {gameState === 'START' && (
                 <div className="fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4">
                     <div className="text-center max-w-sm">
@@ -558,9 +565,7 @@ function Room() {
                 </div>
             )}
 
-            {/* ========================================================= */}
             {/* OVERLAY: ROUND STANDINGS & GAME OVER PODIUM               */}
-            {/* ========================================================= */}
             {(gameState === 'LEADERBOARD' || gameState === 'GAME_OVER') && (
                 <div className="fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4 overflow-y-auto">
                     <div className="bg-slate-900 border-2 border-purple-500/80 rounded-3xl p-6 sm:p-8 max-w-lg w-full text-center shadow-2xl glow-purple backdrop-blur-xl animate-fade-in my-auto">
