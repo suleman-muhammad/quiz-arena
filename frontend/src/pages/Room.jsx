@@ -3,6 +3,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import SockJS from "sockjs-client"
 import Stomp from 'stompjs'
 import { PlayerAvatar, HostAvatar } from "../components/CyberAvatar"
+import colosseumBg from "../assets/colosseum_bg.jpg"
 
 function Room() {
     const navigate = useNavigate()
@@ -238,10 +239,16 @@ function Room() {
     return (
         <div className="min-h-screen bg-[#070a18] text-white relative overflow-hidden flex flex-col justify-between selection:bg-purple-500 selection:text-white font-sans">
             
-            {/* Ambient Nebula & Colosseum Glows */}
+            {/* Gothic Colosseum Arena Photographic Backdrop with Cheering Spectators */}
+            <div 
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-50 transform scale-105"
+                style={{ backgroundImage: `url(${colosseumBg})` }}
+            />
+            {/* Dark Vignette & Ambient Glows Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#070a18]/85 via-[#070a18]/65 to-[#070a18]/90 pointer-events-none" />
             <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-purple-700/15 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute top-1/3 right-10 w-[400px] h-[400px] bg-cyan-600/10 rounded-full blur-[100px] pointer-events-none" />
-            <div className="absolute bottom-0 inset-x-0 h-64 cyber-grid opacity-30 pointer-events-none [mask-image:linear-gradient(to_bottom,transparent,black)]" />
+            <div className="absolute bottom-0 inset-x-0 h-64 cyber-grid opacity-20 pointer-events-none [mask-image:linear-gradient(to_bottom,transparent,black)]" />
 
             {/* ========================================================= */}
             {/* TOP TACTICAL HUD BAR                                      */}
