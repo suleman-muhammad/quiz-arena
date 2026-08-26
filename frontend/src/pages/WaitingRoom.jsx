@@ -74,7 +74,6 @@ function WaitingRoom() {
             )
         }
 
-        // Always include competitive arena combat tips
         facts.push(
             { title: "Arena Tip", icon: "⚡", text: "Points decay every second! Faster correct answers earn maximum quadratic bonus points." },
             { title: "Arena Tip", icon: "🛡️", text: "Wrong answers yield 0 points for that round. Think carefully before locking in!" }
@@ -242,36 +241,28 @@ function WaitingRoom() {
         setTimeout(() => setCopied(false), 2000)
     }
 
-    // Determine Host vs Other players
     const hostPlayer = (players && players.length > 0) ? players[0] : { nickName: isHost ? nickName : 'Host' }
     const otherPlayers = (players && players.length > 1) ? players.slice(1) : []
 
-    // Progress Bar calculations (target: 2 minimum, max 10 for full bar)
     const totalSegments = 14
     const filledSegments = Math.min(totalSegments, Math.max(0, Math.floor(((players?.length || 0) / 2) * (totalSegments / 2))))
 
     return (
         <div className="min-h-screen bg-[#070a18] text-white relative overflow-hidden flex flex-col justify-between selection:bg-purple-500 selection:text-white font-sans">
             
-            {/* Authentic Gladiator Armory & Preparation Gallery Backdrop */}
             <div 
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-70 transform scale-100"
                 style={{ backgroundImage: `url(${prepGalleryBg})` }}
             />
-            {/* Cinematic Vignette & Ambient Warm Glows */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#070a18]/75 via-[#070a18]/50 to-[#070a18]/85 pointer-events-none" />
             <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-amber-600/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute top-1/3 right-10 w-[400px] h-[400px] bg-purple-700/10 rounded-full blur-[100px] pointer-events-none" />
 
             {/* Main Content Arena */}
             <div className="max-w-7xl mx-auto w-full px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10 my-auto">
-                
-                {/* ========================================================= */}
+    
                 {/* LEFT COLUMN: Room Code Plaque + Quiz Detail Card (3 cols) */}
-                {/* ========================================================= */}
                 <div className="lg:col-span-3 flex flex-col gap-5">
-                    
-                    {/* Room Code Plaque */}
                     <div className="bg-slate-900/90 border-2 border-amber-500/80 rounded-2xl p-5 glow-amber text-center relative overflow-hidden backdrop-blur-md">
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-[11px] font-extrabold tracking-widest text-amber-400 uppercase">Room Code</span>
@@ -295,17 +286,14 @@ function WaitingRoom() {
                         </div>
                     </div>
 
-                    {/* Quiz Overview Card */}
                     <div className="bg-slate-900/85 border-2 border-purple-500/80 rounded-2xl p-5 glow-purple backdrop-blur-md flex flex-col justify-between flex-grow">
                         <div>
-                            {/* Question Count Pill */}
                             <div className="flex items-center justify-between mb-4">
                                 <span className="bg-purple-900/60 border border-purple-400/50 text-purple-200 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-[0_0_10px_rgba(168,85,247,0.3)]">
                                     {questionCount} Questions <span className="text-pink-400">✨</span>
                                 </span>
                             </div>
 
-                            {/* Thumbnail / Theme Artwork */}
                             <div className="w-full h-32 rounded-xl bg-gradient-to-br from-purple-950/60 via-slate-900 to-indigo-950/60 border border-purple-500/30 flex items-center justify-center p-3 relative overflow-hidden mb-4 group">
                                 <div className="absolute inset-0 bg-cyan-500/5 cyber-grid opacity-50" />
                                 <div className="text-5xl drop-shadow-[0_0_15px_rgba(168,85,247,0.8)] relative z-10 transition-transform group-hover:scale-110 duration-300">
@@ -316,7 +304,6 @@ function WaitingRoom() {
                             <h3 className="text-xl font-extrabold text-white leading-tight">{quizTitle || 'Loading Quiz...'}</h3>
                             <p className="text-xs text-purple-300/80 mt-1 mb-4">{quizDescription || 'Test your knowledge in the arena'}</p>
 
-                            {/* Key Concepts List */}
                             <div className="border-t border-slate-800 pt-3">
                                 <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Key concepts</p>
                                 <ul className="text-xs text-slate-300 space-y-1.5">
@@ -336,20 +323,15 @@ function WaitingRoom() {
                     </div>
                 </div>
 
-                {/* ========================================================= */}
                 {/* CENTER COLUMN: Host Podium & Live Battle Arena (6 cols)   */}
-                {/* ========================================================= */}
                 <div className="lg:col-span-6 flex flex-col items-center justify-between min-h-[540px]">
                     
-                    {/* Top Section: Host Podium */}
+                    {/*Host Podium */}
                     <div className="flex flex-col items-center relative w-full pt-2">
-                        {/* Elevated Circular Glowing Pedestal */}
                         <div className="pedestal-stage rounded-full p-4 flex flex-col items-center relative">
                             <HostAvatar className="w-28 h-28 relative z-10" />
                             <div className="w-48 h-10 rounded-[50%] bg-purple-600/50 border border-purple-400 shadow-[0_0_35px_rgba(168,85,247,0.9)] flex items-center justify-center -mt-5 z-0" />
                         </div>
-
-                        {/* Host Label & Nickname */}
                         <h3 className="text-xl font-black text-white tracking-wide mt-1 drop-shadow-md">
                             {hostPlayer?.nickName || 'Host'}
                         </h3>
@@ -358,13 +340,11 @@ function WaitingRoom() {
                         </span>
                     </div>
 
-                    {/* Middle Section: Joined Players Arena Arc */}
+                    {/* Joined Players Arena Arc */}
                     <div className="w-full my-4">
                         <p className="text-xs font-bold text-center tracking-wider text-purple-300 uppercase mb-3">
                             Waiting for players: at least 2 needed
                         </p>
-
-                        {/* Segmented Glowing LED Progress Bar */}
                         <div className="flex items-center justify-center gap-1.5 mb-6 px-4">
                             {Array.from({ length: totalSegments }).map((_, idx) => {
                                 const isLit = idx < filledSegments
@@ -395,7 +375,7 @@ function WaitingRoom() {
                                 </div>
                             ))}
 
-                            {/* Empty Placeholder Slots if under minimum */}
+                            {/* Empty Placeholder */ }
                             {Array.from({ length: Math.max(0, 3 - otherPlayers.length) }).map((_, idx) => (
                                 <div key={`empty-${idx}`} className="w-24 flex flex-col items-center opacity-40 hover:opacity-70 transition-opacity">
                                     <div className="w-16 h-16 rounded-full border-2 border-dashed border-slate-600 bg-slate-900/40 flex items-center justify-center text-slate-500 text-xl font-bold">
@@ -407,7 +387,7 @@ function WaitingRoom() {
                         </div>
                     </div>
 
-                    {/* Bottom Action: Start Game CTA */}
+                    {/* Start Game CTA */}
                     <div className="w-full max-w-sm flex flex-col items-center">
                         <div className="flex items-center gap-2 text-xs font-bold mb-2 text-slate-400">
                             <span>{players.length < 2 ? '🔒' : '🚀'}</span>
@@ -438,12 +418,9 @@ function WaitingRoom() {
                     </div>
                 </div>
 
-                {/* ========================================================= */}
                 {/* RIGHT COLUMN: Trivia Ticker + Lobby Chat (3 cols)         */}
-                {/* ========================================================= */}
                 <div className="lg:col-span-3 flex flex-col gap-5">
                     
-                    {/* Trivia Ticker Widget */}
                     <div className="bg-slate-900/85 border border-slate-700/80 rounded-2xl p-4 shadow-lg backdrop-blur-md flex flex-col">
                         <div className="flex items-center justify-between mb-3 border-b border-slate-800 pb-2">
                             <span className="text-xs font-extrabold tracking-wider uppercase text-purple-400 flex items-center gap-1.5">
@@ -481,7 +458,7 @@ function WaitingRoom() {
 
                         {!chatMinimized && (
                             <>
-                                {/* Messages scroll area */}
+                                {/* scroll area */}
                                 <div className="flex-grow space-y-2 overflow-y-auto max-h-40 my-2 pr-1 text-xs">
                                     {chatMessages.map((msg, idx) => (
                                         <div key={idx} className={`rounded-lg p-2 ${msg.isSystem ? 'bg-purple-950/40 border border-purple-900/50 text-purple-300' : 'bg-slate-950/80 border border-slate-800 text-slate-200'}`}>
@@ -491,7 +468,7 @@ function WaitingRoom() {
                                     ))}
                                 </div>
 
-                                {/* Chat input box */}
+                                {/* input box */}
                                 <form onSubmit={handleSendChat} className="flex gap-2 mt-auto pt-2 border-t border-slate-800">
                                     <input
                                         type="text"
@@ -531,4 +508,4 @@ function WaitingRoom() {
     )
 }
 
-export default WaitingRoom
+export default WaitingRoom
