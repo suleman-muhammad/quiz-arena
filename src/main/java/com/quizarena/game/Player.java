@@ -5,6 +5,7 @@ public class Player {
     private String nickName;
     private long score;
     private long currentPos;
+    private int combo;
 
 
     
@@ -32,7 +33,10 @@ public class Player {
     public void setCurrentPos(long currentPos) {
         this.currentPos = currentPos;
     }
-
-
-    
+    public int getCombo() {
+        return combo;
+    }
+    public void setCombo(int combo) {
+        this.combo = combo;
+    }  
 }
