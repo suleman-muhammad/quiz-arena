@@ -49,6 +49,8 @@ function Room() {
      * ---------------------------------------------------------------------------------
      */
 
+    const [combo, setCombo] = useState(0);
+
     const stompClient = useRef(null)
 
     useEffect(() => {
@@ -143,8 +145,10 @@ function Room() {
 
                 if(currectScore.current > 0){
                     setGameState('RESULT_CORRECT')
+                    setCombo(combo + 1);
                 }else{
                     setGameState("RESULT_WRONG")
+                    setCombo(0)
                 }
                 setOptionA('')
                 setOptionB('')
@@ -161,6 +165,7 @@ function Room() {
                 if(me){
                     setTotalScore(me.score)
                     setPosition(me.currentPos)
+                    setCombo(me.combo)
                 }
 
                 setGameState("LEADERBOARD")
@@ -516,7 +521,10 @@ function Room() {
                                                     {p.score.toLocaleString() || 0}
                                                 </span>
                                                 <span className="text-emerald-400 text-xs font-bold" title="Submitted">
-                                                    ✔
+                                                    {gameState === "SUBMITTED" ? '✔' : ''}
+                                                </span>
+                                                <span className="text-emerald-400 text-xs font-bold" title="Submitted">
+                                                    {p.combo > 1 ? p.combo + '🔥' : ''}
                                                 </span>
                                             </div>
                                         </div>
@@ -625,10 +633,17 @@ function Room() {
                             {leaderboard.map((p, index) => (
                                 <div key={index} className="flex items-center justify-between p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 text-xs">
                                     <div className="flex items-center gap-2">
-                                        <span className="font-bold text-slate-500 w-4">{index + 1}</span>
+                                        <span className="font-bold text-slate-500 w-4">{p.currentPos}</span>
                                         <span className="font-bold text-slate-200">{p.nickName}</span>
                                     </div>
-                                    <span className="font-mono font-black text-amber-400">{p.score} pts</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs font-black text-amber-400 font-mono">
+                                            {p.score.toLocaleString() || 0}
+                                        </span>
+                                        <span className="text-emerald-400 text-xs font-bold" title="Submitted">
+                                            {p.combo > 1 ? p.combo + '🔥' : ''}
+                                        </span>
+                                    </div>
                                 </div>
                             ))}
                         </div>
