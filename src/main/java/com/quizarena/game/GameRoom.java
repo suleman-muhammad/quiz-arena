@@ -162,6 +162,10 @@ public class GameRoom {
         return "unKnown";
     }
 
+    public boolean hasFinished(){
+        return this.currQuestionNo >= this.questions.size();
+    }
+
 
     public long getQuizId() {
         return quizId;
