@@ -186,8 +186,13 @@ public class GameService {
         List<Player> roundResult = room.finishRound();
 
         // System.out.println("Server: Got Round Result.");
-
         messagingTemplate.convertAndSend("/topic/room/play/leaderboard/" + room.getRoomCode(), roundResult);
+        if(room.hasFinished()){
+            messagingTemplate.convertAndSend("/topic/room/end/" + room.getRoomCode(),new SimpleMessage("GAME_OVER","ROOM Ended."));
+            manager.removeRoom(room.getRoomCode());
+            return;
+        }
+
         this.roomThread.schedule(() -> {
             try{
                 this.sendQuestionText(room);
