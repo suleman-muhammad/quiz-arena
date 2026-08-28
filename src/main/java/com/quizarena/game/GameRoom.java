@@ -71,7 +71,11 @@ public class GameRoom {
                 if(p.getNickName().equalsIgnoreCase(ans.getPlayerNickName())){
                     System.out.println("Game: Player Matched.");
                     p.setScore(p.getScore() + answers.get(ans));
-                    if (answers.get(ans) > 0) p.setCombo(p.getCombo() + 1); 
+                    if (answers.get(ans) > 0){
+                        p.setCombo(p.getCombo() + 1);
+                    }else{
+                        p.setCombo(0);
+                    }
                 }
             }
         }
