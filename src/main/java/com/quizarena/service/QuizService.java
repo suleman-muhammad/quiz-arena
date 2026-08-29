@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.quizarena.entity.Question;
 import com.quizarena.entity.Quiz;
+import com.quizarena.entity.QuizConcept;
+import com.quizarena.entity.TriviaFact;
 import com.quizarena.repository.QuizRepository;
 
 @Service
@@ -31,6 +33,13 @@ public class QuizService {
         // so we have to set the quiz_id field in Questions manually
         for (Question q: quiz.getQuestions()){
             q.setQuiz(quiz);
+        }
+        for (TriviaFact fact: quiz.getTriviaFacts()){
+            fact.setQuiz(quiz);
+        }
+
+        for(QuizConcept concept: quiz.getConcepts()){
+            concept.setQuiz(quiz);
         }
 
         quiz = quizRepository.saveAndFlush(quiz);
