@@ -23,6 +23,8 @@ function WaitingRoom() {
     const [quizDescription, setQuizDescription] = useState('')
     const [questionCount, setQuestionCount] = useState(0)
     const [quizQuestions, setQuizQuestions] = useState([])
+    const [quizTriviaFacts, setQuizTriviaFacts] = useState([])
+    const [quizConcepts , setQuizConcepts] = useState([])
 
     // Chat state
     const [chatMessages, setChatMessages] = useState([
@@ -173,6 +175,9 @@ function WaitingRoom() {
                         setQuizDescription(data.description)
                         setQuestionCount(data.questions?.length || 0)
                         setQuizQuestions(data.questions || [])
+                        setQuizConcepts(data.concepts || [])
+                        setQuizTriviaFacts(data.triviaFacts || []) 
+                        // Set the Icon as well.
                     })
             })
 
@@ -307,14 +312,14 @@ function WaitingRoom() {
                             <div className="border-t border-slate-800 pt-3">
                                 <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Key concepts</p>
                                 <ul className="text-xs text-slate-300 space-y-1.5">
-                                    {dynamicConcepts.map((concept, idx) => (
+                                    {quizConcepts.map((c, idx) => (
                                         <li key={idx} className="flex items-center gap-2">
                                             <span className={`w-1.5 h-1.5 rounded-full ${
                                                 idx % 4 === 0 ? 'bg-purple-400' :
                                                 idx % 4 === 1 ? 'bg-cyan-400' :
                                                 idx % 4 === 2 ? 'bg-pink-400' : 'bg-emerald-400'
                                             }`} />
-                                            <span className="truncate">{concept}</span>
+                                            <span className="truncate">{c?.concept}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -429,7 +434,7 @@ function WaitingRoom() {
                         </div>
 
                         <div className="space-y-3 overflow-y-auto max-h-56 pr-1">
-                            {dynamicTrivia.map((fact, idx) => (
+                            {quizTriviaFacts.map((fact, idx) => (
                                 <div key={idx} className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 flex items-start gap-2.5 hover:border-purple-500/40 transition-colors">
                                     <span className="text-lg shrink-0 mt-0.5">{fact.icon}</span>
                                     <div>
