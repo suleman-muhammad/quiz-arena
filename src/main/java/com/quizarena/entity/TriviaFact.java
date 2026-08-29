@@ -54,7 +54,10 @@ public class TriviaFact {
     public int getId() {
         return id;
     }
-
-
-    
+    public Quiz getQuiz() {
+        return quiz;
+    }
+    public void setQuiz(Quiz quiz){
+        this.quiz = quiz;
+    }
 }
