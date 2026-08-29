@@ -106,15 +106,13 @@ function CreateQuiz() {
         setError('')
         setLoading(true)
 
-        const metadata = {
-            category,
-            keyConcepts,
-            triviaFacts,
-            summary: description.trim()
-        }
-        const fullDescription = JSON.stringify(metadata)
-
-        const quiz = { title: title.trim(), description: fullDescription, questions }
+        const quiz = { title: title.trim(),
+                     description: description.trim(),
+                     category: category,
+                     questions: questions,
+                     triviaFacts: triviaFacts,
+                     concepts: keyConcepts.map(c => ({concept:c})),
+                    }
 
         fetch('http://localhost:8080/api/quizzes', {
             method: 'POST',
