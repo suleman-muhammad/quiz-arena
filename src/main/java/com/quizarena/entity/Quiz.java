@@ -27,10 +27,11 @@ public class Quiz {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto generated identity
     private long id;
 
-
+    private String icon;
     private String title;
     private String description;
     private LocalDateTime createdAt;
+    private String category;
 
     // Serialize this side.
     // to stop refrencing back to back between quiz and questions.
@@ -39,6 +40,16 @@ public class Quiz {
     @OneToMany(mappedBy = "quiz",cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER) 
     private List<Question> questions = new ArrayList<>();
 
+    @JsonManagedReference 
+    //for relation ship with questions, and remove quistons if parent quiz is deleted.  
+    @OneToMany(mappedBy = "quiz",cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER) 
+    private List<TriviaFact> triviaFacts = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval= true, fetch = FetchType.EAGER)
+    private List<QuizConcept> concepts = new ArrayList<>();
+
+    
     public Quiz() {
     }
 
@@ -87,6 +98,39 @@ public class Quiz {
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public List<TriviaFact> getTriviaFacts() {
+        return triviaFacts;
+    }
+
+    public void setTriviaFacts(List<TriviaFact> triviaFacts) {
+        this.triviaFacts = triviaFacts;
+    }
+
+    public List<QuizConcept> getConcepts() {
+        return concepts;
+    }
+
+    public void setConcepts(List<QuizConcept> concepts) {
+        this.concepts = concepts;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+    
     
 
 }
