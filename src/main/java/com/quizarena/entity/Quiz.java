@@ -12,6 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -27,11 +28,12 @@ public class Quiz {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto generated identity
     private long id;
 
-    private String icon;
     private String title;
     private String description;
     private LocalDateTime createdAt;
-    private String category;
+
+    @ManyToOne
+    private QuizCategory category;
 
     // Serialize this side.
     // to stop refrencing back to back between quiz and questions.
@@ -99,11 +101,11 @@ public class Quiz {
         this.questions = questions;
     }
 
-    public String getCategory() {
+    public QuizCategory getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(QuizCategory category) {
         this.category = category;
     }
 
@@ -122,15 +124,4 @@ public class Quiz {
     public void setConcepts(List<QuizConcept> concepts) {
         this.concepts = concepts;
     }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-    
-    
-
 }
