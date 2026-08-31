@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.quizarena.entity.Question;
 import com.quizarena.entity.Quiz;
+import com.quizarena.entity.QuizCategory;
 import com.quizarena.entity.QuizConcept;
 import com.quizarena.entity.TriviaFact;
+import com.quizarena.repository.QuizCategoryRepository;
 import com.quizarena.repository.QuizRepository;
 
 @Service
@@ -17,9 +19,11 @@ public class QuizService {
     
     // this is a bean
     private final QuizRepository quizRepository;
+    private final QuizCategoryRepository quizCategoryRepository;
 
-    public QuizService(QuizRepository quizRepository){
+    public QuizService(QuizRepository quizRepository,QuizCategoryRepository quizCategoryRepository){
         this.quizRepository = quizRepository;
+        this.quizCategoryRepository = quizCategoryRepository;
     }
 
 
@@ -68,6 +72,10 @@ public class QuizService {
             return ResponseEntity.noContent().build(); // returns 204 cause nothing to show.
         }
         return ResponseEntity.notFound().build(); // returns 404 
+    }
+
+    public List<QuizCategory> getAllQuizCategories(){
+        return quizCategoryRepository.findAll();
     }
 
 }
