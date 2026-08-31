@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import prepGalleryBg from '../assets/prep_gallery_bg.jpg'
 
@@ -108,10 +108,10 @@ function CreateQuiz() {
 
         const quiz = { title: title.trim(),
                      description: description.trim(),
-                     category: category,
                      questions: questions,
                      triviaFacts: triviaFacts,
                      concepts: keyConcepts.map(c => ({concept:c})),
+                     category : categories.current.find(c => c.label === category) || categories[0]
                     }
 
         fetch('http://localhost:8080/api/quizzes', {
@@ -135,7 +135,7 @@ function CreateQuiz() {
             })
     }
 
-    const categories = [
+    const defaultCategories = [
         { id: 'cs_it', label: '💻 CS & IT', icon: '💻' },
         { id: 'psychology', label: '🧠 Psychology', icon: '🧠' },
         { id: 'history', label: '🏛️ World History', icon: '🏛️' },
@@ -151,6 +151,25 @@ function CreateQuiz() {
         { id: 'sports', label: '⚽ Sports & Athletics', icon: '⚽' },
         { id: 'general', label: '⚔️ General Arena', icon: '⚔️' }
     ]
+
+
+
+    const [categories, setCategories] = useState(defaultCategories)
+
+    useEffect(() =>{
+        fetch(`http://localhost:8080/api/quizzes/categories`)
+            .then((res) => {
+                if(!res.ok) return null
+                return res.json()
+            })
+            .then((data) =>{
+                if(data && Array.isArray(data) && data.length > 0){
+                    console.log(data)
+                    setCategories(data);
+                }
+            })
+            .catch(err => console.log('Failed to Load categories:',err))
+    },[])
 
     const selectedCategoryObj = categories.find(c => c.label === category) || categories[0]
 
@@ -321,7 +340,7 @@ function CreateQuiz() {
                                 <div className="w-full h-32 rounded-xl bg-gradient-to-br from-purple-950/60 via-slate-900 to-indigo-950/60 border border-purple-500/30 flex items-center justify-center p-3 relative overflow-hidden mb-4 group">
                                     <div className="absolute inset-0 bg-cyan-500/5 cyber-grid opacity-50" />
                                     <div className="text-5xl drop-shadow-[0_0_15px_rgba(168,85,247,0.8)] relative z-10 transition-transform group-hover:scale-110 duration-300">
-                                        {selectedCategoryObj.icon}
+                                        {selectedCategoryObj?.icon || '💻'}
                                     </div>
                                 </div>
 
