@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.quizarena.entity.Quiz;
+import com.quizarena.entity.QuizCategory;
 import com.quizarena.service.QuizService;
 
 @RestController
@@ -48,6 +49,11 @@ public class QuizController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Quiz> delteQuiz(@PathVariable Long id){
         return quizService.deleteQuizById(id);
+    }
+
+    @GetMapping("/categories")
+    public List<QuizCategory> getAllCategories(){
+        return quizService.getAllQuizCategories();
     }
 
 }
