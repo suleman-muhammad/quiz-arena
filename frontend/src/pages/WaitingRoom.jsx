@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import SockJS from "sockjs-client"
-import Stomp from 'stompjs'
+import Stomp, { client } from 'stompjs'
 import { HostAvatar, PlayerAvatar } from "../components/CyberAvatar"
 
 function WaitingRoom() {
@@ -102,7 +102,7 @@ function WaitingRoom() {
             })
 
             // Subscribe to direct player notifications
-            client.subscribe(`/topic/player/${nickName}`, (msg) => {
+            client.subscribe(`/topic/player/room/${roomCode}/${nickName}`, (msg) => {
                 const data = JSON.parse(msg.body)
                 setMyMsgs(data.message)
             })
@@ -148,6 +148,16 @@ function WaitingRoom() {
         navigator.clipboard.writeText(roomCode)
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
+    }
+
+    function leaveRoom(){
+        if (stompClient.current) {
+            stompClient.current.send("/app/game/room/leave", {}, JSON.stringify({
+                roomCode: roomCode,
+                playerNickName: nickName
+            }))
+        }
+        navigate("/")
     }
 
     const hostPlayer = (players && players.length > 0) ? players[0] : { nickName: isHost ? nickName : 'Host' }
@@ -215,6 +225,32 @@ function WaitingRoom() {
                     <circle cx="200" cy="200" r="120" stroke="currentColor" strokeWidth="1" strokeOpacity="0.7" />
                     <circle cx="200" cy="200" r="60" stroke="currentColor" strokeWidth="1" strokeDasharray="2 4" />
                 </svg>
+            </div>
+
+            {/* FLOATING TOP LOBBY HUD                                  */}
+            <div className="relative z-20 px-4 sm:px-6 pt-4 pb-0 w-full max-w-7xl mx-auto flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                    <span className="text-xs sm:text-sm font-black tracking-wider text-purple-300 flex items-center gap-1.5 bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-1.5 backdrop-blur-md shadow-md">
+                        <span>⚔️</span> <span className="text-white">QUIZ</span>ARENA LOBBY
+                    </span>
+                </div>
+
+                <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="flex items-center gap-2 bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-1 backdrop-blur-md shadow-md">
+                        <PlayerAvatar name={nickName} className="w-7 h-7" />
+                        <span className="text-xs font-bold text-slate-200">{nickName}</span>
+                    </div>
+
+                    {/* Leave Lobby Button */}
+                    <button
+                        onClick={leaveRoom}
+                        title="Leave Battle Lobby"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-900/90 border border-rose-500/60 text-rose-300 hover:text-white text-xs font-bold transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer backdrop-blur-md"
+                    >
+                        <span>🚪</span>
+                        <span className="hidden sm:inline">Leave</span>
+                    </button>
+                </div>
             </div>
 
             {/* Main Content Arena */}
