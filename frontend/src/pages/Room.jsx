@@ -50,6 +50,24 @@ function Room() {
      */
 
     const [combo, setCombo] = useState(0);
+    const [podiumStep, setPodiumStep] = useState(0);
+
+    // Sequential Podium Reveal Timers (3rd at 400ms, 2nd at 1400ms, 1st at 2500ms)
+    useEffect(() => {
+        if (gameState === 'LEADERBOARD' || gameState === 'GAME_OVER') {
+            setPodiumStep(0);
+            const t1 = setTimeout(() => setPodiumStep(1), 400);  // Step 1: 3rd Place
+            const t2 = setTimeout(() => setPodiumStep(2), 1400); // Step 2: 2nd Place
+            const t3 = setTimeout(() => setPodiumStep(3), 2500); // Step 3: 1st Place Grand Champion
+            return () => {
+                clearTimeout(t1);
+                clearTimeout(t2);
+                clearTimeout(t3);
+            };
+        } else {
+            setPodiumStep(0);
+        }
+    }, [gameState, currQuestionNo]);
 
     const stompClient = useRef(null)
 
@@ -588,44 +606,77 @@ function Room() {
                             {gameState === 'GAME_OVER' ? 'Final Arena Results' : `After Question ${currQuestionNo}`}
                         </p>
 
-                        {/* Top 3 Champions Podium Arc */}
-                        <div className="flex items-end justify-center gap-3 mb-8 px-2">
-                            {/* 2nd Place */}
-                            {leaderboard[1] && (
-                                <div className="flex flex-col items-center flex-1">
-                                    <PlayerAvatar index={2} name={leaderboard[1].nickName} className="w-12 h-12 mb-2" />
-                                    <div className="w-full bg-slate-800 border-t-2 border-slate-300 rounded-t-lg p-2 flex flex-col items-center h-24 justify-between shadow-lg">
-                                        <span className="text-xs">🥈</span>
-                                        <p className="text-[10px] font-black text-slate-200 truncate max-w-[80px]">{leaderboard[1].nickName}</p>
-                                        <span className="text-[10px] font-mono text-slate-300 font-bold">{leaderboard[1].score}</span>
+                        {/* Top 3 Champions Podium Arc (State-Driven Reveal: 3rd -> 2nd -> 1st) */}
+                        <div className="flex items-end justify-center gap-2 sm:gap-3 mb-8 px-1 sm:px-2 min-h-[220px]">
+                            {/* 2nd Place (Silver) - Pops up at Step 2 (1.4s) */}
+                            <div className={`flex flex-col items-center flex-1 transition-all duration-700 ease-out transform ${
+                                podiumStep >= 2 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-16 scale-75 pointer-events-none'
+                            }`}>
+                                {leaderboard[1] ? (
+                                    <>
+                                        <PlayerAvatar index={2} name={leaderboard[1].nickName} className="w-12 h-12 mb-2 border-2 border-slate-300 shadow-[0_0_15px_rgba(203,213,225,0.5)]" />
+                                        <div className="w-full bg-gradient-to-t from-slate-900 via-slate-800 to-slate-700/60 border-t-4 border-slate-300 rounded-t-xl p-2 flex flex-col items-center h-24 justify-between shadow-lg">
+                                            <span className="text-sm font-black text-slate-300">🥈 2ND</span>
+                                            <p className="text-[11px] font-black text-slate-100 truncate max-w-[85px]">{leaderboard[1].nickName}</p>
+                                            <span className="text-[10px] font-mono text-slate-200 font-bold">{leaderboard[1].score?.toLocaleString()} pts</span>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="flex flex-col items-center w-full opacity-30">
+                                        <div className="w-10 h-10 rounded-full border-2 border-dashed border-slate-600 mb-2 flex items-center justify-center text-slate-500 text-xs font-bold">2</div>
+                                        <div className="w-full bg-slate-900/60 border-t-2 border-slate-700 rounded-t-xl p-2 flex flex-col items-center h-20 justify-center">
+                                            <span className="text-[10px] text-slate-500 font-bold">Open</span>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
+                            </div>
 
-                            {/* 1st Place */}
-                            {leaderboard[0] && (
-                                <div className="flex flex-col items-center flex-1 -mt-4">
-                                    <span className="text-lg animate-bounce">👑</span>
-                                    <PlayerAvatar index={1} name={leaderboard[0].nickName} className="w-16 h-16 mb-2 border-amber-400" />
-                                    <div className="w-full bg-gradient-to-t from-amber-950/80 to-amber-900/60 border-t-2 border-amber-400 rounded-t-lg p-2 flex flex-col items-center h-32 justify-between shadow-[0_0_20px_rgba(245,158,11,0.5)]">
-                                        <span className="text-sm">🥇</span>
-                                        <p className="text-xs font-black text-amber-200 truncate max-w-[80px]">{leaderboard[0].nickName}</p>
-                                        <span className="text-xs font-mono text-amber-300 font-black">{leaderboard[0].score}</span>
+                            {/* 1st Place (Gold Champion) - Grand Finale at Step 3 (2.5s) */}
+                            <div className={`flex flex-col items-center flex-1 -mt-6 z-10 transition-all duration-800 ease-out transform ${
+                                podiumStep >= 3 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-20 scale-75 pointer-events-none'
+                            }`}>
+                                {leaderboard[0] ? (
+                                    <>
+                                        <span className="text-2xl animate-bounce drop-shadow-[0_0_12px_rgba(245,158,11,0.9)]">👑</span>
+                                        <PlayerAvatar index={1} name={leaderboard[0].nickName} className="w-16 h-16 mb-2 border-2 border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.8)]" />
+                                        <div className="w-full bg-gradient-to-t from-amber-950/90 via-amber-900/70 to-amber-600/50 border-t-4 border-amber-400 rounded-t-2xl p-2.5 flex flex-col items-center h-36 justify-between shadow-[0_0_35px_rgba(245,158,11,0.7)]">
+                                            <span className="text-base font-black text-amber-300">🥇 1ST</span>
+                                            <p className="text-xs font-black text-amber-100 truncate max-w-[90px]">{leaderboard[0].nickName}</p>
+                                            <span className="text-xs font-mono text-amber-300 font-black">{leaderboard[0].score?.toLocaleString()} pts</span>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="flex flex-col items-center w-full opacity-30">
+                                        <div className="w-12 h-12 rounded-full border-2 border-dashed border-amber-500 mb-2 flex items-center justify-center text-amber-400 text-sm font-bold">1</div>
+                                        <div className="w-full bg-slate-900/60 border-t-2 border-amber-500 rounded-t-xl p-2 flex flex-col items-center h-28 justify-center">
+                                            <span className="text-[10px] text-amber-400 font-bold">No 1st</span>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
+                            </div>
 
-                            {/* 3rd Place */}
-                            {leaderboard[2] && (
-                                <div className="flex flex-col items-center flex-1">
-                                    <PlayerAvatar index={3} name={leaderboard[2].nickName} className="w-12 h-12 mb-2" />
-                                    <div className="w-full bg-slate-800 border-t-2 border-amber-700 rounded-t-lg p-2 flex flex-col items-center h-20 justify-between shadow-lg">
-                                        <span className="text-xs">🥉</span>
-                                        <p className="text-[10px] font-black text-slate-200 truncate max-w-[80px]">{leaderboard[2].nickName}</p>
-                                        <span className="text-[10px] font-mono text-slate-300 font-bold">{leaderboard[2].score}</span>
+                            {/* 3rd Place (Bronze) - Reveals First at Step 1 (0.4s) */}
+                            <div className={`flex flex-col items-center flex-1 transition-all duration-700 ease-out transform ${
+                                podiumStep >= 1 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-16 scale-75 pointer-events-none'
+                            }`}>
+                                {leaderboard[2] ? (
+                                    <>
+                                        <PlayerAvatar index={3} name={leaderboard[2].nickName} className="w-12 h-12 mb-2 border-2 border-amber-700 shadow-[0_0_15px_rgba(180,83,9,0.5)]" />
+                                        <div className="w-full bg-gradient-to-t from-slate-900 via-slate-800 to-amber-950/50 border-t-4 border-amber-700 rounded-t-xl p-2 flex flex-col items-center h-20 justify-between shadow-lg">
+                                            <span className="text-sm font-black text-amber-600">🥉 3RD</span>
+                                            <p className="text-[11px] font-black text-slate-200 truncate max-w-[85px]">{leaderboard[2].nickName}</p>
+                                            <span className="text-[10px] font-mono text-amber-300 font-bold">{leaderboard[2].score?.toLocaleString()} pts</span>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="flex flex-col items-center w-full opacity-30">
+                                        <div className="w-10 h-10 rounded-full border-2 border-dashed border-slate-600 mb-2 flex items-center justify-center text-slate-500 text-xs font-bold">3</div>
+                                        <div className="w-full bg-slate-900/60 border-t-2 border-slate-700 rounded-t-xl p-2 flex flex-col items-center h-16 justify-center">
+                                            <span className="text-[10px] text-slate-500 font-bold">Open</span>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
+                            </div>
                         </div>
 
                         {/* Full Scoreboard Rows */}
