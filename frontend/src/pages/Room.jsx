@@ -3,7 +3,6 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import SockJS from "sockjs-client"
 import Stomp from 'stompjs'
 import { PlayerAvatar, HostAvatar } from "../components/CyberAvatar"
-import colosseumBg from "../assets/colosseum_bg.jpg"
 
 function Room() {
     const navigate = useNavigate()
@@ -129,6 +128,8 @@ function Room() {
             client.subscribe(`/topic/room/update/${roomCode}`, (msg) => {
                 const data = JSON.parse(msg.body)
                 console.log(data)
+                
+
             })
 
             client.subscribe(`/topic/room/play/question/text/${roomCode}`, (msg) => {
@@ -138,6 +139,7 @@ function Room() {
                 setGameState("QUESTION")
                 setCurrQuestionNo(data.questionNo)
                 setQuestionText(data.questionText)
+                currectScore.current = 0;
             })
 
             client.subscribe(`/topic/room/play/question/options/${roomCode}`, (msg) =>{
@@ -254,6 +256,16 @@ function Room() {
         return (pos || 1) + 'th'
     }
 
+    function leaveRoom(){
+        if (stompClient.current) {
+            stompClient.current.send("/app/game/room/leave", {}, JSON.stringify({
+                roomCode: roomCode,
+                playerNickName: nickName
+            }))
+        }
+        navigate("/")
+    }
+
     
     const radius = 40
     const circumference = 2 * Math.PI * radius
@@ -328,48 +340,59 @@ function Room() {
                 </div>
             )}
 
-            {/* TOP TACTICAL HUD BAR                                      */}
-            <header className="relative z-20 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md px-6 py-3">
-                <div className="max-w-7xl mx-auto flex items-center justify-between">
+            {/* FLOATING TOP COMBAT HUD (No Heavy Navbar Bar)            */}
+            <div className="relative z-20 px-4 sm:px-6 pt-4 pb-1">
+                <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
                     
-                    <div className="flex items-center gap-3">
-                        <div className="bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-1.5 flex items-center gap-2">
+                    {/* Room Code & Connection Indicator */}
+                    <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-1.5 flex items-center gap-2 backdrop-blur-md shadow-md">
                             <span className="text-[10px] font-extrabold tracking-widest uppercase text-slate-400">Room</span>
                             <span className="font-mono font-black text-amber-400 tracking-wider text-sm">{roomCode}</span>
                         </div>
-                        <div className="hidden sm:flex items-center gap-1.5 bg-slate-900/60 border border-slate-800 rounded-lg px-2.5 py-1">
+                        <div className="hidden sm:flex items-center gap-1.5 bg-slate-900/60 border border-slate-800 rounded-lg px-2.5 py-1 backdrop-blur-sm">
                             <span className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-400 animate-pulse' : 'bg-rose-500'}`} />
                             <span className="text-[11px] font-semibold text-slate-300">{connected ? 'Live' : 'Offline'}</span>
                         </div>
                     </div>
 
+                    {/* Floating Question Progress Pill */}
                     <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider hidden sm:inline">Progress</span>
-                        <div className="bg-gradient-to-r from-purple-900/80 to-indigo-900/80 border border-purple-400/50 text-purple-200 text-xs font-black px-4 py-1.5 rounded-full shadow-[0_0_12px_rgba(168,85,247,0.4)]">
+                        <div className="bg-gradient-to-r from-purple-900/80 to-indigo-900/80 border border-purple-400/50 text-purple-200 text-xs font-black px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(168,85,247,0.4)] backdrop-blur-md">
                             Question {currQuestionNo} of {questionCount || 5}
                         </div>
                     </div>
 
-                    {/* Personal Combat Stats (Rank, Score, Avatar) */}
-                    <div className="flex items-center gap-3">
-                        <div className="bg-slate-900 border border-slate-700/80 rounded-xl px-3.5 py-1 flex items-center gap-3">
+                    {/* Personal Combat Stats + Avatar + LEAVE Button */}
+                    <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-1 flex items-center gap-3 backdrop-blur-md shadow-md">
                             <div className="text-right">
-                                <p className="text-[10px] uppercase font-extrabold text-slate-400 tracking-wider">Rank</p>
+                                <p className="text-[9px] uppercase font-extrabold text-slate-400 tracking-wider">Rank</p>
                                 <p className="text-xs font-black text-cyan-400">{getPosition(position)}</p>
                             </div>
-                            <div className="h-6 w-px bg-slate-700/80" />
+                            <div className="h-5 w-px bg-slate-700/80" />
                             <div className="text-right">
-                                <p className="text-[10px] uppercase font-extrabold text-slate-400 tracking-wider">Score</p>
+                                <p className="text-[9px] uppercase font-extrabold text-slate-400 tracking-wider">Score</p>
                                 <p className="text-xs font-black text-amber-300 flex items-center gap-1">
                                     <span>👑</span> {totalScore.toLocaleString()}
                                 </p>
                             </div>
                         </div>
 
-                        <PlayerAvatar name={nickName} className="w-9 h-9" />
+                        <PlayerAvatar name={nickName} className="w-9 h-9 border border-purple-500/50 shadow-md" />
+
+                        {/* Leave Battle Button */}
+                        <button
+                            onClick={leaveRoom}
+                            title="Leave Battle Arena"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-900/90 border border-rose-500/60 text-rose-300 hover:text-white text-xs font-bold transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer backdrop-blur-md"
+                        >
+                            <span>🚪</span>
+                            <span className="hidden sm:inline">Leave</span>
+                        </button>
                     </div>
                 </div>
-            </header>
+            </div>
 
             {/* MAIN BATTLE ARENA GRID (Left: 8 cols, Right: 4 cols)      */}
             <main className="max-w-7xl mx-auto w-full px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10 my-auto">
