@@ -260,43 +260,73 @@ function Room() {
     const strokeDashoffset = totalTime > 0 ? circumference - (timeLeft / totalTime) * circumference : circumference
 
     return (
-        <div className="min-h-screen bg-[#070a18] text-white relative overflow-hidden flex flex-col justify-between selection:bg-purple-500 selection:text-white font-sans">
-            <div 
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-75 animate-arena-breath"
-                style={{ backgroundImage: `url(${colosseumBg})` }}
-            />
+        <div className="min-h-screen bg-[#050714] text-white relative overflow-hidden flex flex-col justify-between selection:bg-purple-500 selection:text-white font-sans">
+            
+            {/* ========================================================================= */}
+            {/* OPTION A: CLEAN ESPORTS ARENA STAGE (Solid #050714 + 3D Grid Stage + HUD) */}
+            {/* ========================================================================= */}
 
-            {/* Living Torchlight & Fire Braziers Flicker Effect */}
-            <div className="absolute inset-0 bg-gradient-to-t from-amber-600/15 via-transparent to-amber-500/10 pointer-events-none animate-torch-flicker" />
+            {/* 1. Deep Space Vector Gradients & Radial Light Orbs */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.18)_0%,_transparent_65%)] pointer-events-none" />
+            <div className="absolute top-1/4 -left-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/3 -right-20 w-96 h-96 bg-purple-600/12 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-cyan-500/15 rounded-full blur-[140px] pointer-events-none" />
 
-            {/* Floating Fire Embers / Sparks Rising from Arena Sand */}
+            {/* 2. Ambient Twinkling Vector Stars */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <span className="ember-particle" style={{ '--x': '15%', '--delay': '0s', '--duration': '7s', '--size': '5px' }} />
-                <span className="ember-particle" style={{ '--x': '28%', '--delay': '2.5s', '--duration': '8.5s', '--size': '6px' }} />
-                <span className="ember-particle" style={{ '--x': '45%', '--delay': '1s', '--duration': '6s', '--size': '4px' }} />
-                <span className="ember-particle" style={{ '--x': '62%', '--delay': '3.2s', '--duration': '9s', '--size': '7px' }} />
-                <span className="ember-particle" style={{ '--x': '78%', '--delay': '0.5s', '--duration': '6.5s', '--size': '5px' }} />
-                <span className="ember-particle" style={{ '--x': '90%', '--delay': '4s', '--duration': '8s', '--size': '4px' }} />
+                <span className="absolute top-[8%] left-[12%] w-1.5 h-1.5 bg-cyan-300 rounded-full animate-star shadow-[0_0_6px_#38bdf8]" style={{ animationDelay: '0s' }} />
+                <span className="absolute top-[14%] left-[28%] w-1 h-1 bg-purple-300 rounded-full animate-star shadow-[0_0_4px_#c084fc]" style={{ animationDelay: '1.2s' }} />
+                <span className="absolute top-[6%] left-[48%] w-2 h-2 bg-cyan-200 rounded-full animate-star shadow-[0_0_8px_#67e8f9]" style={{ animationDelay: '2.1s' }} />
+                <span className="absolute top-[18%] left-[64%] w-1 h-1 bg-amber-200 rounded-full animate-star shadow-[0_0_4px_#fde047]" style={{ animationDelay: '0.7s' }} />
+                <span className="absolute top-[10%] left-[82%] w-1.5 h-1.5 bg-cyan-300 rounded-full animate-star shadow-[0_0_6px_#38bdf8]" style={{ animationDelay: '1.8s' }} />
+                <span className="absolute top-[22%] left-[92%] w-1 h-1 bg-purple-200 rounded-full animate-star shadow-[0_0_4px_#e9d5ff]" style={{ animationDelay: '2.8s' }} />
             </div>
 
-            {/* Atmospheric Sand Mist Drift */}
-            <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-amber-950/20 to-transparent pointer-events-none animate-mist" />
+            {/* 3. Floating Geometric Energy Sparks */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+                <div className="absolute top-1/4 left-[14%] w-2.5 h-2.5 bg-cyan-400/40 rotate-45 animate-vector-float shadow-[0_0_10px_rgba(6,182,212,0.6)]" style={{ animationDelay: '0s' }} />
+                <div className="absolute top-1/3 right-[16%] w-3 h-3 bg-purple-400/40 rotate-45 animate-vector-float shadow-[0_0_10px_rgba(168,85,247,0.6)]" style={{ animationDelay: '2.5s' }} />
+                <div className="absolute bottom-1/3 left-[22%] w-2 h-2 bg-amber-400/40 rotate-45 animate-vector-float shadow-[0_0_8px_rgba(245,158,11,0.6)]" style={{ animationDelay: '1.2s' }} />
+                <div className="absolute top-1/2 right-[10%] w-2 h-2 bg-pink-400/40 rotate-45 animate-vector-float shadow-[0_0_8px_rgba(236,72,153,0.6)]" style={{ animationDelay: '3.8s' }} />
+            </div>
 
-            {/* Cinematic Vignette Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#070a18]/70 via-[#070a18]/45 to-[#070a18]/85 pointer-events-none" />
+            {/* 4. 3D Perspective Vector Grid Stage Floor (Infinite Forward Motion) */}
+            <div className="absolute -bottom-10 inset-x-0 h-[44vh] vector-grid-3d pointer-events-none [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.85)_35%,black_100%)] opacity-70" />
 
-            {/* Ambient Nebula Glows */}
-            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute top-1/3 right-10 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none" />
+            {/* 5. Glowing Vector Horizon Beam */}
+            <div className="absolute bottom-[40vh] inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent shadow-[0_0_18px_rgba(6,182,212,0.9)] pointer-events-none" />
 
-            {/* RADIANT ARENA FLARE & VICTORY BURST ON CORRECT ANSWER    */}
+            {/* 6. Tactical HUD Corner Brackets & Orbital Rings */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+                {/* Top-Left Vector Bracket */}
+                <svg className="absolute top-14 left-6 w-32 h-32 text-purple-500/35 animate-circuit-pulse" viewBox="0 0 100 100" fill="none">
+                    <path d="M0 40 L0 0 L40 0" stroke="currentColor" strokeWidth="2" />
+                    <circle cx="4" cy="4" r="2.5" fill="currentColor" />
+                    <line x1="12" y1="12" x2="35" y2="12" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+                </svg>
+
+                {/* Top-Right Vector Bracket */}
+                <svg className="absolute top-14 right-6 w-32 h-32 text-cyan-400/35 animate-circuit-pulse" viewBox="0 0 100 100" fill="none">
+                    <path d="M100 40 L100 0 L60 0" stroke="currentColor" strokeWidth="2" />
+                    <circle cx="96" cy="4" r="2.5" fill="currentColor" />
+                    <line x1="88" y1="12" x2="65" y2="12" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+                </svg>
+
+                {/* Ambient Center Arena Orbital Radar Rings */}
+                <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] text-purple-500/10 pointer-events-none" viewBox="0 0 400 400" fill="none">
+                    <circle cx="200" cy="200" r="180" stroke="currentColor" strokeWidth="1" strokeDasharray="6 6" />
+                    <circle cx="200" cy="200" r="120" stroke="currentColor" strokeWidth="1" strokeOpacity="0.7" />
+                    <circle cx="200" cy="200" r="60" stroke="currentColor" strokeWidth="1" strokeDasharray="2 4" />
+                </svg>
+            </div>
+
+            {/* 7. Radiant Vector Shockwave on Correct Answer */}
             {gameState === 'RESULT_CORRECT' && (
                 <div className="absolute inset-0 pointer-events-none z-15">
-                    <div className="absolute inset-0 bg-radial from-emerald-500/20 via-amber-500/10 to-transparent animate-pulse" />
-                    <div className="absolute bottom-0 inset-x-0 h-80 bg-gradient-to-t from-emerald-500/30 via-amber-500/15 to-transparent" />
+                    <div className="absolute inset-0 bg-radial from-emerald-500/25 via-cyan-500/10 to-transparent animate-pulse" />
+                    <div className="absolute bottom-0 inset-x-0 h-96 bg-gradient-to-t from-emerald-500/35 via-cyan-500/15 to-transparent" />
                 </div>
             )}
-            <div className="absolute bottom-0 inset-x-0 h-64 cyber-grid opacity-20 pointer-events-none [mask-image:linear-gradient(to_bottom,transparent,black)]" />
 
             {/* TOP TACTICAL HUD BAR                                      */}
             <header className="relative z-20 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md px-6 py-3">
