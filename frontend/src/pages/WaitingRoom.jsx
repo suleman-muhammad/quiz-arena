@@ -159,11 +159,63 @@ function WaitingRoom() {
     return (
         <div className="min-h-screen bg-[#050714] text-white relative overflow-hidden flex flex-col justify-between selection:bg-purple-500 selection:text-white font-sans">
             
-            {/* Ambient Deep Space Radial Halos on Solid Dark Canvas */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.15)_0%,_transparent_60%)] pointer-events-none" />
-            <div className="absolute top-1/4 -left-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute top-1/3 -right-20 w-96 h-96 bg-purple-600/12 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none" />
+            {/* ========================================================================= */}
+            {/* LUMINOUS ESPORTS STAGING DECK (Depth Flares + 3D Grid + Tactical Vectors) */}
+            {/* ========================================================================= */}
+
+            {/* 1. Luminous Deep Space Radial Flares & Ambient Light Orbs */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.22)_0%,_transparent_65%)] pointer-events-none" />
+            <div className="absolute top-1/4 -left-20 w-[450px] h-[450px] bg-cyan-500/15 rounded-full blur-[130px] pointer-events-none" />
+            <div className="absolute top-1/3 -right-20 w-[450px] h-[450px] bg-purple-600/18 rounded-full blur-[130px] pointer-events-none" />
+            <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-cyan-500/20 rounded-full blur-[150px] pointer-events-none" />
+
+            {/* 2. Twinkling Ambient Starfield */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+                <span className="absolute top-[8%] left-[10%] w-1.5 h-1.5 bg-cyan-300 rounded-full animate-star shadow-[0_0_6px_#38bdf8]" style={{ animationDelay: '0s' }} />
+                <span className="absolute top-[15%] left-[25%] w-1 h-1 bg-purple-300 rounded-full animate-star shadow-[0_0_4px_#c084fc]" style={{ animationDelay: '1.2s' }} />
+                <span className="absolute top-[6%] left-[50%] w-2 h-2 bg-cyan-200 rounded-full animate-star shadow-[0_0_8px_#67e8f9]" style={{ animationDelay: '2.1s' }} />
+                <span className="absolute top-[18%] left-[70%] w-1 h-1 bg-amber-200 rounded-full animate-star shadow-[0_0_4px_#fde047]" style={{ animationDelay: '0.7s' }} />
+                <span className="absolute top-[12%] left-[85%] w-1.5 h-1.5 bg-cyan-300 rounded-full animate-star shadow-[0_0_6px_#38bdf8]" style={{ animationDelay: '1.8s' }} />
+                <span className="absolute top-[22%] left-[94%] w-1 h-1 bg-purple-200 rounded-full animate-star shadow-[0_0_4px_#e9d5ff]" style={{ animationDelay: '2.8s' }} />
+            </div>
+
+            {/* 3. Floating Geometric Energy Sparks */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+                <div className="absolute top-1/4 left-[12%] w-2.5 h-2.5 bg-cyan-400/40 rotate-45 animate-vector-float shadow-[0_0_10px_rgba(6,182,212,0.6)]" style={{ animationDelay: '0s' }} />
+                <div className="absolute top-1/3 right-[14%] w-3 h-3 bg-purple-400/40 rotate-45 animate-vector-float shadow-[0_0_10px_rgba(168,85,247,0.6)]" style={{ animationDelay: '2.5s' }} />
+                <div className="absolute bottom-1/3 left-[20%] w-2 h-2 bg-amber-400/40 rotate-45 animate-vector-float shadow-[0_0_8px_rgba(245,158,11,0.6)]" style={{ animationDelay: '1.2s' }} />
+                <div className="absolute top-1/2 right-[8%] w-2 h-2 bg-pink-400/40 rotate-45 animate-vector-float shadow-[0_0_8px_rgba(236,72,153,0.6)]" style={{ animationDelay: '3.8s' }} />
+            </div>
+
+            {/* 4. 3D Perspective Vector Grid Stage Floor (Infinite Forward Motion) */}
+            <div className="absolute -bottom-10 inset-x-0 h-[44vh] vector-grid-3d pointer-events-none [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.85)_35%,black_100%)] opacity-70" />
+
+            {/* 5. Glowing Vector Horizon Beam */}
+            <div className="absolute bottom-[40vh] inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent shadow-[0_0_18px_rgba(6,182,212,0.9)] pointer-events-none" />
+
+            {/* 6. Tactical HUD Corner Brackets & Orbital Rings */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+                {/* Top-Left Vector Bracket */}
+                <svg className="absolute top-14 left-6 w-32 h-32 text-purple-500/35 animate-circuit-pulse" viewBox="0 0 100 100" fill="none">
+                    <path d="M0 40 L0 0 L40 0" stroke="currentColor" strokeWidth="2" />
+                    <circle cx="4" cy="4" r="2.5" fill="currentColor" />
+                    <line x1="12" y1="12" x2="35" y2="12" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+                </svg>
+
+                {/* Top-Right Vector Bracket */}
+                <svg className="absolute top-14 right-6 w-32 h-32 text-cyan-400/35 animate-circuit-pulse" viewBox="0 0 100 100" fill="none">
+                    <path d="M100 40 L100 0 L60 0" stroke="currentColor" strokeWidth="2" />
+                    <circle cx="96" cy="4" r="2.5" fill="currentColor" />
+                    <line x1="88" y1="12" x2="65" y2="12" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+                </svg>
+
+                {/* Ambient Center Orbital Radar Rings */}
+                <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] text-purple-500/10 pointer-events-none" viewBox="0 0 400 400" fill="none">
+                    <circle cx="200" cy="200" r="180" stroke="currentColor" strokeWidth="1" strokeDasharray="6 6" />
+                    <circle cx="200" cy="200" r="120" stroke="currentColor" strokeWidth="1" strokeOpacity="0.7" />
+                    <circle cx="200" cy="200" r="60" stroke="currentColor" strokeWidth="1" strokeDasharray="2 4" />
+                </svg>
+            </div>
 
             {/* Main Content Arena */}
             <div className="max-w-7xl mx-auto w-full px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10 my-auto">
