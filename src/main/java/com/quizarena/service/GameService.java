@@ -242,6 +242,6 @@ public class GameService {
         roomInfo.setRoomCode(room.getRoomCode());
         roomInfo.setState(room.getState());
         messagingTemplate.convertAndSend(roomEndPoint + room.getRoomCode(),roomInfo);
-        messagingTemplate.convertAndSend("/topic/player/" + request.playerNickName(), new SimpleMessage("INFO","Out of the ROOM."));
+        messagingTemplate.convertAndSend("/topic/player/room/" + room.getRoomCode() + "/" + request.playerNickName(), new SimpleMessage("INFO","Out of the ROOM."));
     }
 }

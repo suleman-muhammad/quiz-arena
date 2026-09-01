@@ -12,7 +12,6 @@ import com.quizarena.dto.JoinRequestAnswer;
 import com.quizarena.dto.JoinRoomRequest;
 import com.quizarena.dto.LeaveRoomRequest;
 import com.quizarena.dto.RoomInfo;
-import com.quizarena.dto.SimpleMessage;
 import com.quizarena.dto.StartRoomRequest;
 import com.quizarena.game.GameManager;
 import com.quizarena.game.GameRoom;
@@ -69,7 +68,7 @@ public class GameController {
     @MessageMapping("/game/room/leave")
     public void leaveRoom(LeaveRoomRequest request){
         gameService.handleRemovePlayer(request);
-         System.out.println("SERVER: Leave ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
+        System.out.println("SERVER: Leave ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
 
 
