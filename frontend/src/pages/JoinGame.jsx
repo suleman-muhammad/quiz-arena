@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import SockJS from "sockjs-client"
 import Stomp from 'stompjs'
 import { PlayerAvatar } from '../components/CyberAvatar'
-import prepGalleryBg from '../assets/prep_gallery_bg.jpg'
 
 function JoinGame() {
     const navigate = useNavigate()
@@ -13,23 +12,21 @@ function JoinGame() {
     const [loading, setLoading] = useState(false)
 
     function handleJoin() {
-        if (roomCode.length === 0) {
-            setError("Room Code cannot be empty.")
+        if (!roomCode.trim() || !nickname.trim()) {
+            setError("Room code and nickname are required!")
             return
         }
-        if (!nickname.trim()) {
-            setError("Nickname cannot be empty.")
-            return
-        }
+
         setError('')
         setLoading(true)
 
-        const socket = new SockJS("http://localhost:8080/ws")
+        const socket = new SockJS('http://localhost:8080/ws')
         const client = Stomp.over(socket)
         client.debug = null
 
         client.connect({}, () => {
-            const requestId = Date.now().toString()
+            const requestId = "REQ_" + Math.random().toString(36).substring(2, 9)
+            
             client.subscribe(`/topic/join_request/${nickname}/${requestId}`, (msg) => {
                 const data = JSON.parse(msg.body)
                 console.log(data)
@@ -55,14 +52,12 @@ function JoinGame() {
     }
 
     return (
-        <div className="min-h-screen bg-[#070a18] text-white relative overflow-hidden flex flex-col justify-center items-center p-6 selection:bg-purple-500 selection:text-white font-sans">
+        <div className="min-h-screen bg-[#050714] text-white relative overflow-hidden flex flex-col justify-center items-center p-6 selection:bg-purple-500 selection:text-white font-sans">
             
             {/* Background Atmosphere */}
-            <div 
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-40 transform scale-105"
-                style={{ backgroundImage: `url(${prepGalleryBg})` }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#070a18]/80 via-[#070a18]/60 to-[#070a18]/90 pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.15)_0%,_transparent_60%)] pointer-events-none" />
+            <div className="absolute top-1/4 -left-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/3 -right-20 w-96 h-96 bg-purple-600/12 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute top-1/4 left-1/3 w-[450px] h-[450px] bg-purple-700/15 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-amber-600/10 rounded-full blur-[100px] pointer-events-none" />
 
