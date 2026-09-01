@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import prepGalleryBg from '../assets/prep_gallery_bg.jpg'
 
 function CreateQuiz() {
     const navigate = useNavigate()
