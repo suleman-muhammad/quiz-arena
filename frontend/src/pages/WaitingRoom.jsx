@@ -12,6 +12,7 @@ function WaitingRoom() {
     const nickName = searchParams.get('nickname') || 'Player'
     const isHost = searchParams.get('host') === 'true'
     const isHostPlaying = searchParams.get('playing') === 'true'
+    const defaultCategory = { id: 'general', label: '⚔️ General Arena', icon: '⚔️' }
 
     const [connected, setConnected] = useState(false)
     const [copied, setCopied] = useState(false)
@@ -25,6 +26,7 @@ function WaitingRoom() {
     const [quizQuestions, setQuizQuestions] = useState([])
     const [quizTriviaFacts, setQuizTriviaFacts] = useState([])
     const [quizConcepts , setQuizConcepts] = useState([])
+    const [quizCategory, setQuizCategory] = useState(defaultCategory)
 
     // Chat state
     const [chatMessages, setChatMessages] = useState([
@@ -32,104 +34,6 @@ function WaitingRoom() {
     ])
     const [chatInput, setChatInput] = useState('')
     const [chatMinimized, setChatMinimized] = useState(false)
-
-    // Dynamic Trivia & Lore Generator based on Quiz Title & Topic
-    function getDynamicTrivia(title = "", questions = []) {
-        const safeTitle = typeof title === 'string' ? title : ""
-        const safeQuestions = Array.isArray(questions) ? questions : []
-        const lower = safeTitle.toLowerCase()
-        const facts = []
-
-        if (lower.includes('java') && !lower.includes('javascript')) {
-            facts.push(
-                { title: "Java Fact", icon: "☕", text: "Originally named 'Oak' in 1991 by James Gosling, it was later renamed Java after coffee." },
-                { title: "Java Fact", icon: "⚙️", text: "The Java Virtual Machine (JVM) executes bytecode, enabling 'Write Once, Run Anywhere'." },
-                { title: "Java Fact", icon: "📱", text: "Android OS applications have historically run on Java/Kotlin bytecode runtimes (Dalvik/ART)." }
-            )
-        } else if (lower.includes('python')) {
-            facts.push(
-                { title: "Python Fact", icon: "🐍", text: "Python was named after the British comedy troupe 'Monty Python', not the snake!" },
-                { title: "Python Fact", icon: "⚡", text: "Created by Guido van Rossum and released in 1991 with a strong focus on code readability." },
-                { title: "Python Fact", icon: "🧠", text: "Python is the primary language for machine learning, AI, and data science globally." }
-            )
-        } else if (lower.includes('javascript') || lower.includes('react') || lower.includes('web')) {
-            facts.push(
-                { title: "JS Fact", icon: "🌐", text: "JavaScript was created in just 10 days in May 1995 by Brendan Eich at Netscape." },
-                { title: "Web Fact", icon: "⚡", text: "React was created by Jordan Walke, a software engineer at Facebook, and open-sourced in 2013." },
-                { title: "JS Fact", icon: "🚀", text: "V8 engine compiles JavaScript directly to native machine code before executing it." }
-            )
-        } else if (lower.includes('history') || lower.includes('war')) {
-            facts.push(
-                { title: "History Lore", icon: "🏛️", text: "The Library of Alexandria was one of the largest and most significant libraries of the ancient world." },
-                { title: "History Lore", icon: "⚔️", text: "Spartan hoplites trained from age 7 in the Agoge military system." }
-            )
-        } else if (lower.includes('science') || lower.includes('physics') || lower.includes('space')) {
-            facts.push(
-                { title: "Cosmic Fact", icon: "🌌", text: "Light from the Sun takes approximately 8 minutes and 20 seconds to reach Earth." },
-                { title: "Science Fact", icon: "⚛️", text: "One teaspoon of a neutron star would weigh around 6 billion tons on Earth." }
-            )
-        } else {
-            // General Knowledge & Battle Arena Lore
-            facts.push(
-                { title: "Arena Fact", icon: "🏆", text: `This tournament contains ${safeQuestions.length || 'multiple'} battle questions to test your knowledge!` },
-                { title: "Champion Rule", icon: "⚔️", text: "First place requires both sharp accuracy and swift reaction times." }
-            )
-        }
-
-        facts.push(
-            { title: "Arena Tip", icon: "⚡", text: "Points decay every second! Faster correct answers earn maximum quadratic bonus points." },
-            { title: "Arena Tip", icon: "🛡️", text: "Wrong answers yield 0 points for that round. Think carefully before locking in!" }
-        )
-
-        return facts
-    }
-
-    // Dynamic Topic Icon Generator
-    function getTopicIcon(title = "") {
-        const safeTitle = typeof title === 'string' ? title : ""
-        const lower = safeTitle.toLowerCase()
-        if (lower.includes('java') && !lower.includes('javascript')) return '☕'
-        if (lower.includes('python')) return '🐍'
-        if (lower.includes('javascript') || lower.includes('react') || lower.includes('web')) return '⚡'
-        if (lower.includes('history')) return '🏛️'
-        if (lower.includes('science') || lower.includes('space')) return '🌌'
-        if (lower.includes('math')) return '📐'
-        return '⚔️'
-    }
-
-    // Dynamic Key Concepts extractor
-    function getKeyConcepts(title = "", questions = [], description = "") {
-        const safeDesc = typeof description === 'string' ? description.trim() : ""
-        const safeQuestions = Array.isArray(questions) ? questions : []
-        const concepts = []
-
-        if (safeDesc) {
-            concepts.push(safeDesc.slice(0, 45) + (safeDesc.length > 45 ? '...' : ''))
-        }
-        
-        // Extract interesting keywords from questions
-        if (safeQuestions.length > 0) {
-            safeQuestions.slice(0, 3).forEach((q, i) => {
-                const text = q && typeof q.questionText === 'string' ? q.questionText : ""
-                if (text.length > 0) {
-                    concepts.push(`Q${i+1}: ${text.slice(0, 35)}${text.length > 35 ? '...' : ''}`)
-                }
-            })
-        }
-
-        if (concepts.length < 3) {
-            concepts.push("Speed & Precision Scoring")
-            concepts.push("Live Arena Leaderboard")
-            concepts.push("Multiplayer Showdown")
-        }
-
-        return concepts.slice(0, 4)
-    }
-
-    const dynamicTrivia = getDynamicTrivia(quizTitle, quizQuestions)
-    const dynamicIcon = getTopicIcon(quizTitle)
-    const dynamicConcepts = getKeyConcepts(quizTitle, quizQuestions, quizDescription)
-
 
     const stompClient = useRef(null)
 
@@ -177,6 +81,7 @@ function WaitingRoom() {
                         setQuizQuestions(data.questions || [])
                         setQuizConcepts(data.concepts || [])
                         setQuizTriviaFacts(data.triviaFacts || []) 
+                        setQuizCategory(data.category || defaultCategory)
                         // Set the Icon as well.
                     })
             })
@@ -297,12 +202,16 @@ function WaitingRoom() {
                                 <span className="bg-purple-900/60 border border-purple-400/50 text-purple-200 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-[0_0_10px_rgba(168,85,247,0.3)]">
                                     {questionCount} Questions <span className="text-pink-400">✨</span>
                                 </span>
+                                {/* 🏷️ CATEGORY BADGE */}
+                                <span className="bg-amber-950/60 border border-amber-500/40 text-amber-300 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                                    {quizCategory?.label || '⚔️ General Arena'}
+                                </span>
                             </div>
 
                             <div className="w-full h-32 rounded-xl bg-gradient-to-br from-purple-950/60 via-slate-900 to-indigo-950/60 border border-purple-500/30 flex items-center justify-center p-3 relative overflow-hidden mb-4 group">
                                 <div className="absolute inset-0 bg-cyan-500/5 cyber-grid opacity-50" />
                                 <div className="text-5xl drop-shadow-[0_0_15px_rgba(168,85,247,0.8)] relative z-10 transition-transform group-hover:scale-110 duration-300">
-                                    {dynamicIcon}
+                                    {quizCategory.icon}
                                 </div>
                             </div>
 
