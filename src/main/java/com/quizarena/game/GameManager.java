@@ -15,7 +15,7 @@ public class GameManager {
     
     private final Map<String,GameRoom> rooms = new ConcurrentHashMap<>();
 
-    public GameRoom createRoom(CreateRoomRequest request){
+    public synchronized GameRoom createRoom(CreateRoomRequest request){
         Long quizId = request.quizId();
         String hostNickName = request.hostNickName();
         String code = generateCode();
@@ -52,10 +52,7 @@ public class GameManager {
     }
 
     public GameRoom findRoomByCode(String code){
-        if(rooms.containsKey(code)){
-            return rooms.get(code);
-        }
-        return null;
+        return rooms.get(code);
     }
 
     public JoinRequestAnswer addPlayerToRoom(String roomCode,String playernickName){
