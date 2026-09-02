@@ -225,7 +225,7 @@ public class GameService {
         if(room.getState() == RoomState.WAITING){
             roomEndPoint = "/topic/room/waiting/";
         }else{
-            roomEndPoint = "/topic/room/update/";
+            roomEndPoint = "/topic/room/" + room.getRoomCode() + "/update";
         }
 
         // if(request.playerNickName().equalsIgnoreCase(room.getHost())){
@@ -243,7 +243,7 @@ public class GameService {
         roomInfo.setPlayers(room.getPlayers());
         roomInfo.setRoomCode(room.getRoomCode());
         roomInfo.setState(room.getState());
-        messagingTemplate.convertAndSend(roomEndPoint + room.getRoomCode(),roomInfo);
-        messagingTemplate.convertAndSend("/topic/player/room/" + room.getRoomCode() + "/" + request.playerNickName(), new SimpleMessage("INFO","Out of the ROOM."));
+        messagingTemplate.convertAndSend(roomEndPoint,roomInfo);
+        messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode() + "/player/" + request.playerNickName(), new SimpleMessage("INFO","Out of the ROOM."));
     }
 }
