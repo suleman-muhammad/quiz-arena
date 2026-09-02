@@ -50,6 +50,7 @@ function Room() {
 
     const [combo, setCombo] = useState(0);
     const [podiumStep, setPodiumStep] = useState(0);
+    const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
 
     // Sequential Podium Reveal Timers (3rd at 400ms, 2nd at 1400ms, 1st at 2500ms)
     useEffect(() => {
@@ -69,6 +70,22 @@ function Room() {
     }, [gameState, currQuestionNo]);
 
     const stompClient = useRef(null)
+    const hasLeftRef = useRef(false)
+
+    function leaveRoom() {
+        hasLeftRef.current = true
+        if (stompClient.current && connected) {
+            stompClient.current.send("/app/game/room/leave", {}, JSON.stringify({
+                roomCode: roomCode,
+                playerNickName: nickName
+            }))
+            setTimeout(() => {
+                if (stompClient.current) stompClient.current.disconnect()
+                setConnected(false)
+            }, 150)
+        }
+        setGameState('LEFT')
+    }
 
     useEffect(() => {
         fetch(`http://localhost:8080/api/rooms/${roomCode}`)
@@ -126,13 +143,13 @@ function Room() {
             setConnected(true)
 
             client.subscribe(`/topic/room/update/${roomCode}`, (msg) => {
+                if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
-                
-
             })
 
             client.subscribe(`/topic/room/play/question/text/${roomCode}`, (msg) => {
+                if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
 
@@ -143,6 +160,7 @@ function Room() {
             })
 
             client.subscribe(`/topic/room/play/question/options/${roomCode}`, (msg) =>{
+                if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
 
@@ -156,6 +174,7 @@ function Room() {
             })
 
             client.subscribe(`/topic/room/play/question/stop/${roomCode}`, (msg) =>{
+                if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
 
@@ -177,6 +196,7 @@ function Room() {
             })
 
             client.subscribe(`/topic/room/play/leaderboard/${roomCode}`, (msg) =>{
+                if (hasLeftRef.current) return
                 const players = JSON.parse(msg.body)
                 console.log(players)
                 setLeaderBoard(players.slice(0,5))
@@ -191,7 +211,8 @@ function Room() {
                 setGameState("LEADERBOARD")
             })
 
-            client.subscribe(`/topic/room/${roomCode}/player/${nickName}/scores`, (msg) => {
+            client.subscribe(`/topic/room/${roomCode}/player/${nickName}`, (msg) => {
+                if (hasLeftRef.current) return
                 const result = JSON.parse(msg.body)
                 switch(result.type){
                     case 'SCORES':
@@ -199,6 +220,7 @@ function Room() {
                         currectScore.current = result.payLoad
                         break;
                     case 'ROOM_LEFT':
+                        hasLeftRef.current = true
                         setGameState('LEFT')
                         break;
                 }   
@@ -206,6 +228,7 @@ function Room() {
             })
 
             client.subscribe(`/topic/room/end/${roomCode}`, (msg) => {
+                if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
                 setGameState('GAME_OVER')
@@ -264,17 +287,6 @@ function Room() {
         return (pos || 1) + 'th'
     }
 
-    function leaveRoom(){
-        if (stompClient.current) {
-            stompClient.current.send("/app/game/room/leave", {}, JSON.stringify({
-                roomCode: roomCode,
-                playerNickName: nickName
-            }))
-        }
-        navigate("/")
-    }
-
-    
     const radius = 40
     const circumference = 2 * Math.PI * radius
     const strokeDashoffset = totalTime > 0 ? circumference - (timeLeft / totalTime) * circumference : circumference
@@ -391,7 +403,7 @@ function Room() {
 
                         {/* Leave Battle Button */}
                         <button
-                            onClick={leaveRoom}
+                            onClick={() => setShowLeaveConfirm(true)}
                             title="Leave Battle Arena"
                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-900/90 border border-rose-500/60 text-rose-300 hover:text-white text-xs font-bold transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer backdrop-blur-md"
                         >
@@ -768,6 +780,78 @@ function Room() {
                                 RETURN TO LOBBY
                             </button>
                         )}
+                    </div>
+                </div>
+            )}
+
+            {/* CONFIRM LEAVE MODAL */}
+            {showLeaveConfirm && (
+                <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fade-in">
+                    <div className="bg-slate-900/95 border-2 border-rose-500/80 rounded-2xl p-6 max-w-sm w-full text-center shadow-[0_0_30px_rgba(244,63,94,0.35)] relative overflow-hidden">
+                        <div className="w-14 h-14 rounded-full bg-rose-950/80 border border-rose-500/50 flex items-center justify-center text-3xl mx-auto mb-4">
+                            ⚠️
+                        </div>
+                        <h3 className="text-xl font-black text-white mb-2">Abandon Battle?</h3>
+                        <p className="text-xs text-slate-300 mb-6 leading-relaxed">
+                            Are you sure you want to leave the arena? Your current score and combo streak will be forfeited.
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowLeaveConfirm(false)}
+                                className="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all cursor-pointer"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowLeaveConfirm(false)
+                                    leaveRoom()
+                                }}
+                                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white text-xs font-black shadow-lg transition-all cursor-pointer"
+                            >
+                                Confirm Leave
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* OVERLAY: PLAYER LEFT ARENA */}
+            {gameState === 'LEFT' && (
+                <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 p-4">
+                    <div className="bg-slate-900/95 border-2 border-purple-500/80 rounded-3xl p-8 max-w-md w-full text-center glow-purple relative overflow-hidden">
+                        <div className="w-16 h-16 rounded-2xl bg-purple-950/80 border border-purple-400/50 flex items-center justify-center text-4xl mx-auto mb-4 shadow-[0_0_20px_rgba(168,85,247,0.5)]">
+                            🚪
+                        </div>
+                        <h2 className="text-2xl font-black text-white mb-2 tracking-wide">
+                            You Have Left the Arena
+                        </h2>
+                        <p className="text-xs text-purple-300/80 mb-6 leading-relaxed">
+                            You have disconnected from battle room <span className="font-mono font-bold text-amber-400">{roomCode}</span>.
+                        </p>
+
+                        {/* Match Stats Summary */}
+                        <div className="grid grid-cols-2 gap-3 mb-6 bg-slate-950/80 border border-slate-800 rounded-2xl p-4">
+                            <div className="text-center">
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Final Score</p>
+                                <p className="text-lg font-black text-amber-300 font-mono mt-0.5">
+                                    👑 {totalScore.toLocaleString()}
+                                </p>
+                            </div>
+                            <div className="text-center border-l border-slate-800">
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Final Rank</p>
+                                <p className="text-lg font-black text-cyan-400 mt-0.5">
+                                    {getPosition(position)}
+                                </p>
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={() => navigate('/')}
+                            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:from-purple-500 hover:to-amber-400 text-white font-black text-sm tracking-wider shadow-[0_0_20px_rgba(217,70,239,0.5)] transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                        >
+                            RETURN TO LOBBY
+                        </button>
                     </div>
                 </div>
             )}
