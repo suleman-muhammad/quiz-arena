@@ -24,6 +24,7 @@ import com.quizarena.dto.AnswerDTO;
 import com.quizarena.dto.SimpleMessage;
 import com.quizarena.dto.StartRoomRequest;
 import com.quizarena.dto.LeaveRoomRequest;
+import com.quizarena.dto.PlayerInfoDTO;
 import com.quizarena.entity.Quiz;
 import com.quizarena.game.GameManager;
 import com.quizarena.game.GameRoom;
@@ -208,7 +209,8 @@ public class GameService {
         GameRoom room = manager.findRoomByCode(roomCode);
         if(room != null){
             int result = room.submitAnswer(answer);  
-            messagingTemplate.convertAndSend("/topic/room/" + roomCode + "/player/" + answer.getPlayerNickName() + "/scores",result);
+            PlayerInfoDTO playerInfoDTO = new PlayerInfoDTO("SCORES",Integer.valueOf(result));
+            messagingTemplate.convertAndSend("/topic/room/" + roomCode + "/player/" + answer.getPlayerNickName(),playerInfoDTO);
         }
     }
 
