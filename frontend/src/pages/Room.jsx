@@ -94,7 +94,7 @@ function Room() {
                 if (data === null) {
                     navigate("/")
                 }else{
-                    setLeaderBoard(data.players ? data.players.slice(0, 5) : [])
+                    setLeaderBoard(data.players ? data.players : [])
 
                     const me = data.players.find(p => p.nickName === nickName)
                     if (me){
@@ -142,10 +142,11 @@ function Room() {
             stompClient.current = client
             setConnected(true)
 
-            client.subscribe(`/topic/room/update/${roomCode}`, (msg) => {
+            client.subscribe(`/topic/room/${roomCode}/update`, (msg) => {
                 if (hasLeftRef.current) return
-                const data = JSON.parse(msg.body)
-                console.log(data)
+                const roomInfo = JSON.parse(msg.body)
+                console.log(roomInfo)
+                setLeaderBoard(roomInfo.players);
             })
 
             client.subscribe(`/topic/room/play/question/text/${roomCode}`, (msg) => {
@@ -199,7 +200,7 @@ function Room() {
                 if (hasLeftRef.current) return
                 const players = JSON.parse(msg.body)
                 console.log(players)
-                setLeaderBoard(players.slice(0,5))
+                setLeaderBoard(players)
 
                 const me = players.find(p => p.nickName === nickName)
                 if(me){
@@ -579,7 +580,7 @@ function Room() {
                             </div>
 
                             <div className="space-y-2.5">
-                                {leaderboard.map((p, index) => {
+                                {leaderboard.slice(0,5).map((p, index) => {
                                     const isMe = p.nickName === nickName
                                     const medals = ['🥇', '🥈', '🥉']
                                     const isTop3 = p.currentPos < 3
