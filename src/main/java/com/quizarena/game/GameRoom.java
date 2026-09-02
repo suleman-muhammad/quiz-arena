@@ -62,24 +62,25 @@ public class GameRoom {
     public List<Player> finishRound(){
         System.out.println("Game: Got a finish Round Request.");
         Question q = questions.get(currQuestionNo-1);
-        for(String playerName: answers.keySet()){ 
+        synchronized(this.answers){
+            for(String playerName: answers.keySet()){ 
 
-            // System.out.println("Game: Checking answer from " + playerName + 
-            // " chose=" + ans.getChosenOption() + " correct=" + q.getCorrectOption());
-
-            for (Player p : players){
-                if(p.getNickName().equalsIgnoreCase(playerName)){
-                    System.out.println("Game: Player Matched.");
-                    p.setScore(p.getScore() + answers.get(playerName));
-                    if (answers.get(playerName) > 0){
-                        p.setCombo(p.getCombo() + 1);
-                    }else{
-                        p.setCombo(0);
+                for (Player p : players){
+                    if(p.getNickName().equalsIgnoreCase(playerName)){
+                        System.out.println("Game: Player Matched.");
+                        p.setScore(p.getScore() + answers.get(playerName));
+                        if (answers.get(playerName) > 0){
+                            p.setCombo(p.getCombo() + 1);
+                        }else{
+                            p.setCombo(0);
+                        }
                     }
                 }
             }
+
+            this.answers.clear();
         }
-        this.answers.clear();
+        
         System.out.println("Serivce: Sending LeaderBoard.");
         if(currQuestionNo >= this.questions.size()){
             this.state = RoomState.FINISHED;
@@ -90,11 +91,14 @@ public class GameRoom {
     }
 
     private List<Player> getLeaderBoard(){
-        Collections.sort(players,new ComparePlayersForPosition());
-        for(int i = 0; i<players.size(); i++){
-            players.get(i).setCurrentPos(i+1);
+        synchronized(this.players){
+            Collections.sort(players,new ComparePlayersForPosition());
+            for(int i = 0; i<players.size(); i++){
+                players.get(i).setCurrentPos(i+1);
+            }
+            return players;
         }
-        return players;
+        
     }
 
     public boolean addPlayer(Player p){
@@ -102,23 +106,25 @@ public class GameRoom {
             return false;
         }
         
-        p.setCurrentPos(1);
-        p.setScore(0);
-        for(Player player: players){
-            if (player.getNickName().equalsIgnoreCase(p.getNickName())){
-                return false;
+        synchronized(this.players){
+            p.setCurrentPos(1);
+            p.setScore(0);
+            for(Player player: players){
+                if (player.getNickName().equalsIgnoreCase(p.getNickName())){
+                    return false;
+                }
             }
-        }
-        
-
-        this.players.add(p);
-        return true;
+            this.players.add(p);
+            return true;
+        }   
     }
 
     public boolean removePlayer(Player p){
-        for(Player player: players){
-            if(player.getNickName().equalsIgnoreCase(p.getNickName())){
-                return players.remove(player);
+        synchronized(this.players){
+            for(Player player: players){
+                if(player.getNickName().equalsIgnoreCase(p.getNickName())){
+                    return players.remove(player);
+                }
             }
         }
         return false;
