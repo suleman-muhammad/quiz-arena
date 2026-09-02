@@ -35,10 +35,14 @@ public class GameRoom {
     }
 
 
-    public void startRoom(List<Question> questions){
+    public synchronized boolean startRoom(List<Question> questions){
+        if(this.state != RoomState.WAITING){
+            return false;
+        }
         this.questions = questions;
         currQuestionNo = 0;
         this.state = RoomState.In_PROGRESS;
+        return true;
     }
 
     public QuestionDTO getNextQuestion(){
