@@ -218,7 +218,7 @@ function Room() {
                 switch(result.type){
                     case 'SCORES':
                         console.log(result)
-                        currectScore.current = result.payLoad
+                        if(result.payLoad >= 0) currectScore.current = result.payLoad
                         break;
                     case 'ROOM_LEFT':
                         hasLeftRef.current = true
