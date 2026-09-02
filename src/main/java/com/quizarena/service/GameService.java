@@ -1,12 +1,7 @@
 package com.quizarena.service;
 
-
-
 import java.util.List;
-
 import java.util.Optional;
-
-
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -45,7 +40,7 @@ public class GameService {
         this.manager = manager;
         this.quizRepository = quizRepository;
         this.messagingTemplate = template;
-        this.roomThread = Executors.newScheduledThreadPool(1);
+        this.roomThread = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() * 2);
     }
 
 
@@ -84,8 +79,11 @@ public class GameService {
 
         // System.out.println("Game Service: Passed quiz check for the Room  " + roomCode);
 
-        room.startRoom(q.get().getQuestions());
-
+        boolean result = room.startRoom(q.get().getQuestions());
+        if(!result){
+            messagingTemplate.convertAndSend("/topic/host/" + request.hostNickName(), new SimpleMessage("ERROR","ROOM is already Started."));
+            return;
+        }
         // System.out.println("Game Service: Passed statring checks for the Room  " + roomCode);
 
         this.roomThread.schedule(() -> {
@@ -223,7 +221,7 @@ public class GameService {
 
         String roomEndPoint;
         if(room.getState() == RoomState.WAITING){
-            roomEndPoint = "/topic/room/waiting/";
+            roomEndPoint = "/topic/room/waiting/" + room.getRoomCode();
         }else{
             roomEndPoint = "/topic/room/" + room.getRoomCode() + "/update";
         }
