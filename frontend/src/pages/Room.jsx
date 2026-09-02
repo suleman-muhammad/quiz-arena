@@ -193,8 +193,16 @@ function Room() {
 
             client.subscribe(`/topic/room/${roomCode}/player/${nickName}/scores`, (msg) => {
                 const result = JSON.parse(msg.body)
-                console.log(result)
-                currectScore.current = result
+                switch(result.type){
+                    case 'SCORES':
+                        console.log(result)
+                        currectScore.current = result.payLoad
+                        break;
+                    case 'ROOM_LEFT':
+                        setGameState('LEFT')
+                        break;
+                }   
+                
             })
 
             client.subscribe(`/topic/room/end/${roomCode}`, (msg) => {
