@@ -40,7 +40,7 @@ function JoinGame() {
                 navigate(`/waitingRoom/${roomCode}?nickname=${nickname}&host=false`)
             })
 
-            client.send(`/app/game/room/join`, {}, JSON.stringify({
+            client.send(`/app/game/rooms/join`, {}, JSON.stringify({
                 roomCode: roomCode,
                 playerNickName: nickname,
                 requestId: requestId

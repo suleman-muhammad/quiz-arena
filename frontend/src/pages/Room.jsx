@@ -75,7 +75,7 @@ function Room() {
     function leaveRoom() {
         hasLeftRef.current = true
         if (stompClient.current && connected) {
-            stompClient.current.send("/app/game/room/leave", {}, JSON.stringify({
+            stompClient.current.send("/app/game/rooms/leave", {}, JSON.stringify({
                 roomCode: roomCode,
                 playerNickName: nickName
             }))
@@ -142,14 +142,14 @@ function Room() {
             stompClient.current = client
             setConnected(true)
 
-            client.subscribe(`/topic/room/${roomCode}/update`, (msg) => {
+            client.subscribe(`/topic/rooms/${roomCode}/update`, (msg) => {
                 if (hasLeftRef.current) return
                 const roomInfo = JSON.parse(msg.body)
                 console.log(roomInfo)
                 setLeaderBoard(roomInfo.players);
             })
 
-            client.subscribe(`/topic/room/${roomCode}/play/question/text`, (msg) => {
+            client.subscribe(`/topic/rooms/${roomCode}/play/question/text`, (msg) => {
                 if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
@@ -160,7 +160,7 @@ function Room() {
                 currectScore.current = 0;
             })
 
-            client.subscribe(`/topic/room/${roomCode}/play/question/options`, (msg) =>{
+            client.subscribe(`/topic/rooms/${roomCode}/play/question/options`, (msg) =>{
                 if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
@@ -174,7 +174,7 @@ function Room() {
                 setTotalTime(data.timeLimit || 10)
             })
 
-            client.subscribe(`/topic/room/${roomCode}/play/question/stop`, (msg) =>{
+            client.subscribe(`/topic/rooms/${roomCode}/play/question/stop`, (msg) =>{
                 if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
@@ -196,7 +196,7 @@ function Room() {
                 setOptionD('')
             })
 
-            client.subscribe(`/topic/room/${roomCode}/play/leaderboard`, (msg) =>{
+            client.subscribe(`/topic/rooms/${roomCode}/play/leaderboard`, (msg) =>{
                 if (hasLeftRef.current) return
                 const players = JSON.parse(msg.body)
                 console.log(players)
@@ -212,7 +212,7 @@ function Room() {
                 setGameState("LEADERBOARD")
             })
 
-            client.subscribe(`/topic/room/${roomCode}/player/${nickName}`, (msg) => {
+            client.subscribe(`/topic/rooms/${roomCode}/player/${nickName}`, (msg) => {
                 if (hasLeftRef.current) return
                 const result = JSON.parse(msg.body)
                 switch(result.type){
@@ -228,7 +228,7 @@ function Room() {
                 
             })
 
-            client.subscribe(`/topic/room/${roomCode}/end`, (msg) => {
+            client.subscribe(`/topic/rooms/${roomCode}/end`, (msg) => {
                 if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
@@ -270,7 +270,7 @@ function Room() {
     function submitAnswer(val) {
         setGameState('SUBMITTED')
         if (stompClient.current) {
-            stompClient.current.send("/app/game/room/answer", {}, JSON.stringify({
+            stompClient.current.send("/app/game/rooms/answer", {}, JSON.stringify({
                 roomCode: roomCode,
                 playerNickName: nickName,
                 questionNo: currQuestionNo,

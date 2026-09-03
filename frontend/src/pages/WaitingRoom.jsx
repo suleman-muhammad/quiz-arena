@@ -94,7 +94,7 @@ function WaitingRoom() {
             setConnected(true)
 
             // Subscribe to room lobby updates
-            client.subscribe(`/topic/room/${roomCode}/waiting`, (msg) => {
+            client.subscribe(`/topic/rooms/${roomCode}/waiting`, (msg) => {
                 const data = JSON.parse(msg.body)
                 if (data && data.players) {
                     setPlayers(data.players)
@@ -102,15 +102,15 @@ function WaitingRoom() {
             })
 
             // Subscribe to direct player notifications
-            client.subscribe(`/topic/room/${roomCode}/player/${nickName}`, (msg) => {
+            client.subscribe(`/topic/rooms/${roomCode}/player/${nickName}`, (msg) => {
                 const data = JSON.parse(msg.body)
                 setMyMsgs(data.message)
             })
 
             // Subscribe to room start signal
-            client.subscribe(`/topic/room/${roomCode}/waiting/start`, () => {
+            client.subscribe(`/topic/rooms/${roomCode}/waiting/start`, () => {
                 client.disconnect()
-                navigate(`/room/${roomCode}?nickname=${nickName}`)
+                navigate(`/rooms/${roomCode}?nickname=${nickName}`)
             })
         }, () => {
             setConnected(false)
@@ -128,7 +128,7 @@ function WaitingRoom() {
         }
         setMyMsgs('')
         if (stompClient.current) {
-            stompClient.current.send("/app/game/room/start", {}, JSON.stringify({
+            stompClient.current.send("/app/game/rooms/start", {}, JSON.stringify({
                 roomCode: roomCode,
                 hostNickName: nickName
             }))
@@ -152,7 +152,7 @@ function WaitingRoom() {
 
     function leaveRoom(){
         if (stompClient.current) {
-            stompClient.current.send("/app/game/room/leave", {}, JSON.stringify({
+            stompClient.current.send("/app/game/rooms/leave", {}, JSON.stringify({
                 roomCode: roomCode,
                 playerNickName: nickName
             }))
