@@ -54,10 +54,10 @@ public class GameController {
         JoinRequestAnswer requestAnswer = manager.addPlayerToRoom(request.roomCode(), request.playerNickName());
 
         // if(requestAnswer.roomInfo() == null){
-        //     messagingTemplate.convertAndSend("/topic/join_request/" + request.playerNickName() + "/" + request.requestId(), new SimpleMessage("ERROR",requestAnswer.message()));
+        //     messagingTemplate.convertAndSend("/topic/join-requests/" + request.playerNickName() + "/" + request.requestId(), new SimpleMessage("ERROR",requestAnswer.message()));
         //     return;
         // }
-        messagingTemplate.convertAndSend("/topic/join_request/" + request.playerNickName() + "/" + request.requestId(), requestAnswer);
+        messagingTemplate.convertAndSend("/topic/join-requests/" + request.playerNickName() + "/" + request.requestId(), requestAnswer);
 
         // messagingTemplate.convertAndSend("/topic/rooms/waiting/" + request.roomCode(),requestAnswer.roomInfo());
         messagingTemplate.convertAndSend("/topic/rooms/" + request.roomCode() + "/waiting", requestAnswer.roomInfo());
