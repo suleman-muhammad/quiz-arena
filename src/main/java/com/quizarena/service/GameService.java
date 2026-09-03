@@ -233,7 +233,7 @@ public class GameService {
         if (room.getState() == RoomState.WAITING) {
             roomEndPoint = "/topic/rooms/" + room.getRoomCode() + "/waiting";
         } else {
-            roomEndPoint = "/topic/rooms/" + room.getRoomCode() + "/update";
+            roomEndPoint = "/topic/rooms/" + room.getRoomCode() + "/roster";
         }
 
         // if(request.playerNickName().equalsIgnoreCase(room.getHost())){
