@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import SockJS from "sockjs-client"
-import Stomp, { client } from 'stompjs'
+import Stomp from 'stompjs'
 import { HostAvatar, PlayerAvatar } from "../components/CyberAvatar"
 
 function WaitingRoom() {
@@ -94,7 +94,7 @@ function WaitingRoom() {
             setConnected(true)
 
             // Subscribe to room lobby updates
-            client.subscribe(`/topic/room/waiting/${roomCode}`, (msg) => {
+            client.subscribe(`/topic/room/${roomCode}/waiting`, (msg) => {
                 const data = JSON.parse(msg.body)
                 if (data && data.players) {
                     setPlayers(data.players)
@@ -102,13 +102,13 @@ function WaitingRoom() {
             })
 
             // Subscribe to direct player notifications
-            client.subscribe(`/topic/player/room/${roomCode}/${nickName}`, (msg) => {
+            client.subscribe(`/topic/room/${roomCode}/player/${nickName}`, (msg) => {
                 const data = JSON.parse(msg.body)
                 setMyMsgs(data.message)
             })
 
             // Subscribe to room start signal
-            client.subscribe(`/topic/room/waiting/start/${roomCode}`, () => {
+            client.subscribe(`/topic/room/${roomCode}/waiting/start`, () => {
                 client.disconnect()
                 navigate(`/room/${roomCode}?nickname=${nickName}`)
             })
