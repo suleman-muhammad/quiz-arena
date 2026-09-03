@@ -66,12 +66,12 @@ public class GameService {
 
         // System.out.println("Game Service: Passed the Room check for Room " + roomCode);
 
-        messagingTemplate.convertAndSend("/topic/room/waiting/start/" + roomCode, ResponseEntity.ok("let's Go"));
+        messagingTemplate.convertAndSend("/topic/room/" + roomCode + "/waiting/start" , ResponseEntity.ok("let's Go"));
         Optional<Quiz> q = quizRepository.findById(room.getQuizId());
 
         if(!q.isPresent()){
             // System.out.println("Game Service: No Quiz Found with Code " + room.getQuizId());
-            messagingTemplate.convertAndSend("/topic/room/waiting" + roomCode, new SimpleMessage("ERROR","No Quiz Found with id " + room.getQuizId()));
+            messagingTemplate.convertAndSend("/topic/room/" + roomCode + "/waiting" , new SimpleMessage("ERROR","No Quiz Found with id " + room.getQuizId()));
             manager.removeRoom(roomCode);
             return;
         }
@@ -221,7 +221,7 @@ public class GameService {
 
         String roomEndPoint;
         if(room.getState() == RoomState.WAITING){
-            roomEndPoint = "/topic/room/waiting/" + room.getRoomCode();
+            roomEndPoint = "/topic/room/" + room.getRoomCode() + "/waiting";
         }else{
             roomEndPoint = "/topic/room/" + room.getRoomCode() + "/update";
         }
