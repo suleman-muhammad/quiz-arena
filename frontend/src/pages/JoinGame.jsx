@@ -27,7 +27,7 @@ function JoinGame() {
         client.connect({}, () => {
             const requestId = "REQ_" + Math.random().toString(36).substring(2, 9)
             
-            client.subscribe(`/topic/join_request/${nickname}/${requestId}`, (msg) => {
+            client.subscribe(`/topic/join-requests/${nickname}/${requestId}`, (msg) => {
                 const data = JSON.parse(msg.body)
                 console.log(data)
                 setLoading(false)
