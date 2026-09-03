@@ -217,7 +217,7 @@ public class GameService {
         if (room != null) {
             int result = room.submitAnswer(answer);
             PlayerInfoDTO playerInfoDTO = new PlayerInfoDTO("SCORES", Integer.valueOf(result));
-            messagingTemplate.convertAndSend("/topic/rooms/" + roomCode + "/player/" + answer.getPlayerNickName(),
+            messagingTemplate.convertAndSend("/topic/rooms/" + roomCode + "/players/" + answer.getPlayerNickName(),
                     playerInfoDTO);
         }
     }
@@ -237,7 +237,7 @@ public class GameService {
         }
 
         // if(request.playerNickName().equalsIgnoreCase(room.getHost())){
-        // messagingTemplate.convertAndSend("/topic/player/" + request.playerNickName(),
+        // messagingTemplate.convertAndSend("/topic/players/" + request.playerNickName(),
         // new SimpleMessage("INFO","Out of the ROOM."));
         // messagingTemplate.convertAndSend(roomEndPoint + "end/" +
         // room.getRoomCode(),new SimpleMessage("GAME_OVER","Host Disconnected."));
@@ -254,7 +254,7 @@ public class GameService {
         roomInfo.setRoomCode(room.getRoomCode());
         roomInfo.setState(room.getState());
         messagingTemplate.convertAndSend(roomEndPoint, roomInfo);
-        messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/player/" + request.playerNickName(),
+        messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/players/" + request.playerNickName(),
                 new SimpleMessage("INFO", "Out of the ROOM."));
     }
 }

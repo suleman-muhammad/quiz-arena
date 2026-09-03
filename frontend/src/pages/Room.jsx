@@ -212,7 +212,7 @@ function Room() {
                 setGameState("LEADERBOARD")
             })
 
-            client.subscribe(`/topic/rooms/${roomCode}/player/${nickName}`, (msg) => {
+            client.subscribe(`/topic/rooms/${roomCode}/players/${nickName}`, (msg) => {
                 if (hasLeftRef.current) return
                 const result = JSON.parse(msg.body)
                 switch(result.type){

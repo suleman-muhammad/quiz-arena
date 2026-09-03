@@ -102,7 +102,7 @@ function WaitingRoom() {
             })
 
             // Subscribe to direct player notifications
-            client.subscribe(`/topic/rooms/${roomCode}/player/${nickName}`, (msg) => {
+            client.subscribe(`/topic/rooms/${roomCode}/players/${nickName}`, (msg) => {
                 const data = JSON.parse(msg.body)
                 setMyMsgs(data.message)
             })
