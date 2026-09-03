@@ -34,7 +34,7 @@ function QuizCard({ quiz }) {
         client.debug = null
 
         client.connect({},()=>{
-            client.subscribe(`/topic/host/${hostName}`, (msg) => {
+            client.subscribe(`/topic/hosts/${hostName}`, (msg) => {
                 const room = JSON.parse(msg.body)
                 client.disconnect()
                 navigate(`/waitingRoom/${room.roomCode}?nickname=${hostName}&host=true&playing=${willPlay}`)
