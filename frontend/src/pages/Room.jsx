@@ -142,7 +142,7 @@ function Room() {
             stompClient.current = client
             setConnected(true)
 
-            client.subscribe(`/topic/rooms/${roomCode}/update`, (msg) => {
+            client.subscribe(`/topic/rooms/${roomCode}/roster`, (msg) => {
                 if (hasLeftRef.current) return
                 const roomInfo = JSON.parse(msg.body)
                 console.log(roomInfo)
