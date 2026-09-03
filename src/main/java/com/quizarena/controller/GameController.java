@@ -31,10 +31,10 @@ public class GameController {
         this.manager = manager;
     }
 
-    @MessageMapping("/game/room/create")
+    @MessageMapping("/game/rooms/create")
     public void createRoom(CreateRoomRequest request){
         GameRoom room = manager.createRoom(request);
-        // messagingTemplate.convertAndSend("/topic/room/" + room.getRoomCode(),room);
+        // messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode(),room);
         System.out.println("SERVER: Create ROOM Hit: " + request.quizId() + " , Room Code: " + room.getRoomCode());
         RoomInfo roomInfo = new RoomInfo();
         roomInfo.setPlayers(room.getPlayers());
@@ -47,7 +47,7 @@ public class GameController {
         
     }
 
-    @MessageMapping("/game/room/join")
+    @MessageMapping("/game/rooms/join")
     public void joinRoom(JoinRoomRequest request){
         System.out.println("SERVER: Join ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
         
@@ -59,26 +59,26 @@ public class GameController {
         // }
         messagingTemplate.convertAndSend("/topic/join_request/" + request.playerNickName() + "/" + request.requestId(), requestAnswer);
 
-        // messagingTemplate.convertAndSend("/topic/room/waiting/" + request.roomCode(),requestAnswer.roomInfo());
-        messagingTemplate.convertAndSend("/topic/room/" + request.roomCode() + "/waiting", requestAnswer.roomInfo());
+        // messagingTemplate.convertAndSend("/topic/rooms/waiting/" + request.roomCode(),requestAnswer.roomInfo());
+        messagingTemplate.convertAndSend("/topic/rooms/" + request.roomCode() + "/waiting", requestAnswer.roomInfo());
         
     }
 
-    @MessageMapping("/game/room/leave")
+    @MessageMapping("/game/rooms/leave")
     public void leaveRoom(LeaveRoomRequest request){
         gameService.handleRemovePlayer(request);
         System.out.println("SERVER: Leave ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
 
 
-    @MessageMapping("/game/room/start")
+    @MessageMapping("/game/rooms/start")
     public void startRoom(@RequestBody StartRoomRequest request){
         System.out.println("SERVER: Start ROOM Hit: " + request.roomCode());
 
         gameService.startRoom(request);
     }
 
-    @MessageMapping("/game/room/answer")
+    @MessageMapping("/game/rooms/answer")
     public void handleAnswer(@RequestBody AnswerDTO answer){
         System.out.println("Controller: Got an Answer Submission.");
         gameService.handleAnswer(answer.getRoomCode(),answer);
