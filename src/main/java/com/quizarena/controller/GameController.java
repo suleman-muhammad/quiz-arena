@@ -41,7 +41,7 @@ public class GameController {
         roomInfo.setRoomCode(room.getRoomCode());
         roomInfo.setState(room.getState());
         messagingTemplate.convertAndSend(
-            "/topic/host/" + request.hostNickName(), 
+            "/topic/hosts/" + request.hostNickName(), 
             roomInfo
         );
         

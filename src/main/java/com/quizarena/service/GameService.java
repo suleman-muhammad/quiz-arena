@@ -54,13 +54,13 @@ public class GameService {
         }
 
         if (room.getState() != RoomState.WAITING) {
-            messagingTemplate.convertAndSend("/topic/host/" + request.hostNickName(),
+            messagingTemplate.convertAndSend("/topic/hosts/" + request.hostNickName(),
                     new SimpleMessage("ERROR", "ROOM is already Started."));
             return;
         }
 
         if (!room.getHost().equalsIgnoreCase(request.hostNickName())) {
-            messagingTemplate.convertAndSend("/topic/host/" + request.hostNickName(),
+            messagingTemplate.convertAndSend("/topic/hosts/" + request.hostNickName(),
                     new SimpleMessage("ERROR", "You are not the Host of the ROOM so cannot start."));
             return;
         }
@@ -85,7 +85,7 @@ public class GameService {
 
         boolean result = room.startRoom(q.get().getQuestions());
         if (!result) {
-            messagingTemplate.convertAndSend("/topic/host/" + request.hostNickName(),
+            messagingTemplate.convertAndSend("/topic/hosts/" + request.hostNickName(),
                     new SimpleMessage("ERROR", "ROOM is already Started."));
             return;
         }
