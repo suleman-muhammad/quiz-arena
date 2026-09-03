@@ -50,8 +50,7 @@ public class GameController {
     @MessageMapping("/game/room/join")
     public void joinRoom(JoinRoomRequest request){
         System.out.println("SERVER: Join ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
-
-
+        
         JoinRequestAnswer requestAnswer = manager.addPlayerToRoom(request.roomCode(), request.playerNickName());
 
         // if(requestAnswer.roomInfo() == null){
@@ -60,8 +59,8 @@ public class GameController {
         // }
         messagingTemplate.convertAndSend("/topic/join_request/" + request.playerNickName() + "/" + request.requestId(), requestAnswer);
 
-        
-        messagingTemplate.convertAndSend("/topic/room/waiting/" + request.roomCode(),requestAnswer.roomInfo());
+        // messagingTemplate.convertAndSend("/topic/room/waiting/" + request.roomCode(),requestAnswer.roomInfo());
+        messagingTemplate.convertAndSend("/topic/room/" + request.roomCode() + "/waiting", requestAnswer.roomInfo());
         
     }
 
