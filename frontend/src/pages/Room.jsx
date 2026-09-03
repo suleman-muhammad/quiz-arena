@@ -149,7 +149,7 @@ function Room() {
                 setLeaderBoard(roomInfo.players);
             })
 
-            client.subscribe(`/topic/room/play/question/text/${roomCode}`, (msg) => {
+            client.subscribe(`/topic/room/${roomCode}/play/question/text`, (msg) => {
                 if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
@@ -160,7 +160,7 @@ function Room() {
                 currectScore.current = 0;
             })
 
-            client.subscribe(`/topic/room/play/question/options/${roomCode}`, (msg) =>{
+            client.subscribe(`/topic/room/${roomCode}/play/question/options`, (msg) =>{
                 if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
@@ -174,7 +174,7 @@ function Room() {
                 setTotalTime(data.timeLimit || 10)
             })
 
-            client.subscribe(`/topic/room/play/question/stop/${roomCode}`, (msg) =>{
+            client.subscribe(`/topic/room/${roomCode}/play/question/stop`, (msg) =>{
                 if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
@@ -196,7 +196,7 @@ function Room() {
                 setOptionD('')
             })
 
-            client.subscribe(`/topic/room/play/leaderboard/${roomCode}`, (msg) =>{
+            client.subscribe(`/topic/room/${roomCode}/play/leaderboard`, (msg) =>{
                 if (hasLeftRef.current) return
                 const players = JSON.parse(msg.body)
                 console.log(players)
@@ -228,7 +228,7 @@ function Room() {
                 
             })
 
-            client.subscribe(`/topic/room/end/${roomCode}`, (msg) => {
+            client.subscribe(`/topic/room/${roomCode}/end`, (msg) => {
                 if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
