@@ -74,8 +74,6 @@ public class QuizService {
         return ResponseEntity.notFound().build(); // returns 404 
     }
 
-    public List<QuizCategory> getAllQuizCategories(){
-        return quizCategoryRepository.findAll();
-    }
+    
 
 }

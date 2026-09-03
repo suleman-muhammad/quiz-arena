@@ -156,7 +156,7 @@ function CreateQuiz() {
     const [categories, setCategories] = useState(defaultCategories)
 
     useEffect(() =>{
-        fetch(`http://localhost:8080/api/quizzes/categories`)
+        fetch(`http://localhost:8080/api/quiz-categories`)
             .then((res) => {
                 if(!res.ok) return null
                 return res.json()
