@@ -68,7 +68,7 @@ public class GameService {
         // System.out.println("Game Service: Passed the Room check for Room " +
         // roomCode);
 
-        messagingTemplate.convertAndSend("/topic/rooms/" + roomCode + "/waiting/start", ResponseEntity.ok("let's Go"));
+        messagingTemplate.convertAndSend("/topic/rooms/" + roomCode + "/start", ResponseEntity.ok("let's Go"));
         Optional<Quiz> q = quizRepository.findById(room.getQuizId());
 
         if (!q.isPresent()) {
@@ -128,7 +128,7 @@ public class GameService {
 
         QuestionTextDTO questionTextDTO = new QuestionTextDTO(currQuestion.getQuestionText(),
                 currQuestion.getQuestionNo());
-        messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/play/question/text", questionTextDTO);
+        messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/question/text", questionTextDTO);
 
         // System.out.println("Server: send the Question Succeccfully" );
 
@@ -154,7 +154,7 @@ public class GameService {
             return;
         }
 
-        messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/play/question/options", questionDTO);
+        messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/question/options", questionDTO);
         room.setPreviousQuestionSentTimeMillis(System.currentTimeMillis());
 
         this.roomThread.schedule(() -> {
@@ -171,7 +171,7 @@ public class GameService {
 
     public void endRound(GameRoom room, StopAcceptingAnswers stopAcceptingAnswers) {
 
-        messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/play/question/stop",
+        messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/question/stop",
                 stopAcceptingAnswers);
 
         // System.out.println("Server: Send the Stop Question Request Succeccfully");
@@ -193,7 +193,7 @@ public class GameService {
         List<Player> roundResult = room.finishRound();
 
         // System.out.println("Server: Got Round Result.");
-        messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/play/leaderboard", roundResult);
+        messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/leaderboard", roundResult);
         if (room.hasFinished()) {
             messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/end",
                     new SimpleMessage("GAME_OVER", "ROOM Ended."));
@@ -253,6 +253,7 @@ public class GameService {
         roomInfo.setPlayers(room.getPlayers());
         roomInfo.setRoomCode(room.getRoomCode());
         roomInfo.setState(room.getState());
+        roomInfo.setQuizId(room.getQuizId());
         messagingTemplate.convertAndSend(roomEndPoint, roomInfo);
         messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/players/" + request.playerNickName(),
                 new SimpleMessage("INFO", "Out of the ROOM."));
