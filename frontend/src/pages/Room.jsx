@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import SockJS from "sockjs-client"
 import Stomp from 'stompjs'
-import { PlayerAvatar, HostAvatar } from "../components/CyberAvatar"
+import { PlayerAvatar, HostAvatar } from "CyberAvatar"
 
 function Room() {
     const navigate = useNavigate()
@@ -90,50 +90,54 @@ function Room() {
     useEffect(() => {
         fetch(`http://localhost:8080/api/rooms/${roomCode}`)
             .then(res => res.json())
-            .then((data) => {
-                if (data === null) {
+            .then((roomInfo) => {
+                if (roomInfo === null) {
                     navigate("/")
                 }else{
-                    setLeaderBoard(data.players ? data.players : [])
+                    setLeaderBoard(roomInfo.players ? roomInfo.players : [])
 
-                    const me = data.players.find(p => p.nickName === nickName)
+                    const me = roomInfo.players.find(p => p.nickName === nickName)
                     if (me){
                         setTotalScore(me.score)
                         setPosition(me.currentPos)
                     }
-                }        
-            })
-            .catch(err => console.log(err))
-        
-        fetch(`http://localhost:8080/api/rooms/${roomCode}/quiz`)
-            .then(res => {
-                if (!res.ok) return null
-                return res.json()
-            })
-            .then((id) => {
-                if (id == null) {
-                    console.log(`Room with code ${roomCode} does not have quiz.`)
-                    navigate("/")
-                    return
-                }
-                
-                fetch(`http://localhost:8080/api/quizzes/${id}`)
+
+
+
+                    fetch(`http://localhost:8080/api/quizzes/${roomInfo.quizId}`)
                     .then(res => {
                         if (!res.ok) return null
                         return res.json()
                     })
-                    .then((data) => {
-                        if (data == null) {
-                            console.log(`No quiz found with Id ${id}`)
+                    .then((quizInfo) => {
+                        if (quizInfo == null) {
+                            console.log(`No quiz found with Id ${roomInfo.quizId}`)
                             navigate("/")
                             return
                         }
-                        setQuizId(id)
-                        setQuizTitle(data.title)
-                        setQuizDescription(data.description)
-                        setQuestionCount(data.questions?.length || 0)
+                        setQuizId(roomInfo.quizId)
+                        setQuizTitle(quizInfo.title)
+                        setQuizDescription(quizInfo.description)
+                        setQuestionCount(quizInfo.questions?.length || 0)
                     })
+                }        
             })
+            .catch(err => console.log(err))
+        
+        // fetch(`http://localhost:8080/api/rooms/${roomCode}/quiz`)
+        //     .then(res => {
+        //         if (!res.ok) return null
+        //         return res.json()
+        //     })
+        //     .then((id) => {
+        //         if (id == null) {
+        //             console.log(`Room with code ${roomCode} does not have quiz.`)
+        //             navigate("/")
+        //             return
+        //         }
+                
+                
+        //     })
 
         const socket = new SockJS('http://localhost:8080/ws')
         const client = Stomp.over(socket)
@@ -149,7 +153,7 @@ function Room() {
                 setLeaderBoard(roomInfo.players);
             })
 
-            client.subscribe(`/topic/rooms/${roomCode}/play/question/text`, (msg) => {
+            client.subscribe(`/topic/rooms/${roomCode}/question/text`, (msg) => {
                 if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
@@ -160,7 +164,7 @@ function Room() {
                 currectScore.current = 0;
             })
 
-            client.subscribe(`/topic/rooms/${roomCode}/play/question/options`, (msg) =>{
+            client.subscribe(`/topic/rooms/${roomCode}/question/options`, (msg) =>{
                 if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
@@ -174,7 +178,7 @@ function Room() {
                 setTotalTime(data.timeLimit || 10)
             })
 
-            client.subscribe(`/topic/rooms/${roomCode}/play/question/stop`, (msg) =>{
+            client.subscribe(`/topic/rooms/${roomCode}/question/stop`, (msg) =>{
                 if (hasLeftRef.current) return
                 const data = JSON.parse(msg.body)
                 console.log(data)
@@ -196,7 +200,7 @@ function Room() {
                 setOptionD('')
             })
 
-            client.subscribe(`/topic/rooms/${roomCode}/play/leaderboard`, (msg) =>{
+            client.subscribe(`/topic/rooms/${roomCode}/leaderboard`, (msg) =>{
                 if (hasLeftRef.current) return
                 const players = JSON.parse(msg.body)
                 console.log(players)

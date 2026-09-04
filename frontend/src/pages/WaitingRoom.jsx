@@ -40,50 +40,53 @@ function WaitingRoom() {
         // Fetch room information
         fetch(`http://localhost:8080/api/rooms/${roomCode}`)
             .then(res => res.json())
-            .then((data) => {
-                if (data === null) {
+            .then((roomInfo) => {
+                if (roomInfo === null) {
                     navigate("/")
                 } else {
-                    setPlayers(data.players || [])
-                }
-            })
-            .catch(err => console.log(err))
+                    setPlayers(roomInfo.players || [])
 
-        // Fetch room quiz details
-        fetch(`http://localhost:8080/api/rooms/${roomCode}/quiz`)
-            .then(res => {
-                if (!res.ok) return null
-                return res.json()
-            })
-            .then((id) => {
-                if (id == null) {
-                    console.log(`Room with code ${roomCode} does not have quiz.`)
-                    navigate("/")
-                    return
-                }
-
-                fetch(`http://localhost:8080/api/quizzes/${id}`)
+                    fetch(`http://localhost:8080/api/quizzes/${roomInfo.quizId}`)
                     .then(res => {
                         if (!res.ok) return null
                         return res.json()
                     })
-                    .then((data) => {
-                        if (data == null) {
-                            console.log(`No quiz found with Id ${id}`)
+                    .then((quizInfo) => {
+                        if (quizInfo == null) {
+                            console.log(`No quiz found with Id ${roomInfo.quizId}`)
                             navigate("/")
                             return
                         }
-                        setQuizId(id)
-                        setQuizTitle(data.title)
-                        setQuizDescription(data.description)
-                        setQuestionCount(data.questions?.length || 0)
-                        setQuizQuestions(data.questions || [])
-                        setQuizConcepts(data.concepts || [])
-                        setQuizTriviaFacts(data.triviaFacts || []) 
-                        setQuizCategory(data.category || defaultCategory)
+                        setQuizId(roomInfo.quizId)
+                        setQuizTitle(quizInfo.title)
+                        setQuizDescription(quizInfo.description)
+                        setQuestionCount(quizInfo.questions?.length || 0)
+                        setQuizQuestions(quizInfo.questions || [])
+                        setQuizConcepts(quizInfo.concepts || [])
+                        setQuizTriviaFacts(quizInfo.triviaFacts || []) 
+                        setQuizCategory(quizInfo.category || defaultCategory)
                         // Set the Icon as well.
                     })
+
+                }
             })
+            .catch(err => console.log(err))
+
+        // // Fetch room quiz details
+        // fetch(`http://localhost:8080/api/rooms/${roomCode}/quiz`)
+        //     .then(res => {
+        //         if (!res.ok) return null
+        //         return res.json()
+        //     })
+        //     .then((id) => {
+        //         if (id == null) {
+        //             console.log(`Room with code ${roomCode} does not have quiz.`)
+        //             navigate("/")
+        //             return
+        //         }
+
+                
+        //     })
 
         // Connect STOMP WebSocket
         const socket = new SockJS('http://localhost:8080/ws')
@@ -108,7 +111,7 @@ function WaitingRoom() {
             })
 
             // Subscribe to room start signal
-            client.subscribe(`/topic/rooms/${roomCode}/waiting/start`, () => {
+            client.subscribe(`/topic/rooms/${roomCode}/start`, () => {
                 client.disconnect()
                 navigate(`/rooms/${roomCode}?nickname=${nickName}`)
             })
