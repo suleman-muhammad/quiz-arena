@@ -10,6 +10,7 @@ public class RoomInfo {
     private String roomCode;
     private List<Player> players;
     private RoomState state;
+    private long quizId;
 
     
     public String getRoomCode() {
@@ -30,6 +31,10 @@ public class RoomInfo {
     public void setState(RoomState state) {
         this.state = state;
     }
-
-    
+    public long getQuizId() {
+        return quizId;
+    }
+    public void setQuizId(long quizId) {
+        this.quizId = quizId;
+    } 
 }
