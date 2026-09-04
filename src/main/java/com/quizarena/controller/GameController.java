@@ -40,6 +40,7 @@ public class GameController {
         roomInfo.setPlayers(room.getPlayers());
         roomInfo.setRoomCode(room.getRoomCode());
         roomInfo.setState(room.getState());
+        roomInfo.setQuizId(room.getQuizId());
         messagingTemplate.convertAndSend(
             "/topic/hosts/" + request.hostNickName(), 
             roomInfo
