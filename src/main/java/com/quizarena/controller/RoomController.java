@@ -37,6 +37,7 @@ public class RoomController {
         info.setPlayers(room.getPlayers());
         info.setRoomCode(roomCode);
         info.setState(room.getState());
+        info.setQuizId(room.getQuizId());
         return info;
 
     }
