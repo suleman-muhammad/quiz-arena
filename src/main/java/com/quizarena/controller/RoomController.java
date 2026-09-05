@@ -33,22 +33,24 @@ public class RoomController {
         if(room == null){
             return null;
         }
+
         RoomInfo info = new RoomInfo();
         info.setPlayers(room.getPlayers());
         info.setRoomCode(roomCode);
         info.setState(room.getState());
         info.setQuizId(room.getQuizId());
+        
         return info;
 
     }
 
     @GetMapping("/{roomCode}/quiz")
     public ResponseEntity<Long> getRoomQuiz(@PathVariable String roomCode){
-
         GameRoom room = gameManager.findRoomByCode(roomCode);
         if(room == null){
             return ResponseEntity.notFound().build();
         }
+
         long quizId = room.getQuizId();
         return ResponseEntity.ok(quizId);
         
@@ -56,12 +58,11 @@ public class RoomController {
 
     @GetMapping("/{roomCode}/leaderboard")
     public ResponseEntity<List<Player>> getleaderBoard(@PathVariable String roomCode){
-
-        System.out.println("Server: Got a get Request for Players.");
         GameRoom room = gameManager.findRoomByCode(roomCode);
         if(room == null){
             return ResponseEntity.notFound().build();
         }
+
         List<Player> players = room.getPlayers();
         return ResponseEntity.ok(players);
     }

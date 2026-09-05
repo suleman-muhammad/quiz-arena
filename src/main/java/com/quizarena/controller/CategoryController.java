@@ -19,7 +19,6 @@ public class CategoryController {
         this.categoryService = service;
     }
 
-    
     @GetMapping("/quiz-categories")
     public List<QuizCategory> getAllCategories(){
         return categoryService.getAllQuizCategories();

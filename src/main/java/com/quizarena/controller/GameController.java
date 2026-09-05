@@ -17,7 +17,6 @@ import com.quizarena.game.GameManager;
 import com.quizarena.game.GameRoom;
 import com.quizarena.service.GameService;
 
-
 @Controller
 public class GameController {
 
@@ -34,13 +33,13 @@ public class GameController {
     @MessageMapping("/game/rooms/create")
     public void createRoom(CreateRoomRequest request){
         GameRoom room = manager.createRoom(request);
-        // messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode(),room);
-        System.out.println("SERVER: Create ROOM Hit: " + request.quizId() + " , Room Code: " + room.getRoomCode());
+
         RoomInfo roomInfo = new RoomInfo();
         roomInfo.setPlayers(room.getPlayers());
         roomInfo.setRoomCode(room.getRoomCode());
         roomInfo.setState(room.getState());
         roomInfo.setQuizId(room.getQuizId());
+
         messagingTemplate.convertAndSend(
             "/topic/hosts/" + request.hostNickName(), 
             roomInfo
@@ -49,18 +48,10 @@ public class GameController {
     }
 
     @MessageMapping("/game/rooms/join")
-    public void joinRoom(JoinRoomRequest request){
-        System.out.println("SERVER: Join ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
-        
+    public void joinRoom(JoinRoomRequest request){    
         JoinRequestAnswer requestAnswer = manager.addPlayerToRoom(request.roomCode(), request.playerNickName());
 
-        // if(requestAnswer.roomInfo() == null){
-        //     messagingTemplate.convertAndSend("/topic/join-requests/" + request.playerNickName() + "/" + request.requestId(), new SimpleMessage("ERROR",requestAnswer.message()));
-        //     return;
-        // }
         messagingTemplate.convertAndSend("/topic/join-requests/" + request.playerNickName() + "/" + request.requestId(), requestAnswer);
-
-        // messagingTemplate.convertAndSend("/topic/rooms/waiting/" + request.roomCode(),requestAnswer.roomInfo());
         messagingTemplate.convertAndSend("/topic/rooms/" + request.roomCode() + "/waiting", requestAnswer.roomInfo());
         
     }
@@ -74,14 +65,11 @@ public class GameController {
 
     @MessageMapping("/game/rooms/start")
     public void startRoom(@RequestBody StartRoomRequest request){
-        System.out.println("SERVER: Start ROOM Hit: " + request.roomCode());
-
         gameService.startRoom(request);
     }
 
     @MessageMapping("/game/rooms/answer")
     public void handleAnswer(@RequestBody AnswerDTO answer){
-        System.out.println("Controller: Got an Answer Submission.");
         gameService.handleAnswer(answer.getRoomCode(),answer);
     }
 }
