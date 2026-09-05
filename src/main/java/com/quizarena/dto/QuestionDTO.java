@@ -51,7 +51,5 @@ public class QuestionDTO {
     public void setQuestionNo(int questionNo) {
         this.questionNo = questionNo;
     }
-
-    
-    
+   
 }
