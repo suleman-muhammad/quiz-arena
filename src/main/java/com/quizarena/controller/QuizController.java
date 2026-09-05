@@ -24,27 +24,22 @@ public class QuizController {
         this.quizService = quizService;
     }
 
-    // this method handles the Post mapping on the class' original url
     @PostMapping
-    public Quiz creatQuiz(@RequestBody Quiz quiz){ // request body handles the conversion of json to Quiz and quiz to Json while returning
+    public Quiz creatQuiz(@RequestBody Quiz quiz){ 
         
         return quizService.creatQuiz(quiz);
     }
 
-    // get mapping on main url
-    // returns all quizzes
     @GetMapping
     public List<Quiz> getAllQuizzes(){
         return quizService.getAllQuizzes();
     }
 
-    //get mapping with main + sub url
-    // @PathVariable takes the id from the url and assigns it to id
     @GetMapping("/{id}")
     public ResponseEntity<Quiz> quizWithId(@PathVariable Long id){
         return quizService.findQuizWithId(id);
     }
-    // delete mapping with main + sub url
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Quiz> delteQuiz(@PathVariable Long id){
         return quizService.deleteQuizById(id);
