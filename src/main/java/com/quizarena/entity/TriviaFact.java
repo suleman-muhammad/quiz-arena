@@ -22,16 +22,10 @@ public class TriviaFact {
     private String title;
     private String text;
 
-    // dont serialize this side.
-    // for stop refrencing back to back between quiz and questions.
     @JsonBackReference
-    // relationship to quiz table. 
     @ManyToOne(fetch = FetchType.LAZY)
-    // which column to join on.
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
-
-
     
     public String getIcon() {
         return icon;
@@ -72,5 +66,5 @@ public class TriviaFact {
     public void setQuiz(Quiz quiz){
         this.quiz = quiz;
     }
-    
+
 }
