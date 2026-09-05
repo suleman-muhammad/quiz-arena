@@ -110,7 +110,7 @@ function CreateQuiz() {
                      questions: questions,
                      triviaFacts: triviaFacts,
                      concepts: keyConcepts.map(c => ({concept:c})),
-                     category : categories.current.find(c => c.label === category) || categories[0]
+                     category : categories.find(c => c.label === category) || categories[0]
                     }
 
         fetch('http://localhost:8080/api/quizzes', {
