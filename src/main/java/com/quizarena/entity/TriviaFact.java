@@ -36,31 +36,41 @@ public class TriviaFact {
     public String getIcon() {
         return icon;
     }
+
     public void setIcon(String icon) {
         this.icon = icon;
     }
+
     public String getTitle() {
         return title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
+
     public String getText() {
         return text;
     }
+
     public void setText(String text) {
         this.text = text;
     }
+
     public long getId() {
         return id;
     }
+
     public void setId(long id){
         this.id = id;
     }
+
     public Quiz getQuiz() {
         return quiz;
     }
+
     public void setQuiz(Quiz quiz){
         this.quiz = quiz;
     }
+    
 }

@@ -17,15 +17,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
-// represent a table in database.
+
 @Entity
-// table name in database
 @Table(name = "quizzes")
 public class Quiz {
 
 
-    @Id  // primary id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto generated identity
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private long id;
 
     private String title;
@@ -35,22 +34,17 @@ public class Quiz {
     @ManyToOne
     private QuizCategory category;
 
-    // Serialize this side.
-    // to stop refrencing back to back between quiz and questions.
     @JsonManagedReference 
-    //for relation ship with questions, and remove quistons if parent quiz is deleted.  
     @OneToMany(mappedBy = "quiz",cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER) 
     private List<Question> questions = new ArrayList<>();
 
     @JsonManagedReference 
-    //for relation ship with questions, and remove quistons if parent quiz is deleted.  
     @OneToMany(mappedBy = "quiz",cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER) 
     private List<TriviaFact> triviaFacts = new ArrayList<>();
 
     @JsonManagedReference
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval= true, fetch = FetchType.EAGER)
     private List<QuizConcept> concepts = new ArrayList<>();
-
     
     public Quiz() {
     }
@@ -59,7 +53,6 @@ public class Quiz {
     protected void onCreate(){
         this.createdAt = LocalDateTime.now();
     }
-
 
     public long getId() {
         return id;
