@@ -30,7 +30,6 @@ public class GameRoom {
 
         this.players = new ArrayList<>();
         this.answers = new ConcurrentHashMap<>();
-
         this.questions = null;
     }
 
@@ -39,6 +38,7 @@ public class GameRoom {
         if(this.state != RoomState.WAITING){
             return false;
         }
+
         this.questions = questions;
         currQuestionNo = 0;
         this.state = RoomState.In_PROGRESS;
@@ -50,8 +50,9 @@ public class GameRoom {
             return null;
         }
 
-        QuestionDTO q = new QuestionDTO();
         Question curr = questions.get(currQuestionNo);
+
+        QuestionDTO q = new QuestionDTO();
         q.setQuestionText(curr.getQuestionText());
         q.setOptionA(curr.getOptionA());
         q.setOptionB(curr.getOptionB());
@@ -59,13 +60,12 @@ public class GameRoom {
         q.setOptionD(curr.getOptionD());
         q.setTimeLimit(10);
         q.setQuestionNo(++currQuestionNo);
+        
         this.state = RoomState.In_PROGRESS;
         return q;
     }
 
     public List<Player> finishRound(){
-        System.out.println("Game: Got a finish Round Request.");
-        Question q = questions.get(currQuestionNo-1);
         synchronized(this.answers){
             for(String playerName: answers.keySet()){ 
 
@@ -85,7 +85,6 @@ public class GameRoom {
             this.answers.clear();
         }
         
-        System.out.println("Serivce: Sending LeaderBoard.");
         if(currQuestionNo >= this.questions.size()){
             this.state = RoomState.FINISHED;
         }else{
@@ -181,38 +180,45 @@ public class GameRoom {
         return this.currQuestionNo >= this.questions.size();
     }
 
-
     public long getQuizId() {
         return quizId;
     }
+
     public void setQuizId(long quizId) {
         this.quizId = quizId;
     }
+
     public String getRoomCode() {
         return roomCode;
     }
+
     public void setRoomCode(String roomCode) {
         this.roomCode = roomCode;
     }
+
     public List<Player> getPlayers() {
         return players;
     }
+
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
+
     public RoomState getState() {
         return state;
     }
+
     public void setState(RoomState state) {
         this.state = state;
     }
+
     public String getHost() {
         return host;
     }
+
     public void setHost(String host) {
         this.host = host;
     }
-
 
     public int getCurrQuestionNo() {
         return currQuestionNo;

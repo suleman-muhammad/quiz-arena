@@ -26,8 +26,8 @@ public class GameManager {
 
         GameRoom room = new GameRoom(code,quizId,hostNickName);
         if(request.hostIsPlaying()) room.addPlayer(p);
+
         rooms.put(code, room);
-        
         return room;
     }
 
@@ -57,13 +57,9 @@ public class GameManager {
 
     public JoinRequestAnswer addPlayerToRoom(String roomCode,String playernickName){
 
-        System.out.println("Manager: Adding Player to Room with name" + playernickName);
-
-        
         if(rooms.containsKey(roomCode)){
             GameRoom room = rooms.get(roomCode);
             if(room.getState() != RoomState.WAITING){
-                System.out.println("Manager: Player with name" + playernickName + " already exists in the Room with code: " + roomCode);
                 return new JoinRequestAnswer("Cannot Join ROOM mid Game.",null);
             }
 
@@ -73,22 +69,20 @@ public class GameManager {
             boolean result = room.addPlayer(p);
 
             if(result){
+
                 RoomInfo info = new RoomInfo();
                 info.setPlayers(room.getPlayers());
                 info.setRoomCode(room.getRoomCode());
                 info.setState(room.getState());
                 info.setQuizId(room.getQuizId());
-                System.out.println("Manager : Added Player to Room successfully.");
+                
                 return new JoinRequestAnswer("Ok",info);
             }else{
-                System.out.println("Manager : Could not add Player to Room.");
-
                 return new JoinRequestAnswer(
                     "Player with Given Name already exists.",null
                 );
             }
         }
-        System.out.println("Manager: NO ROOM available with given code.");
 
         return new JoinRequestAnswer("NO ROOM available with given code.",null);
     }
