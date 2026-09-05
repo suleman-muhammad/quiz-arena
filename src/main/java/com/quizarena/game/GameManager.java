@@ -77,6 +77,7 @@ public class GameManager {
                 info.setPlayers(room.getPlayers());
                 info.setRoomCode(room.getRoomCode());
                 info.setState(room.getState());
+                info.setQuizId(room.getQuizId());
                 System.out.println("Manager : Added Player to Room successfully.");
                 return new JoinRequestAnswer("Ok",info);
             }else{
