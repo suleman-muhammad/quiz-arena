@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.quizarena.entity.Question;
 import com.quizarena.entity.Quiz;
-import com.quizarena.entity.QuizCategory;
 import com.quizarena.entity.QuizConcept;
 import com.quizarena.entity.TriviaFact;
 import com.quizarena.repository.QuizCategoryRepository;
@@ -17,24 +16,17 @@ import com.quizarena.repository.QuizRepository;
 @Service
 public class QuizService {
     
-    // this is a bean
     private final QuizRepository quizRepository;
-    private final QuizCategoryRepository quizCategoryRepository;
 
     public QuizService(QuizRepository quizRepository,QuizCategoryRepository quizCategoryRepository){
         this.quizRepository = quizRepository;
-        this.quizCategoryRepository = quizCategoryRepository;
     }
-
-
 
     public Quiz creatQuiz(Quiz quiz){
         if(quiz == null){
             return null;
         }
-        // foreign key does not gets attached 
-        // cause only quiz gets serialized 
-        // so we have to set the quiz_id field in Questions manually
+        
         for (Question q: quiz.getQuestions()){
             q.setQuiz(quiz);
         }
@@ -50,7 +42,6 @@ public class QuizService {
         return quiz;
     }
 
-
     public List<Quiz> getAllQuizzes(){
         return quizRepository.findAll();
     }
@@ -62,18 +53,16 @@ public class QuizService {
         if(quiz.isPresent()){
             return ResponseEntity.ok(quiz.get());
         }else{
-            return ResponseEntity.notFound().build(); // 404 error code
+            return ResponseEntity.notFound().build(); 
         }
     }
 
     public ResponseEntity<Quiz> deleteQuizById(Long id){
         if(quizRepository.existsById(id)){
             quizRepository.deleteById(id);
-            return ResponseEntity.noContent().build(); // returns 204 cause nothing to show.
+            return ResponseEntity.noContent().build(); 
         }
-        return ResponseEntity.notFound().build(); // returns 404 
+        return ResponseEntity.notFound().build(); 
     }
-
-    
 
 }
