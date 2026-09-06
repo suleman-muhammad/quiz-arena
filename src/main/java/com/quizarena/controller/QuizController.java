@@ -15,7 +15,7 @@ import com.quizarena.entity.Quiz;
 import com.quizarena.service.QuizService;
 
 @RestController
-@RequestMapping("/api/quizzes") // this class handles this end point and sub end points of it -if any
+@RequestMapping("/api/quizzes")
 public class QuizController {
     
     private final QuizService quizService;

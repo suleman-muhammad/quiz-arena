@@ -173,7 +173,6 @@ public class GameService {
     }
 
     public void handleAnswer(String roomCode, AnswerDTO answer) {
-        System.out.println("Service: Got an Answer Submission.");
         GameRoom room = manager.findRoomByCode(roomCode);
         if (room != null) {
             int result = room.submitAnswer(answer);
@@ -206,7 +205,7 @@ public class GameService {
         roomInfo.setRoomCode(room.getRoomCode());
         roomInfo.setState(room.getState());
         roomInfo.setQuizId(room.getQuizId());
-        
+
         messagingTemplate.convertAndSend(roomEndPoint, roomInfo);
         messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/players/" + request.playerNickName(),
                 new SimpleMessage("INFO", "Out of the ROOM."));

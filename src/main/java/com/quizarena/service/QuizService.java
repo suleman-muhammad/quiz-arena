@@ -10,7 +10,6 @@ import com.quizarena.entity.Question;
 import com.quizarena.entity.Quiz;
 import com.quizarena.entity.QuizConcept;
 import com.quizarena.entity.TriviaFact;
-import com.quizarena.repository.QuizCategoryRepository;
 import com.quizarena.repository.QuizRepository;
 
 @Service
@@ -18,7 +17,7 @@ public class QuizService {
     
     private final QuizRepository quizRepository;
 
-    public QuizService(QuizRepository quizRepository,QuizCategoryRepository quizCategoryRepository){
+    public QuizService(QuizRepository quizRepository){
         this.quizRepository = quizRepository;
     }
 

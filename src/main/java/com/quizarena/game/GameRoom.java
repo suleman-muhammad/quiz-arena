@@ -71,7 +71,6 @@ public class GameRoom {
 
                 for (Player p : players){
                     if(p.getNickName().equalsIgnoreCase(playerName)){
-                        System.out.println("Game: Player Matched.");
                         p.setScore(p.getScore() + answers.get(playerName));
                         if (answers.get(playerName) > 0){
                             p.setCombo(p.getCombo() + 1);
@@ -134,7 +133,6 @@ public class GameRoom {
     }
 
     public int submitAnswer(AnswerDTO answer){
-        System.out.println("Game: Got an Answer Submission.");
         synchronized(this.answers){
             if(answers.containsKey(answer.getPlayerNickName().toLowerCase())){
                 return -1;
@@ -153,7 +151,6 @@ public class GameRoom {
     public int calScores(AnswerDTO ans){
         Question q = questions.get(currQuestionNo-1);
         if(ans.getChosenOption() == q.getCorrectOption()){
-            System.out.println("Game: Answer Matched.");
             double n = ((ans.getAnsweredAtMillis()-this.previousQuestionSentTimeMillis)/1000);
             int dScores = (int) Math.ceil(1000 - ((10*n*(n+1))/2));
             return dScores;

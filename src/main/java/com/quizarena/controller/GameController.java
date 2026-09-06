@@ -59,7 +59,6 @@ public class GameController {
     @MessageMapping("/game/rooms/leave")
     public void leaveRoom(LeaveRoomRequest request){
         gameService.handleRemovePlayer(request);
-        System.out.println("SERVER: Leave ROOM Hit: " + request.roomCode() + " , Player Name: " + request.playerNickName());
     }
 
 
