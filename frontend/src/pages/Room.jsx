@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import SockJS from "sockjs-client"
 import Stomp from 'stompjs'
-import { PlayerAvatar, HostAvatar } from "CyberAvatar"
+import { PlayerAvatar, HostAvatar } from "../components/CyberAvatar"
 
 function Room() {
     const navigate = useNavigate()
