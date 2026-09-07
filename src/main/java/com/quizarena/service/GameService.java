@@ -101,7 +101,7 @@ public class GameService {
         messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/question/text", questionTextDTO);
 
         stopAcceptingAnswers = new StopAcceptingAnswers(currQuestion.getQuestionNo(),
-                room.getRightAnswer(currQuestion.getQuestionNo() - 1));
+                room.getCorrectAnswer(currQuestion.getQuestionNo() - 1));
 
         this.roomThread.schedule(() -> {
             try {

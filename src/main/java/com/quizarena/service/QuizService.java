@@ -21,7 +21,7 @@ public class QuizService {
         this.quizRepository = quizRepository;
     }
 
-    public Quiz creatQuiz(Quiz quiz){
+    public Quiz createQuiz(Quiz quiz){
         if(quiz == null){
             return null;
         }
