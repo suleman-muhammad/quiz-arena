@@ -9,7 +9,7 @@ function QuizCard({ quiz }) {
     // logic here
 
     const navigate = useNavigate();
-    const [showModal, setShowModel] = useState(false)
+    const [showModal, setShowModal] = useState(false)
     const [hostName, setHostName] = useState('')
     const [willPlay, setWillPlay] = useState(false)
     const [error, setError] = useState('')
@@ -17,7 +17,7 @@ function QuizCard({ quiz }) {
 
     function closeModal(){
         setError('')
-        setShowModel(false)
+        setShowModal(false)
     }
 
 
@@ -87,7 +87,7 @@ function QuizCard({ quiz }) {
                         {quiz.createdAt ? new Date(quiz.createdAt).toLocaleDateString() : ""}
                     </span>
                     <button
-                        onClick={() => {setShowModel(true)}}
+                        onClick={() => {setShowModal(true)}}
                         className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black text-sm font-extrabold px-4 py-2 rounded-md transition-colors"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">

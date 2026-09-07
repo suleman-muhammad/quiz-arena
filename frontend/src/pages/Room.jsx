@@ -284,7 +284,7 @@ function Room() {
         }
     }
 
-    function getPosition(pos) {
+    function getOrdinalPosition(pos) {
         const places = ['st', 'nd', 'rd']
         if (pos >= 1 && pos <= 3) {
             return pos + places[pos - 1]
@@ -393,7 +393,7 @@ function Room() {
                         <div className="bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-1 flex items-center gap-3 backdrop-blur-md shadow-md">
                             <div className="text-right">
                                 <p className="text-[9px] uppercase font-extrabold text-slate-400 tracking-wider">Rank</p>
-                                <p className="text-xs font-black text-cyan-400">{getPosition(position)}</p>
+                                <p className="text-xs font-black text-cyan-400">{getOrdinalPosition(position)}</p>
                             </div>
                             <div className="h-5 w-px bg-slate-700/80" />
                             <div className="text-right">
@@ -640,7 +640,7 @@ function Room() {
                                 <PlayerAvatar name={nickName} className="w-8 h-8" />
                                 <div>
                                     <p className="text-xs font-black text-white">{nickName}</p>
-                                    <p className="text-[10px] font-bold text-purple-400">{getPosition(position)} place</p>
+                                    <p className="text-[10px] font-bold text-purple-400">{getOrdinalPosition(position)} place</p>
                                 </div>
                             </div>
                             <span className="text-sm font-black text-amber-300 font-mono">
@@ -846,7 +846,7 @@ function Room() {
                             <div className="text-center border-l border-slate-800">
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Final Rank</p>
                                 <p className="text-lg font-black text-cyan-400 mt-0.5">
-                                    {getPosition(position)}
+                                    {getOrdinalPosition(position)}
                                 </p>
                             </div>
                         </div>
