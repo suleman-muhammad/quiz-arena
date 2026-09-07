@@ -25,9 +25,8 @@ public class QuizController {
     }
 
     @PostMapping
-    public Quiz creatQuiz(@RequestBody Quiz quiz){ 
-        
-        return quizService.creatQuiz(quiz);
+    public Quiz createQuiz(@RequestBody Quiz quiz){ 
+        return quizService.createQuiz(quiz);
     }
 
     @GetMapping
@@ -41,7 +40,7 @@ public class QuizController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Quiz> delteQuiz(@PathVariable Long id){
+    public ResponseEntity<Quiz> deleteQuiz(@PathVariable Long id){
         return quizService.deleteQuizById(id);
     }
 }

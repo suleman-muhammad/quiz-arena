@@ -57,7 +57,7 @@ public class RoomController {
     }
 
     @GetMapping("/{roomCode}/leaderboard")
-    public ResponseEntity<List<Player>> getleaderBoard(@PathVariable String roomCode){
+    public ResponseEntity<List<Player>> getLeaderBoard(@PathVariable String roomCode){
         GameRoom room = gameManager.findRoomByCode(roomCode);
         if(room == null){
             return ResponseEntity.notFound().build();
