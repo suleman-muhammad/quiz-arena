@@ -139,7 +139,7 @@ public class GameRoom {
             }
 
             if(((answer.getAnsweredAtMillis() - this.previousQuestionSentTimeMillis)/1000) <= questions.get(answer.getQuestionNo()-1).getTimeLimitSeconds()){
-                int dScores = calScores(answer);
+                int dScores = calculateScores(answer);
 
                 this.answers.put(answer.getPlayerNickName().toLowerCase(),dScores);
                 return dScores;
@@ -148,7 +148,7 @@ public class GameRoom {
         }
     }
 
-    public int calScores(AnswerDTO ans){
+    public int calculateScores(AnswerDTO ans){
         Question q = questions.get(currQuestionNo-1);
         if(ans.getChosenOption() == q.getCorrectOption()){
             double n = ((ans.getAnsweredAtMillis()-this.previousQuestionSentTimeMillis)/1000);
@@ -158,7 +158,7 @@ public class GameRoom {
         return 0;
     }
 
-    public String getRightAnswer(int questionNo){
+    public String getCorrectAnswer(int questionNo){
         if(questionNo < questions.size()){
             Question q = questions.get(questionNo);
             int correct = q.getCorrectOption();
@@ -167,7 +167,7 @@ public class GameRoom {
                 case 1 -> q.getOptionB();
                 case 2 -> q.getOptionC();
                 case 3 -> q.getOptionD();
-                default -> "unKnown";
+                default -> "unknown";
             };
         }
         return "unKnown";
