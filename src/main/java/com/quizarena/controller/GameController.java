@@ -7,12 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.quizarena.dto.AnswerDTO;
-import com.quizarena.dto.CreateRoomRequest;
 import com.quizarena.dto.JoinRequestAnswer;
-import com.quizarena.dto.JoinRoomRequest;
-import com.quizarena.dto.LeaveRoomRequest;
 import com.quizarena.dto.RoomInfo;
-import com.quizarena.dto.StartRoomRequest;
+import com.quizarena.dto.request.CreateRoomRequest;
+import com.quizarena.dto.request.JoinRoomRequest;
+import com.quizarena.dto.request.LeaveRoomRequest;
+import com.quizarena.dto.request.StartRoomRequest;
 import com.quizarena.game.GameManager;
 import com.quizarena.game.GameRoom;
 import com.quizarena.service.GameService;

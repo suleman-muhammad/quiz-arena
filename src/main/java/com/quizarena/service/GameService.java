@@ -12,6 +12,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.quizarena.dto.*;
+import com.quizarena.dto.request.LeaveRoomRequest;
+import com.quizarena.dto.request.StartRoomRequest;
 import com.quizarena.game.*;
 import com.quizarena.entity.Quiz;
 import com.quizarena.repository.QuizRepository;

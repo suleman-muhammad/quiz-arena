@@ -6,9 +6,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
 
-import com.quizarena.dto.CreateRoomRequest;
 import com.quizarena.dto.JoinRequestAnswer;
 import com.quizarena.dto.RoomInfo;
+import com.quizarena.dto.request.CreateRoomRequest;
 
 @Service
 public class GameManager {
