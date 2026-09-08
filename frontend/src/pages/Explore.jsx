@@ -1,7 +1,4 @@
 
-
-
-
 function Explore(){
     return <div></div>
 }

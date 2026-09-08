@@ -54,14 +54,12 @@ function JoinGame() {
     return (
         <div className="min-h-screen bg-[#050714] text-white relative overflow-hidden flex flex-col justify-center items-center p-6 selection:bg-purple-500 selection:text-white font-sans">
             
-            {/* Background Atmosphere */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.15)_0%,_transparent_60%)] pointer-events-none" />
             <div className="absolute top-1/4 -left-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute top-1/3 -right-20 w-96 h-96 bg-purple-600/12 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute top-1/4 left-1/3 w-[450px] h-[450px] bg-purple-700/15 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-amber-600/10 rounded-full blur-[100px] pointer-events-none" />
 
-            {/* Main Join Card */}
             <div className="max-w-md w-full bg-slate-900/90 border-2 border-purple-500/60 rounded-3xl p-8 glow-purple backdrop-blur-md shadow-2xl relative z-10">
                 <div className="flex flex-col items-center text-center mb-6">
                     <div className="mb-3">
@@ -84,7 +82,6 @@ function JoinGame() {
                 )}
 
                 <div className="space-y-4">
-                    {/* Room Code */}
                     <div>
                         <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-1.5">
                             Room Code
@@ -99,7 +96,6 @@ function JoinGame() {
                         />
                     </div>
 
-                    {/* Nickname */}
                     <div>
                         <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-1.5">
                             Your Gladiator Name

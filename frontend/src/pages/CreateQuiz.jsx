@@ -4,14 +4,12 @@ import { useNavigate } from 'react-router-dom'
 function CreateQuiz() {
     const navigate = useNavigate()
     
-    // Left Card: Basic Info & Key Concepts
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [category, setCategory] = useState('💻 CS & IT')
     const [keyConcepts, setKeyConcepts] = useState(['Speed & Accuracy', 'Battle Tactics', 'Arena Mastery'])
     const [newConcept, setNewConcept] = useState('')
 
-    // Right Card: Custom Trivia & Arena Tips Ticker
     const [triviaFacts, setTriviaFacts] = useState([
         { icon: '💡', title: 'Arena Tip', text: 'Faster correct answers earn maximum quadratic bonus points!' },
         { icon: '🛡️', title: 'Gladiator Rule', text: 'Wrong answers yield 0 points. Accuracy is just as crucial as speed.' }
@@ -175,12 +173,10 @@ function CreateQuiz() {
     return (
         <div className="min-h-screen bg-[#070a18] text-white relative overflow-hidden flex flex-col justify-between py-10 px-4 sm:px-6 selection:bg-purple-500 selection:text-white font-sans">
             
-            {/* Background Atmosphere */}
             <div 
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-40 transform scale-105"
                 style={{ backgroundImage: `url(${prepGalleryBg})` }}
             />
-            {/* Cinematic Vignette & Ambient Glows */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#070a18]/85 via-[#070a18]/65 to-[#070a18]/90 pointer-events-none" />
             <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-purple-700/15 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute top-1/2 right-10 w-[400px] h-[400px] bg-amber-600/10 rounded-full blur-[100px] pointer-events-none" />
@@ -207,9 +203,7 @@ function CreateQuiz() {
                     </div>
                 )}
 
-                {/* ========================================================= */}
                 {/* SECTION 1: WAITING ROOM LEFT CARD (Briefing & Concepts)    */}
-                {/* ========================================================= */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     
                     {/* Left Card Input Form (7 cols) */}
@@ -222,7 +216,6 @@ function CreateQuiz() {
                         </div>
 
                         <div className="space-y-4">
-                            {/* Title */}
                             <div>
                                 <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-1.5">
                                     Tournament Title *
@@ -236,7 +229,6 @@ function CreateQuiz() {
                                 />
                             </div>
 
-                            {/* Category & Topic */}
                             <div>
                                 <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-1.5">
                                     Arena Discipline / Profession
@@ -260,7 +252,6 @@ function CreateQuiz() {
                                 </div>
                             </div>
 
-                            {/* Short Description */}
                             <div>
                                 <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-1.5">
                                     Description / Lore Summary
@@ -274,7 +265,6 @@ function CreateQuiz() {
                                 />
                             </div>
 
-                            {/* Key Concepts Tested */}
                             <div>
                                 <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-1.5">
                                     Key Concepts Tested (Left Card Bullets)
@@ -327,7 +317,6 @@ function CreateQuiz() {
                             <span className="text-[10px] text-slate-500 font-bold">1:1 Scale</span>
                         </div>
 
-                        {/* TRUE STATE LEFT CARD AS IN WAITINGROOM.JSX */}
                         <div className="bg-slate-900/85 border-2 border-purple-500/80 rounded-2xl p-5 glow-purple backdrop-blur-md flex flex-col justify-between shadow-2xl">
                             <div>
                                 <div className="flex items-center justify-between mb-4">
@@ -370,12 +359,9 @@ function CreateQuiz() {
                     </div>
                 </div>
 
-                {/* ========================================================= */}
                 {/* SECTION 2: WAITING ROOM RIGHT CARD (Trivia Ticker Only)    */}
-                {/* ========================================================= */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     
-                    {/* Right Card Input Form (7 cols) */}
                     <div className="lg:col-span-7 bg-slate-900/90 border-2 border-amber-500/60 rounded-3xl p-6 sm:p-8 glow-amber backdrop-blur-md shadow-2xl">
                         <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-5">
                             <h2 className="text-base font-black text-amber-300 uppercase tracking-wider flex items-center gap-2">
@@ -385,7 +371,6 @@ function CreateQuiz() {
                         </div>
 
                         <div className="space-y-4">
-                            {/* Custom Trivia Ticker Facts */}
                             <div>
                                 <div className="flex items-center justify-between mb-1.5">
                                     <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300">
@@ -399,7 +384,6 @@ function CreateQuiz() {
                                     Add interesting facts or battle tips that will rotate for gladiators on the right of the waiting room.
                                 </p>
                                 
-                                {/* Scrollable List of Added Facts in Form */}
                                 <div className="space-y-2 mb-3 max-h-48 overflow-y-auto pr-1.5">
                                     {triviaFacts.map((fact, idx) => (
                                         <div key={idx} className="bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between gap-3 hover:border-slate-700 transition-colors">
@@ -421,7 +405,6 @@ function CreateQuiz() {
                                     ))}
                                 </div>
 
-                                {/* Add Fact Form */}
                                 <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-3.5 space-y-2.5">
                                     <div className="grid grid-cols-4 gap-2">
                                         <select
@@ -475,7 +458,6 @@ function CreateQuiz() {
                             <span className="text-[10px] text-slate-500 font-bold">1:1 Scale • Scrollable</span>
                         </div>
 
-                        {/* TRUE STATE TRIVIA TICKER CARD AS IN WAITINGROOM.JSX WITH FIXED HEIGHT */}
                         <div className="bg-slate-900/85 border-2 border-amber-500/80 rounded-2xl p-5 glow-amber backdrop-blur-md flex flex-col h-[415px] shadow-2xl">
                             <div className="flex items-center justify-between mb-3 border-b border-slate-800 pb-2 shrink-0">
                                 <span className="text-xs font-extrabold tracking-wider uppercase text-purple-400 flex items-center gap-1.5">
@@ -486,7 +468,6 @@ function CreateQuiz() {
                                 </span>
                             </div>
 
-                            {/* Fixed Height Smooth Scrollable Container */}
                             <div className="space-y-3 overflow-y-auto flex-grow pr-1.5">
                                 {triviaFacts.map((fact, idx) => (
                                     <div key={idx} className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 flex items-start gap-3 hover:border-purple-500/40 transition-colors">
@@ -502,9 +483,7 @@ function CreateQuiz() {
                     </div>
                 </div>
 
-                {/* ========================================================= */}
                 {/* SECTION 3: BATTLE QUESTIONS FORGE                         */}
-                {/* ========================================================= */}
                 <div className="space-y-6">
                     <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                         <h2 className="text-base sm:text-lg font-black text-purple-300 uppercase tracking-wider flex items-center gap-2">
@@ -522,7 +501,6 @@ function CreateQuiz() {
                     {questions.map((q, index) => (
                         <div key={index} className="bg-slate-900/90 border-2 border-slate-700/80 hover:border-purple-500/60 rounded-3xl p-6 shadow-xl backdrop-blur-md transition-all">
                             
-                            {/* Question Card Header */}
                             <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
                                 <div className="flex items-center gap-2.5">
                                     <span className="w-8 h-8 rounded-xl bg-purple-900/80 border border-purple-400/50 flex items-center justify-center font-black text-xs text-purple-200 shadow-sm">
@@ -532,7 +510,6 @@ function CreateQuiz() {
                                 </div>
 
                                 <div className="flex items-center gap-3">
-                                    {/* Time Limit Selector */}
                                     <div className="flex items-center gap-1.5 bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1">
                                         <span className="text-[10px] font-bold text-slate-400">⏱️ Limit:</span>
                                         <select
@@ -548,7 +525,6 @@ function CreateQuiz() {
                                         </select>
                                     </div>
 
-                                    {/* Remove button */}
                                     {questions.length > 1 && (
                                         <button
                                             type="button"
@@ -561,7 +537,6 @@ function CreateQuiz() {
                                 </div>
                             </div>
 
-                            {/* Question Text Prompt */}
                             <div className="mb-4">
                                 <input
                                     type="text"
@@ -572,7 +547,6 @@ function CreateQuiz() {
                                 />
                             </div>
 
-                            {/* 4 Options Grid (A, B, C, D) */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {[
                                     { letter: 'A', border: 'border-rose-500/50 focus-within:border-rose-400', badge: 'bg-rose-500', optIndex: 0 },
@@ -589,7 +563,6 @@ function CreateQuiz() {
                                                 isCorrect ? 'ring-2 ring-emerald-400 bg-emerald-950/20' : ''
                                             }`}
                                         >
-                                            {/* Correct Answer Radio Dot */}
                                             <input
                                                 type="radio"
                                                 name={`correct-${index}`}
@@ -624,7 +597,6 @@ function CreateQuiz() {
                     ))}
                 </div>
 
-                {/* Actions Bottom Bar */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-900/90 border-2 border-slate-700/80 rounded-3xl p-6 backdrop-blur-md shadow-2xl">
                     <button
                         type="button"

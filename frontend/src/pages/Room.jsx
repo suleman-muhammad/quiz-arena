@@ -38,27 +38,16 @@ function Room() {
     const [totalScore, setTotalScore] = useState(0)
     const [position, setPosition] = useState(0)
 
-    /*
-     * ---------------------------------------------------------------------------------
-     * 💡 NOTE FOR YOUR LOGIC PHASE (Add/Expand these whenever you are ready):
-     * - streakCount: Track consecutive correct answers (e.g. 2x, 3x fire multiplier)
-     * - playerSubmittedMap: Track real-time player answer submissions for checkmarks
-     * - speedBonusPoints: Calculate extra points earned based on response speed
-     * - isMuted: Toggle sound effects on/off
-     * ---------------------------------------------------------------------------------
-     */
-
     const [combo, setCombo] = useState(0);
     const [podiumStep, setPodiumStep] = useState(0);
     const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
 
-    // Sequential Podium Reveal Timers (3rd at 400ms, 2nd at 1400ms, 1st at 2500ms)
     useEffect(() => {
         if (gameState === 'LEADERBOARD' || gameState === 'GAME_OVER') {
             setPodiumStep(0);
-            const t1 = setTimeout(() => setPodiumStep(1), 400);  // Step 1: 3rd Place
-            const t2 = setTimeout(() => setPodiumStep(2), 1400); // Step 2: 2nd Place
-            const t3 = setTimeout(() => setPodiumStep(3), 2500); // Step 3: 1st Place Grand Champion
+            const t1 = setTimeout(() => setPodiumStep(1), 400);  
+            const t2 = setTimeout(() => setPodiumStep(2), 1400); 
+            const t3 = setTimeout(() => setPodiumStep(3), 2500); 
             return () => {
                 clearTimeout(t1);
                 clearTimeout(t2);
@@ -102,8 +91,6 @@ function Room() {
                         setPosition(me.currentPosition)
                     }
 
-
-
                     fetch(`http://localhost:8080/api/quizzes/${roomInfo.quizId}`)
                     .then(res => {
                         if (!res.ok) return null
@@ -124,21 +111,6 @@ function Room() {
             })
             .catch(err => console.log(err))
         
-        // fetch(`http://localhost:8080/api/rooms/${roomCode}/quiz`)
-        //     .then(res => {
-        //         if (!res.ok) return null
-        //         return res.json()
-        //     })
-        //     .then((id) => {
-        //         if (id == null) {
-        //             console.log(`Room with code ${roomCode} does not have quiz.`)
-        //             navigate("/")
-        //             return
-        //         }
-                
-                
-        //     })
-
         const socket = new SockJS('http://localhost:8080/ws')
         const client = Stomp.over(socket)
         client.debug = null
@@ -299,17 +271,13 @@ function Room() {
     return (
         <div className="min-h-screen bg-[#050714] text-white relative overflow-hidden flex flex-col justify-between selection:bg-purple-500 selection:text-white font-sans">
             
-            {/* ========================================================================= */}
             {/* OPTION A: CLEAN ESPORTS ARENA STAGE (Solid #050714 + 3D Grid Stage + HUD) */}
-            {/* ========================================================================= */}
 
-            {/* 1. Deep Space Vector Gradients & Radial Light Orbs */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.18)_0%,_transparent_65%)] pointer-events-none" />
             <div className="absolute top-1/4 -left-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute top-1/3 -right-20 w-96 h-96 bg-purple-600/12 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-cyan-500/15 rounded-full blur-[140px] pointer-events-none" />
 
-            {/* 2. Ambient Twinkling Vector Stars */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
                 <span className="absolute top-[8%] left-[12%] w-1.5 h-1.5 bg-cyan-300 rounded-full animate-star shadow-[0_0_6px_#38bdf8]" style={{ animationDelay: '0s' }} />
                 <span className="absolute top-[14%] left-[28%] w-1 h-1 bg-purple-300 rounded-full animate-star shadow-[0_0_4px_#c084fc]" style={{ animationDelay: '1.2s' }} />
@@ -319,7 +287,6 @@ function Room() {
                 <span className="absolute top-[22%] left-[92%] w-1 h-1 bg-purple-200 rounded-full animate-star shadow-[0_0_4px_#e9d5ff]" style={{ animationDelay: '2.8s' }} />
             </div>
 
-            {/* 3. Floating Geometric Energy Sparks */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
                 <div className="absolute top-1/4 left-[14%] w-2.5 h-2.5 bg-cyan-400/40 rotate-45 animate-vector-float shadow-[0_0_10px_rgba(6,182,212,0.6)]" style={{ animationDelay: '0s' }} />
                 <div className="absolute top-1/3 right-[16%] w-3 h-3 bg-purple-400/40 rotate-45 animate-vector-float shadow-[0_0_10px_rgba(168,85,247,0.6)]" style={{ animationDelay: '2.5s' }} />
@@ -327,29 +294,23 @@ function Room() {
                 <div className="absolute top-1/2 right-[10%] w-2 h-2 bg-pink-400/40 rotate-45 animate-vector-float shadow-[0_0_8px_rgba(236,72,153,0.6)]" style={{ animationDelay: '3.8s' }} />
             </div>
 
-            {/* 4. 3D Perspective Vector Grid Stage Floor (Infinite Forward Motion) */}
             <div className="absolute -bottom-10 inset-x-0 h-[44vh] vector-grid-3d pointer-events-none [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.85)_35%,black_100%)] opacity-70" />
 
-            {/* 5. Glowing Vector Horizon Beam */}
             <div className="absolute bottom-[40vh] inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent shadow-[0_0_18px_rgba(6,182,212,0.9)] pointer-events-none" />
 
-            {/* 6. Tactical HUD Corner Brackets & Orbital Rings */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
-                {/* Top-Left Vector Bracket */}
                 <svg className="absolute top-14 left-6 w-32 h-32 text-purple-500/35 animate-circuit-pulse" viewBox="0 0 100 100" fill="none">
                     <path d="M0 40 L0 0 L40 0" stroke="currentColor" strokeWidth="2" />
                     <circle cx="4" cy="4" r="2.5" fill="currentColor" />
                     <line x1="12" y1="12" x2="35" y2="12" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
                 </svg>
 
-                {/* Top-Right Vector Bracket */}
                 <svg className="absolute top-14 right-6 w-32 h-32 text-cyan-400/35 animate-circuit-pulse" viewBox="0 0 100 100" fill="none">
                     <path d="M100 40 L100 0 L60 0" stroke="currentColor" strokeWidth="2" />
                     <circle cx="96" cy="4" r="2.5" fill="currentColor" />
                     <line x1="88" y1="12" x2="65" y2="12" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
                 </svg>
 
-                {/* Ambient Center Arena Orbital Radar Rings */}
                 <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] text-purple-500/10 pointer-events-none" viewBox="0 0 400 400" fill="none">
                     <circle cx="200" cy="200" r="180" stroke="currentColor" strokeWidth="1" strokeDasharray="6 6" />
                     <circle cx="200" cy="200" r="120" stroke="currentColor" strokeWidth="1" strokeOpacity="0.7" />
@@ -357,7 +318,6 @@ function Room() {
                 </svg>
             </div>
 
-            {/* 7. Radiant Vector Shockwave on Correct Answer */}
             {gameState === 'RESULT_CORRECT' && (
                 <div className="absolute inset-0 pointer-events-none z-15">
                     <div className="absolute inset-0 bg-radial from-emerald-500/25 via-cyan-500/10 to-transparent animate-pulse" />
@@ -365,11 +325,9 @@ function Room() {
                 </div>
             )}
 
-            {/* FLOATING TOP COMBAT HUD (No Heavy Navbar Bar)            */}
             <div className="relative z-20 px-4 sm:px-6 pt-4 pb-1">
                 <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
                     
-                    {/* Room Code & Connection Indicator */}
                     <div className="flex items-center gap-2 sm:gap-3">
                         <div className="bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-1.5 flex items-center gap-2 backdrop-blur-md shadow-md">
                             <span className="text-[10px] font-extrabold tracking-widest uppercase text-slate-400">Room</span>
@@ -381,14 +339,12 @@ function Room() {
                         </div>
                     </div>
 
-                    {/* Floating Question Progress Pill */}
                     <div className="flex items-center gap-2">
                         <div className="bg-gradient-to-r from-purple-900/80 to-indigo-900/80 border border-purple-400/50 text-purple-200 text-xs font-black px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(168,85,247,0.4)] backdrop-blur-md">
                             Question {currQuestionNo} of {questionCount || 5}
                         </div>
                     </div>
 
-                    {/* Personal Combat Stats + Avatar + LEAVE Button */}
                     <div className="flex items-center gap-2 sm:gap-3">
                         <div className="bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-1 flex items-center gap-3 backdrop-blur-md shadow-md">
                             <div className="text-right">
@@ -406,7 +362,6 @@ function Room() {
 
                         <PlayerAvatar name={nickName} className="w-9 h-9 border border-purple-500/50 shadow-md" />
 
-                        {/* Leave Battle Button */}
                         <button
                             onClick={() => setShowLeaveConfirm(true)}
                             title="Leave Battle Arena"
@@ -419,13 +374,10 @@ function Room() {
                 </div>
             </div>
 
-            {/* MAIN BATTLE ARENA GRID (Left: 8 cols, Right: 4 cols)      */}
             <main className="max-w-7xl mx-auto w-full px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10 my-auto">
                 
-                {/* LEFT ARENA: Question Card, Timer & Answer Pads (8 cols)   */}
                 <div className="lg:col-span-8 flex flex-col justify-between">
                     
-                    {/* Countdown Timer */}
                     <div className="flex justify-center mb-4">
                         <div className="relative flex items-center justify-center">
                             <svg className="w-24 h-24 transform -rotate-90">
@@ -569,7 +521,6 @@ function Room() {
                     )}
                 </div>
 
-                {/* RIGHT ARENA: Live Rival Mini-Leaderboard (4 cols)         */}
                 <div className="lg:col-span-4 flex flex-col gap-4">
                     <div className="bg-slate-900/85 border border-slate-700/80 rounded-2xl p-5 shadow-xl backdrop-blur-md flex flex-col h-full justify-between">
                         
@@ -651,7 +602,6 @@ function Room() {
                 </div>
             </main>
 
-            {/* OVERLAY: PRE-ROUND COUNTDOWN (Get Ready)                  */}
             {gameState === 'START' && (
                 <div className="fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4">
                     <div className="text-center max-w-sm">
@@ -669,7 +619,6 @@ function Room() {
                 </div>
             )}
 
-            {/* OVERLAY: ROUND STANDINGS & GAME OVER PODIUM               */}
             {(gameState === 'LEADERBOARD' || gameState === 'GAME_OVER') && (
                 <div className="fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4 overflow-y-auto">
                     <div className="bg-slate-900 border-2 border-purple-500/80 rounded-3xl p-6 sm:p-8 max-w-lg w-full text-center shadow-2xl glow-purple backdrop-blur-xl animate-fade-in my-auto">
@@ -684,9 +633,7 @@ function Room() {
                             {gameState === 'GAME_OVER' ? 'Final Arena Results' : `After Question ${currQuestionNo}`}
                         </p>
 
-                        {/* Top 3 Champions Podium Arc (State-Driven Reveal: 3rd -> 2nd -> 1st) */}
                         <div className="flex items-end justify-center gap-2 sm:gap-3 mb-8 px-1 sm:px-2 min-h-[220px]">
-                            {/* 2nd Place (Silver) - Pops up at Step 2 (1.4s) */}
                             <div className={`flex flex-col items-center flex-1 transition-all duration-700 ease-out transform ${
                                 podiumStep >= 2 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-16 scale-75 pointer-events-none'
                             }`}>
@@ -709,7 +656,6 @@ function Room() {
                                 )}
                             </div>
 
-                            {/* 1st Place (Gold Champion) - Grand Finale at Step 3 (2.5s) */}
                             <div className={`flex flex-col items-center flex-1 -mt-6 z-10 transition-all duration-800 ease-out transform ${
                                 podiumStep >= 3 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-20 scale-75 pointer-events-none'
                             }`}>
@@ -733,7 +679,6 @@ function Room() {
                                 )}
                             </div>
 
-                            {/* 3rd Place (Bronze) - Reveals First at Step 1 (0.4s) */}
                             <div className={`flex flex-col items-center flex-1 transition-all duration-700 ease-out transform ${
                                 podiumStep >= 1 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-16 scale-75 pointer-events-none'
                             }`}>
@@ -757,7 +702,6 @@ function Room() {
                             </div>
                         </div>
 
-                        {/* Full Scoreboard Rows */}
                         <div className="space-y-2 mb-6 max-h-40 overflow-y-auto pr-1">
                             {leaderboard.map((p, index) => (
                                 <div key={index} className="flex items-center justify-between p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 text-xs">
@@ -789,7 +733,6 @@ function Room() {
                 </div>
             )}
 
-            {/* CONFIRM LEAVE MODAL */}
             {showLeaveConfirm && (
                 <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fade-in">
                     <div className="bg-slate-900/95 border-2 border-rose-500/80 rounded-2xl p-6 max-w-sm w-full text-center shadow-[0_0_30px_rgba(244,63,94,0.35)] relative overflow-hidden">
@@ -821,7 +764,6 @@ function Room() {
                 </div>
             )}
 
-            {/* OVERLAY: PLAYER LEFT ARENA */}
             {gameState === 'LEFT' && (
                 <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 p-4">
                     <div className="bg-slate-900/95 border-2 border-purple-500/80 rounded-3xl p-8 max-w-md w-full text-center glow-purple relative overflow-hidden">
@@ -835,7 +777,6 @@ function Room() {
                             You have disconnected from battle room <span className="font-mono font-bold text-amber-400">{roomCode}</span>.
                         </p>
 
-                        {/* Match Stats Summary */}
                         <div className="grid grid-cols-2 gap-3 mb-6 bg-slate-950/80 border border-slate-800 rounded-2xl p-4">
                             <div className="text-center">
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Final Score</p>

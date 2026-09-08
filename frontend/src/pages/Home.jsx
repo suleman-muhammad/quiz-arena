@@ -15,10 +15,8 @@ function Home() {
     return (
         
         <div className="p-8 max-w-7xl mx-auto">
-            {/* Main Container: Solid dark slate with electric purple border */}
             <div className="bg-slate-900 border border-purple-500 rounded-2xl p-6 shadow-2xl">
                 
-                {/* Main Action Bar */}
                 <div className="flex items-center gap-4 mb-8">
                     <Link
                         to="./create"
@@ -41,7 +39,6 @@ function Home() {
                     </Link>
                 </div>
 
-                {/* Quiz Card Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {quizzes.map(quiz => (
                         <QuizCard key={quiz.id} quiz={quiz} />
