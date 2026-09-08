@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.quizarena.dto.AnswerDTO;
-import com.quizarena.dto.QuestionDTO;
+import com.quizarena.dto.request.SubmitAnswerRequest;
+import com.quizarena.dto.event.QuestionOptionsDTO;
 import com.quizarena.entity.Question;
 
 public class GameRoom {
@@ -45,14 +45,14 @@ public class GameRoom {
         return true;
     }
 
-    public QuestionDTO getNextQuestion(){
+    public QuestionOptionsDTO getNextQuestion(){
         if(questions == null || currQuestionNo >= questions.size()){
             return null;
         }
 
         Question curr = questions.get(currQuestionNo);
 
-        QuestionDTO q = new QuestionDTO();
+        QuestionOptionsDTO q = new QuestionOptionsDTO();
         q.setQuestionText(curr.getQuestionText());
         q.setOptionA(curr.getOptionA());
         q.setOptionB(curr.getOptionB());
@@ -132,23 +132,23 @@ public class GameRoom {
         return false;
     }
 
-    public int submitAnswer(AnswerDTO answer){
+    public int submitAnswer(SubmitAnswerRequest submitAnswerRequest){
         synchronized(this.answers){
-            if(answers.containsKey(answer.getPlayerNickName().toLowerCase())){
+            if(answers.containsKey(submitAnswerRequest.getPlayerNickName().toLowerCase())){
                 return -1;
             }
 
-            if(((answer.getAnsweredAtMillis() - this.previousQuestionSentTimeMillis)/1000) <= questions.get(answer.getQuestionNo()-1).getTimeLimitSeconds()){
-                int dScores = calculateScores(answer);
+            if(((submitAnswerRequest.getAnsweredAtMillis() - this.previousQuestionSentTimeMillis)/1000) <= questions.get(submitAnswerRequest.getQuestionNo()-1).getTimeLimitSeconds()){
+                int dScores = calculateScores(submitAnswerRequest);
 
-                this.answers.put(answer.getPlayerNickName().toLowerCase(),dScores);
+                this.answers.put(submitAnswerRequest.getPlayerNickName().toLowerCase(),dScores);
                 return dScores;
             }
             return 0;
         }
     }
 
-    public int calculateScores(AnswerDTO ans){
+    public int calculateScores(SubmitAnswerRequest ans){
         Question q = questions.get(currQuestionNo-1);
         if(ans.getChosenOption() == q.getCorrectOption()){
             double n = ((ans.getAnsweredAtMillis()-this.previousQuestionSentTimeMillis)/1000);

@@ -6,8 +6,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
 
-import com.quizarena.dto.JoinRequestAnswer;
-import com.quizarena.dto.RoomInfo;
+import com.quizarena.dto.response.JoinRequestResponse;
+import com.quizarena.dto.response.RoomInfoDTO;
 import com.quizarena.dto.request.CreateRoomRequest;
 
 @Service
@@ -55,12 +55,12 @@ public class GameManager {
         return rooms.get(code);
     }
 
-    public JoinRequestAnswer addPlayerToRoom(String roomCode,String playernickName){
+    public JoinRequestResponse addPlayerToRoom(String roomCode,String playernickName){
 
         if(rooms.containsKey(roomCode)){
             GameRoom room = rooms.get(roomCode);
             if(room.getState() != RoomState.WAITING){
-                return new JoinRequestAnswer("Cannot Join ROOM mid Game.",null);
+                return new JoinRequestResponse("Cannot Join ROOM mid Game.",null);
             }
 
             Player p = new Player();
@@ -70,21 +70,21 @@ public class GameManager {
 
             if(result){
 
-                RoomInfo info = new RoomInfo();
+                RoomInfoDTO info = new RoomInfoDTO();
                 info.setPlayers(room.getPlayers());
                 info.setRoomCode(room.getRoomCode());
                 info.setState(room.getState());
                 info.setQuizId(room.getQuizId());
                 
-                return new JoinRequestAnswer("Ok",info);
+                return new JoinRequestResponse("Ok",info);
             }else{
-                return new JoinRequestAnswer(
+                return new JoinRequestResponse(
                     "Player with Given Name already exists.",null
                 );
             }
         }
 
-        return new JoinRequestAnswer("NO ROOM available with given code.",null);
+        return new JoinRequestResponse("NO ROOM available with given code.",null);
     }
 
     public GameRoom removePlayerFromRoom(String code,String playernickName){
