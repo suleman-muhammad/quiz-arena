@@ -6,9 +6,9 @@ import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.quizarena.dto.AnswerDTO;
-import com.quizarena.dto.JoinRequestAnswer;
-import com.quizarena.dto.RoomInfo;
+import com.quizarena.dto.request.SubmitAnswerRequest;
+import com.quizarena.dto.response.JoinRequestResponse;
+import com.quizarena.dto.response.RoomInfoDTO;
 import com.quizarena.dto.request.CreateRoomRequest;
 import com.quizarena.dto.request.JoinRoomRequest;
 import com.quizarena.dto.request.LeaveRoomRequest;
@@ -34,7 +34,7 @@ public class GameController {
     public void createRoom(CreateRoomRequest request){
         GameRoom room = manager.createRoom(request);
 
-        RoomInfo roomInfo = new RoomInfo();
+        RoomInfoDTO roomInfo = new RoomInfoDTO();
         roomInfo.setPlayers(room.getPlayers());
         roomInfo.setRoomCode(room.getRoomCode());
         roomInfo.setState(room.getState());
@@ -49,7 +49,7 @@ public class GameController {
 
     @MessageMapping("/game/rooms/join")
     public void joinRoom(JoinRoomRequest request){    
-        JoinRequestAnswer requestAnswer = manager.addPlayerToRoom(request.roomCode(), request.playerNickName());
+        JoinRequestResponse requestAnswer = manager.addPlayerToRoom(request.roomCode(), request.playerNickName());
 
         messagingTemplate.convertAndSend("/topic/join-requests/" + request.playerNickName() + "/" + request.requestId(), requestAnswer);
         messagingTemplate.convertAndSend("/topic/rooms/" + request.roomCode() + "/waiting", requestAnswer.roomInfo());
@@ -68,7 +68,7 @@ public class GameController {
     }
 
     @MessageMapping("/game/rooms/answer")
-    public void handleAnswer(@RequestBody AnswerDTO answer){
+    public void handleAnswer(@RequestBody SubmitAnswerRequest answer){
         gameService.handleAnswer(answer.getRoomCode(),answer);
     }
 }

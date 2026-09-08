@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.quizarena.dto.RoomInfo;
+import com.quizarena.dto.response.RoomInfoDTO;
 import com.quizarena.game.GameManager;
 import com.quizarena.game.GameRoom;
 import com.quizarena.game.Player;
@@ -24,7 +24,7 @@ public class RoomController {
     }
 
     @GetMapping("/{roomCode}")
-    public RoomInfo getRoomInfo(@PathVariable String roomCode){
+    public RoomInfoDTO getRoomInfo(@PathVariable String roomCode){
         if(roomCode == null){
             return null;
         }
@@ -34,7 +34,7 @@ public class RoomController {
             return null;
         }
 
-        RoomInfo info = new RoomInfo();
+        RoomInfoDTO info = new RoomInfoDTO();
         info.setPlayers(room.getPlayers());
         info.setRoomCode(roomCode);
         info.setState(room.getState());
