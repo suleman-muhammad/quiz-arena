@@ -6,8 +6,7 @@ import Stomp from 'stompjs'
 
 
 function QuizCard({ quiz }) {
-    // logic here
-
+    
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false)
     const [hostName, setHostName] = useState('')
@@ -19,8 +18,6 @@ function QuizCard({ quiz }) {
         setError('')
         setShowModal(false)
     }
-
-
 
     function handleHostGame(){
         if(hostName.length === 0){
@@ -52,17 +49,13 @@ function QuizCard({ quiz }) {
 
     }
 
-
-
     return (
         <>
             <div className="bg-slate-900 border border-purple-500 rounded-xl p-5 flex flex-col h-full hover:shadow-[0_0_15px_rgba(168,85,247,0.2)] transition-shadow">
                 
-                {/* Header: Icon, Title, and Badge */}
                 <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
                         <div className="text-gray-400">
-                            {/* Generic gear icon placeholder - replace dynamically based on quiz type */}
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -70,18 +63,15 @@ function QuizCard({ quiz }) {
                         </div>
                         <h3 className="text-xl font-bold text-white">{quiz.title}</h3>
                     </div>
-                    {/* Circular Purple Badge */}
                     <span className="bg-purple-600 text-white text-sm font-bold w-10 h-10 flex items-center justify-center rounded-full shrink-0">
                         {quiz.questions?.length || 0} Qs
                     </span>
                 </div>
 
-                {/* Description */}
                 <p className="text-gray-300 text-sm mb-6 flex-grow">
                     {quiz.description || "No description"}
                 </p>
 
-                {/* Footer: Date and CTA */}
                 <div className="flex items-center justify-between mt-auto">
                     <span className="text-sm text-white font-semibold">
                         {quiz.createdAt ? new Date(quiz.createdAt).toLocaleDateString() : ""}
@@ -98,7 +88,6 @@ function QuizCard({ quiz }) {
                 </div>
             </div>
             
-            {/* Modal - shown when showModal is true */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
                     <div className="bg-slate-900 border border-purple-500 rounded-2xl p-8 w-full max-w-sm shadow-2xl">
