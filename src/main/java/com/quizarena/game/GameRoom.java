@@ -41,7 +41,7 @@ public class GameRoom {
 
         this.questions = questions;
         currQuestionNo = 0;
-        this.state = RoomState.In_PROGRESS;
+        this.state = RoomState.IN_PROGRESS;
         return true;
     }
 
@@ -61,7 +61,7 @@ public class GameRoom {
         q.setTimeLimit(10);
         q.setQuestionNo(++currQuestionNo);
         
-        this.state = RoomState.In_PROGRESS;
+        this.state = RoomState.IN_PROGRESS;
         return q;
     }
 

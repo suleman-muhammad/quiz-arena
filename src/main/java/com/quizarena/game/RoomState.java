@@ -2,7 +2,7 @@ package com.quizarena.game;
 
 public enum RoomState {
     WAITING,
-    In_PROGRESS,
+    IN_PROGRESS,
     BETWEEN_QUESTIONS,
     FINISHED
 }
