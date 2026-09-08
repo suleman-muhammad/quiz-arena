@@ -33,8 +33,8 @@ function Room() {
     const [optionD, setOptionD] = useState('')
     const [answer, setAnswer] = useState('')
 
-    const [leaderboard, setLeaderBoard] = useState([])
-    const currectScore = useRef(0)
+    const [leaderboard, setLeaderboard] = useState([])
+    const roundScore = useRef(0)
     const [totalScore, setTotalScore] = useState(0)
     const [position, setPosition] = useState(0)
 
@@ -94,7 +94,7 @@ function Room() {
                 if (roomInfo === null) {
                     navigate("/")
                 }else{
-                    setLeaderBoard(roomInfo.players ? roomInfo.players : [])
+                    setLeaderboard(roomInfo.players ? roomInfo.players : [])
 
                     const me = roomInfo.players.find(p => p.nickName === nickName)
                     if (me){
@@ -150,7 +150,7 @@ function Room() {
                 if (hasLeftRef.current) return
                 const roomInfo = JSON.parse(msg.body)
                 console.log(roomInfo)
-                setLeaderBoard(roomInfo.players);
+                setLeaderboard(roomInfo.players);
             })
 
             client.subscribe(`/topic/rooms/${roomCode}/question/text`, (msg) => {
@@ -161,7 +161,7 @@ function Room() {
                 setGameState("QUESTION")
                 setCurrQuestionNo(data.questionNo)
                 setQuestionText(data.questionText)
-                currectScore.current = 0;
+                roundScore.current = 0;
             })
 
             client.subscribe(`/topic/rooms/${roomCode}/question/options`, (msg) =>{
@@ -187,7 +187,7 @@ function Room() {
                 setTotalTime(0)
                 setAnswer(data.answer)
 
-                if(currectScore.current > 0){
+                if(roundScore.current > 0){
                     setGameState('RESULT_CORRECT')
                     setCombo(combo + 1);
                 }else{
@@ -204,7 +204,7 @@ function Room() {
                 if (hasLeftRef.current) return
                 const players = JSON.parse(msg.body)
                 console.log(players)
-                setLeaderBoard(players)
+                setLeaderboard(players)
 
                 const me = players.find(p => p.nickName === nickName)
                 if(me){
@@ -222,7 +222,7 @@ function Room() {
                 switch(result.type){
                     case 'SCORES':
                         console.log(result)
-                        if(result.payload >= 0) currectScore.current = result.payload
+                        if(result.payload >= 0) roundScore.current = result.payload
                         break;
                     case 'ROOM_LEFT':
                         hasLeftRef.current = true
@@ -553,7 +553,7 @@ function Room() {
                                 👏 THE ARENA STANDS UP & ROARS FOR YOU!
                             </p>
                             <div className="inline-flex items-center gap-2 bg-emerald-950 border border-emerald-400 px-5 py-2 rounded-full text-emerald-200 text-base font-black shadow-[0_0_20px_rgba(52,211,153,0.6)]">
-                                <span>⚡</span> +{currectScore.current || 940} PTS
+                                <span>⚡</span> +{roundScore.current || 940} PTS
                             </div>
                         </div>
                     )}

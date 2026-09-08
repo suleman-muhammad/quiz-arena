@@ -4,7 +4,7 @@ import SockJS from "sockjs-client"
 import Stomp from 'stompjs'
 import { HostAvatar, PlayerAvatar } from "../components/CyberAvatar"
 
-function WaitingRoom() {
+function Lobby() {
     const navigate = useNavigate()
     const { roomCode } = useParams()
     const [searchParams] = useSearchParams()
@@ -16,7 +16,7 @@ function WaitingRoom() {
     const [connected, setConnected] = useState(false)
     const [copied, setCopied] = useState(false)
     const [players, setPlayers] = useState([])
-    const [myMsgs, setMyMsgs] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
 
     const [quizId, setQuizId] = useState(-1)
     const [quizTitle, setQuizTitle] = useState('')
@@ -107,7 +107,7 @@ function WaitingRoom() {
             // Subscribe to direct player notifications
             client.subscribe(`/topic/rooms/${roomCode}/players/${nickName}`, (msg) => {
                 const data = JSON.parse(msg.body)
-                setMyMsgs(data.message)
+                setErrorMessage(data.message)
             })
 
             // Subscribe to room start signal
@@ -126,10 +126,10 @@ function WaitingRoom() {
 
     function startGame() {
         if (!connected) {
-            setMyMsgs("Not connected to server. Try refreshing.")
+            setErrorMessage("Not connected to server. Try refreshing.")
             return
         }
-        setMyMsgs('')
+        setErrorMessage('')
         if (stompClient.current) {
             stompClient.current.send("/app/game/rooms/start", {}, JSON.stringify({
                 roomCode: roomCode,
@@ -493,12 +493,12 @@ function WaitingRoom() {
             </div>
 
             {/* Error / System Alert Modal */}
-            {myMsgs && (
+            {errorMessage && (
                 <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
                     <div className="bg-slate-900 border-2 border-rose-500/80 rounded-2xl p-6 w-full max-w-sm text-center shadow-2xl glow-purple">
-                        <p className="text-white font-bold text-base mb-6">{myMsgs}</p>
+                        <p className="text-white font-bold text-base mb-6">{errorMessage}</p>
                         <button
-                            onClick={() => setMyMsgs('')}
+                            onClick={() => setErrorMessage('')}
                             className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-8 py-2.5 rounded-lg font-bold transition-all"
                         >
                             OK
@@ -510,4 +510,4 @@ function WaitingRoom() {
     )
 }
 
-export default WaitingRoom
+export default Lobby

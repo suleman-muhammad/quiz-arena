@@ -37,7 +37,7 @@ function JoinGame() {
                     return
                 }                
                 client.disconnect()
-                navigate(`/waitingRoom/${roomCode}?nickname=${nickname}&host=false`)
+                navigate(`/lobby/${roomCode}?nickname=${nickname}&host=false`)
             })
 
             client.send(`/app/game/rooms/join`, {}, JSON.stringify({

@@ -4,7 +4,7 @@ import Home from './pages/Home'
 import Explore from './pages/Explore'
 import CreateQuiz from './pages/CreateQuiz'
 import JoinGame from './pages/JoinGame'
-import WaitingRoom from './pages/WaitingRoom'
+import Lobby from './pages/Lobby'
 import Room from './pages/Room'
 
 function App() {
@@ -17,8 +17,8 @@ function App() {
                     <Route path="/explore" element={<Explore />} />
                     <Route path="/create" element={<CreateQuiz />} />
                     <Route path="/join" element={<JoinGame />} />
-                    <Route path='/waitingRoom/:roomCode' element={<WaitingRoom />} />
-                    <Route path='/room/:roomCode' element={<Room />} />
+                    <Route path='/lobby/:roomCode' element={<Lobby />} />
+                    <Route path='/rooms/:roomCode' element={<Room />} />
                 </Routes>
             </BrowserRouter>
         </div>
