@@ -1,5 +1,5 @@
 package com.quizarena.dto.event;
 
-public record PlayerEventDTO(String type, Object payLoad) {
+public record PlayerEventDTO(String type, Object payload) {
     
 }
