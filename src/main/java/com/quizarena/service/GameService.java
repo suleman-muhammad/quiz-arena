@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import com.quizarena.dto.*;
+import com.quizarena.dto.request.*;
+import com.quizarena.dto.response.*;
+import com.quizarena.dto.event.*;
 import com.quizarena.dto.request.LeaveRoomRequest;
 import com.quizarena.dto.request.StartRoomRequest;
 import com.quizarena.game.*;
@@ -44,13 +46,13 @@ public class GameService {
 
         if (room.getState() != RoomState.WAITING) {
             messagingTemplate.convertAndSend("/topic/hosts/" + request.hostNickName(),
-                    new SimpleMessage("ERROR", "ROOM is already Started."));
+                    new SystemMessageDTO("ERROR", "ROOM is already Started."));
             return;
         }
 
         if (!room.getHost().equalsIgnoreCase(request.hostNickName())) {
             messagingTemplate.convertAndSend("/topic/hosts/" + request.hostNickName(),
-                    new SimpleMessage("ERROR", "You are not the Host of the ROOM so cannot start."));
+                    new SystemMessageDTO("ERROR", "You are not the Host of the ROOM so cannot start."));
             return;
         }
 
@@ -59,7 +61,7 @@ public class GameService {
 
         if (!q.isPresent()) {
             messagingTemplate.convertAndSend("/topic/rooms/" + roomCode + "/waiting",
-                    new SimpleMessage("ERROR", "No Quiz Found with id " + room.getQuizId()));
+                    new SystemMessageDTO("ERROR", "No Quiz Found with id " + room.getQuizId()));
             manager.removeRoom(roomCode);
             return;
         }
@@ -67,7 +69,7 @@ public class GameService {
         boolean result = room.startRoom(q.get().getQuestions());
         if (!result) {
             messagingTemplate.convertAndSend("/topic/hosts/" + request.hostNickName(),
-                    new SimpleMessage("ERROR", "ROOM is already Started."));
+                    new SystemMessageDTO("ERROR", "ROOM is already Started."));
             return;
         }
     
@@ -87,27 +89,27 @@ public class GameService {
             return;
         }
 
-        QuestionDTO currQuestion;
-        StopAcceptingAnswers stopAcceptingAnswers;
+        QuestionOptionsDTO currQuestion;
+        QuestionRevealDTO questionReveal;
 
         currQuestion = room.getNextQuestion();
         if (currQuestion == null) {
             messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/end",
-                    new SimpleMessage("GAME_OVER", "ROOM Ended."));
+                    new SystemMessageDTO("GAME_OVER", "ROOM Ended."));
             manager.removeRoom(room.getRoomCode());
             return;
         }
 
-        QuestionTextDTO questionTextDTO = new QuestionTextDTO(currQuestion.getQuestionText(),
+        QuestionPromptDTO questionTextDTO = new QuestionPromptDTO(currQuestion.getQuestionText(),
                 currQuestion.getQuestionNo());
         messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/question/text", questionTextDTO);
 
-        stopAcceptingAnswers = new StopAcceptingAnswers(currQuestion.getQuestionNo(),
+        questionReveal = new QuestionRevealDTO(currQuestion.getQuestionNo(),
                 room.getCorrectAnswer(currQuestion.getQuestionNo() - 1));
 
         this.roomThread.schedule(() -> {
             try {
-                this.sendQuestionOptions(room, currQuestion, stopAcceptingAnswers);
+                this.sendQuestionOptions(room, currQuestion, questionReveal);
             } catch (Exception e) {
                 System.err.println("Sever: in Sending Question options.");
                 e.printStackTrace();
@@ -117,27 +119,27 @@ public class GameService {
 
     }
 
-    public void sendQuestionOptions(GameRoom room, QuestionDTO questionDTO, StopAcceptingAnswers stopAcceptingAnswers) {
+    public void sendQuestionOptions(GameRoom room, QuestionOptionsDTO questionOptionsDTO, QuestionRevealDTO questionReveal) {
         if (room == null) {
             return;
         }
 
-        messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/question/options", questionDTO);
+        messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/question/options", questionOptionsDTO);
         room.setPreviousQuestionSentTimeMillis(System.currentTimeMillis());
 
         this.roomThread.schedule(() -> {
             try {
-                this.endRound(room, stopAcceptingAnswers);
+                this.endRound(room, questionReveal);
             } catch (Exception e) {
                 System.err.println("Sever: in Sending Stop request.");
                 e.printStackTrace();
             }
 
-        }, questionDTO.getTimeLimit(), TimeUnit.SECONDS);
+        }, questionOptionsDTO.getTimeLimit(), TimeUnit.SECONDS);
 
     }
 
-    public void endRound(GameRoom room, StopAcceptingAnswers stopAcceptingAnswers) {
+    public void endRound(GameRoom room, QuestionRevealDTO stopAcceptingAnswers) {
 
         messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/question/stop",
                 stopAcceptingAnswers);
@@ -159,7 +161,7 @@ public class GameService {
         messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/leaderboard", roundResult);
         if (room.hasFinished()) {
             messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/end",
-                    new SimpleMessage("GAME_OVER", "ROOM Ended."));
+                    new SystemMessageDTO("GAME_OVER", "ROOM Ended."));
             manager.removeRoom(room.getRoomCode());
             return;
         }
@@ -174,13 +176,13 @@ public class GameService {
         }, 10, TimeUnit.SECONDS);
     }
 
-    public void handleAnswer(String roomCode, AnswerDTO answer) {
+    public void handleAnswer(String roomCode, SubmitAnswerRequest submitAnswerRequest) {
         GameRoom room = manager.findRoomByCode(roomCode);
         if (room != null) {
-            int result = room.submitAnswer(answer);
-            PlayerInfoDTO playerInfoDTO = new PlayerInfoDTO("SCORES", Integer.valueOf(result));
-            messagingTemplate.convertAndSend("/topic/rooms/" + roomCode + "/players/" + answer.getPlayerNickName(),
-                    playerInfoDTO);
+            int result = room.submitAnswer(submitAnswerRequest);
+            PlayerEventDTO playerEventDTO = new PlayerEventDTO("SCORES", Integer.valueOf(result));
+            messagingTemplate.convertAndSend("/topic/rooms/" + roomCode + "/players/" + submitAnswerRequest.getPlayerNickName(),
+                    playerEventDTO);
         }
     }
 
@@ -202,7 +204,7 @@ public class GameService {
         p.setNickName(request.playerNickName());
         room.removePlayer(p);
 
-        RoomInfo roomInfo = new RoomInfo();
+        RoomInfoDTO roomInfo = new RoomInfoDTO();
         roomInfo.setPlayers(room.getPlayers());
         roomInfo.setRoomCode(room.getRoomCode());
         roomInfo.setState(room.getState());
@@ -210,6 +212,6 @@ public class GameService {
 
         messagingTemplate.convertAndSend(roomEndPoint, roomInfo);
         messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/players/" + request.playerNickName(),
-                new SimpleMessage("INFO", "Out of the ROOM."));
+                new SystemMessageDTO("INFO", "Out of the ROOM."));
     }
 }
