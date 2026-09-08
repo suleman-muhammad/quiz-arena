@@ -4,7 +4,7 @@ public class Player {
     private String id;
     private String nickName;
     private long score;
-    private long currentPos;
+    private long currentPosition;
     private int combo;
 
     public String getId() {
@@ -31,12 +31,12 @@ public class Player {
         this.score = score;
     }
 
-    public long getCurrentPos() {
-        return currentPos;
+    public long getCurrentPosition() {
+        return currentPosition;
     }
 
-    public void setCurrentPos(long currentPos) {
-        this.currentPos = currentPos;
+    public void setCurrentPosition(long currentPosition) {
+        this.currentPosition = currentPosition;
     }
 
     public int getCombo() {

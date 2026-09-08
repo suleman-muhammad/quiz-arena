@@ -96,7 +96,7 @@ public class GameRoom {
         synchronized(this.players){
             Collections.sort(players,new ComparePlayersForPosition());
             for(int i = 0; i<players.size(); i++){
-                players.get(i).setCurrentPos(i+1);
+                players.get(i).setCurrentPosition(i+1);
             }
             return players;
         }
@@ -109,7 +109,7 @@ public class GameRoom {
         }
         
         synchronized(this.players){
-            p.setCurrentPos(1);
+            p.setCurrentPosition(1);
             p.setScore(0);
             for(Player player: players){
                 if (player.getNickName().equalsIgnoreCase(p.getNickName())){
