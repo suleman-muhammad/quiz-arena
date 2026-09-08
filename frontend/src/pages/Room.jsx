@@ -99,7 +99,7 @@ function Room() {
                     const me = roomInfo.players.find(p => p.nickName === nickName)
                     if (me){
                         setTotalScore(me.score)
-                        setPosition(me.currentPos)
+                        setPosition(me.currentPosition)
                     }
 
 
@@ -209,7 +209,7 @@ function Room() {
                 const me = players.find(p => p.nickName === nickName)
                 if(me){
                     setTotalScore(me.score)
-                    setPosition(me.currentPos)
+                    setPosition(me.currentPosition)
                     setCombo(me.combo)
                 }
 
@@ -222,7 +222,7 @@ function Room() {
                 switch(result.type){
                     case 'SCORES':
                         console.log(result)
-                        if(result.payLoad >= 0) currectScore.current = result.payLoad
+                        if(result.payload >= 0) currectScore.current = result.payload
                         break;
                     case 'ROOM_LEFT':
                         hasLeftRef.current = true
@@ -587,11 +587,11 @@ function Room() {
                                 {leaderboard.slice(0,5).map((p, index) => {
                                     const isMe = p.nickName === nickName
                                     const medals = ['🥇', '🥈', '🥉']
-                                    const isTop3 = p.currentPos < 3
+                                    const isTop3 = p.currentPosition < 3
 
                                     return (
                                         <div
-                                            key={p.currentPos || index}
+                                            key={p.currentPosition || index}
                                             className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
                                                 isMe
                                                     ? 'bg-purple-950/60 border-purple-500/80 shadow-[0_0_12px_rgba(168,85,247,0.4)]'
@@ -600,10 +600,10 @@ function Room() {
                                         >
                                             <div className="flex items-center gap-3">
                                                 <span className="w-5 text-center text-sm font-black">
-                                                    {isTop3 ? medals[p.currentPos] : `#${p.currentPos}`}
+                                                    {isTop3 ? medals[p.currentPosition] : `#${p.currentPosition}`}
                                                 </span>
 
-                                                <PlayerAvatar index={p.currentPos} name={p.nickName} className="w-8 h-8" />
+                                                <PlayerAvatar index={p.currentPosition} name={p.nickName} className="w-8 h-8" />
 
                                                 <div>
                                                     <p className={`text-xs font-black truncate max-w-[100px] ${isMe ? 'text-purple-200' : 'text-slate-200'}`}>
@@ -762,7 +762,7 @@ function Room() {
                             {leaderboard.map((p, index) => (
                                 <div key={index} className="flex items-center justify-between p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 text-xs">
                                     <div className="flex items-center gap-2">
-                                        <span className="font-bold text-slate-500 w-4">{p.currentPos}</span>
+                                        <span className="font-bold text-slate-500 w-4">{p.currentPosition}</span>
                                         <span className="font-bold text-slate-200">{p.nickName}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
