@@ -174,13 +174,24 @@ function CreateQuiz() {
     return (
         <div className="min-h-screen bg-[#070a18] text-white relative overflow-hidden flex flex-col justify-between py-10 px-4 sm:px-6 selection:bg-purple-500 selection:text-white font-sans">
             
-            <div 
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-40 transform scale-105"
-                style={{ backgroundImage: `url(${prepGalleryBg})` }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#070a18]/85 via-[#070a18]/65 to-[#070a18]/90 pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.22)_0%,_transparent_65%)] pointer-events-none" />
             <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-purple-700/15 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute top-1/2 right-10 w-[400px] h-[400px] bg-amber-600/10 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-cyan-500/15 rounded-full blur-[150px] pointer-events-none" />
+            <div className="absolute -bottom-10 inset-x-0 h-[40vh] vector-grid-3d pointer-events-none [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.85)_35%,black_100%)] opacity-60" />
+            <div className="absolute bottom-[36vh] inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-purple-500/60 to-transparent shadow-[0_0_18px_rgba(168,85,247,0.8)] pointer-events-none" />
+            <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+                <svg className="absolute top-14 left-6 w-32 h-32 text-purple-500/35 animate-circuit-pulse" viewBox="0 0 100 100" fill="none">
+                    <path d="M0 40 L0 0 L40 0" stroke="currentColor" strokeWidth="2" />
+                    <circle cx="4" cy="4" r="2.5" fill="currentColor" />
+                    <line x1="12" y1="12" x2="35" y2="12" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+                </svg>
+                <svg className="absolute top-14 right-6 w-32 h-32 text-cyan-400/35 animate-circuit-pulse" viewBox="0 0 100 100" fill="none">
+                    <path d="M100 40 L100 0 L60 0" stroke="currentColor" strokeWidth="2" />
+                    <circle cx="96" cy="4" r="2.5" fill="currentColor" />
+                    <line x1="88" y1="12" x2="65" y2="12" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+                </svg>
+            </div>
 
             <div className="max-w-6xl mx-auto w-full relative z-10 space-y-10">
                 
