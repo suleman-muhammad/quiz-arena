@@ -58,7 +58,7 @@ public class GameRoom {
         q.setOptionB(curr.getOptionB());
         q.setOptionC(curr.getOptionC());
         q.setOptionD(curr.getOptionD());
-        q.setTimeLimit(10);
+        q.setTimeLimit(curr.getTimeLimitSeconds() > 0 ? curr.getTimeLimitSeconds() : 15);
         q.setQuestionNo(++currQuestionNo);
         
         this.state = RoomState.IN_PROGRESS;
@@ -67,20 +67,17 @@ public class GameRoom {
 
     public List<Player> finishRound(){
         synchronized(this.answers){
-            for(String playerName: answers.keySet()){ 
-
-                for (Player p : players){
-                    if(p.getNickName().equalsIgnoreCase(playerName)){
-                        p.setScore(p.getScore() + answers.get(playerName));
-                        if (answers.get(playerName) > 0){
-                            p.setCombo(p.getCombo() + 1);
-                        }else{
-                            p.setCombo(0);
-                        }
-                    }
+            
+            for (Player p : players){
+                Integer score = answers.get(p.getNickName().toLowerCase());
+                if(score != null && score > 0){
+                    p.setScore(p.getScore() + score);
+                    p.setCombo(p.getCombo() + 1);
+                }else{
+                    p.setCombo(0);
                 }
             }
-
+            
             this.answers.clear();
         }
         
@@ -151,8 +148,8 @@ public class GameRoom {
     public int calculateScores(SubmitAnswerRequest ans){
         Question q = questions.get(currQuestionNo-1);
         if(ans.getChosenOption() == q.getCorrectOption()){
-            double n = ((ans.getAnsweredAtMillis()-this.previousQuestionSentTimeMillis)/1000);
-            int dScores = (int) Math.ceil(1000 - ((10*n*(n+1))/2));
+            double n = Math.max(0,((ans.getAnsweredAtMillis()-this.previousQuestionSentTimeMillis)/1000.));
+            int dScores = Math.max(0,(int) Math.ceil(1000 - ((10*n*(n+1))/2)));
             return dScores;
         }
         return 0;
