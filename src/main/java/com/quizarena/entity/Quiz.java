@@ -31,7 +31,7 @@ public class Quiz {
     private String description;
     private LocalDateTime createdAt;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private QuizCategory category;
 
     @JsonManagedReference 
