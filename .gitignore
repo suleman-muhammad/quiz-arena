@@ -21,12 +21,10 @@ dist/
 dist-ssr/
 *.local
 
-# Environment variables
+# Environment variables (ignore all .env files except template example)
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
 # Logs
 logs/
