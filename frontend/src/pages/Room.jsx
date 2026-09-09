@@ -163,7 +163,7 @@ function Room() {
 
                 if(roundScore.current > 0){
                     setGameState('RESULT_CORRECT')
-                    setCombo(combo + 1);
+                    setCombo(prev => prev + 1);
                 }else{
                     setGameState("RESULT_WRONG")
                     setCombo(0)
