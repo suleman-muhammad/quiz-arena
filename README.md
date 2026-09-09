@@ -1,125 +1,293 @@
-# ⚔️ QuizArena — Real-Time Multiplayer Trivia Battle Royale
+# ⚔️ QuizArena — Real-Time Multiplayer Trivia Battle Engine
 
 <p align="center">
-  <img src="frontend/src/assets/colosseum_bg.jpg" alt="QuizArena Colosseum" width="800px" style="border-radius: 12px; box-shadow: 0 0 30px rgba(168,85,247,0.4);" />
+  <b>A high-performance, real-time multiplayer trivia platform built with Spring Boot, WebSocket STOMP messaging, and React 19 + Tailwind CSS.</b>
 </p>
 
 <p align="center">
-  <b>A fast-paced, competitive multiplayer quiz game built with Spring Boot, WebSockets (STOMP/SockJS), and React 19 + Tailwind CSS.</b>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white" />
-  <img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" />
-  <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
-  <img src="https://img.shields.io/badge/Vite-8.x-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-4.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
-  <img src="https://img.shields.io/badge/WebSocket-STOMP-000000?style=for-the-badge&logo=socket.io&logoColor=white" />
+  <img src="https://img.shields.io/badge/Spring_Boot-3.4.x-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white" alt="Spring Boot" />
+  <img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 21" />
+  <img src="https://img.shields.io/badge/React-19.x-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 19" />
+  <img src="https://img.shields.io/badge/Vite-8.x-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 8" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS 4" />
+  <img src="https://img.shields.io/badge/WebSocket-STOMP-000000?style=for-the-badge&logo=socket.io&logoColor=white" alt="STOMP" />
 </p>
 
 ---
 
-## 📖 Table of Contents
+## 📑 Table of Contents
+
 - [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Architecture & Tech Stack](#-architecture--tech-stack)
-- [Scoring Formula](#-scoring-formula)
-- [Current Implementation Notes](#-current-implementation-notes)
-- [Upcoming Roadmap](#-upcoming-roadmap)
-- [Getting Started](#-getting-started)
-- [Project Structure](#-project-structure)
+- [System Architecture](#-system-architecture)
+- [Core Features](#-core-features)
+- [Real-Time Game Loop & State Machine](#-real-time-game-loop--state-machine)
+- [Mathematical Scoring Engine](#-mathematical-scoring-engine)
+- [WebSocket STOMP Channel Protocol](#-websocket-stomp-channel-protocol)
+- [REST API Reference](#-rest-api-reference)
+- [Project Directory Structure](#-project-directory-structure)
+- [Upcoming Engineering Roadmap](#-upcoming-engineering-roadmap)
+- [Local Development & Setup](#-local-development--setup)
 
 ---
 
 ## 🏛️ Overview
 
-**QuizArena** turns ordinary trivia into an electrifying gladiator arena showdown. Players enter customized battle rooms using 6-character room codes, equip distinct **Gothic Warrior Archetype Avatars**, and compete under strict quadratic countdown timers. Real-time scores and leaderboards synchronize instantly across all connected clients via WebSocket STOMP messaging.
+**QuizArena** is a full-stack, low-latency multiplayer trivia battle engine designed for competitive, multi-user synchronous gameplay. Players create or discover trivia quizzes, spin up isolated multiplayer rooms using unique 6-character room codes, select cyberpunk warrior archetypes, and compete under strict quadratic time-decay countdowns.
+
+The application architecture emphasizes **thread safety, non-blocking scheduled concurrency, synchronized multi-client state distribution**, and a modern **GPU-accelerated CSS 3D Vector Grid UI** built without heavy external raster assets.
 
 ---
 
-## ✨ Key Features
+## 🏗️ System Architecture
 
-### 1. 🛡️ Gladiator Preparation Gallery (Waiting Room)
-- **Room Code Plaque**: One-click code copying and real-time live server heartbeat indicator.
-- **Quiz Briefing Card**: Displays question counts, dynamic topic badges, and key concepts.
-- **Host Champion Pedestal**: Elevated glowing stage for the match creator.
-- **4-Column Warrior Avatar Grid**: Responsive grid displaying joined gladiators with unique warrior emblems (Paladin, Berserker, Assassin, Samurai, Crusader, Valkyrie).
-- **Segmented LED Readiness Bar**: Visual progress indicator showing player thresholds before launching.
-- **Interactive Trivia Ticker & Lobby Chat**: Real-time room messaging and contextual lore facts.
-
-### 2. ⚔️ The Live Colosseum Arena (`Room.jsx`)
-- **Atmospheric Living Backdrop**: Authentic Roman Colosseum sand arena with living torchlight flickers, floating ember sparks, and subtle mist depth.
-- **Circular Neon Countdown Ring**: Dynamic SVG timer ring that transitions from Cyan $\rightarrow$ Amber $\rightarrow$ Pulsing Red as the clock winds down.
-- **Combat Answer Pads (2x2 Grid)**: Color-coded pads (Rose `[A]`, Cyan `[B]`, Emerald `[C]`, Amber `[D]`) with responsive click feedback.
-- **Live Rival Mini-Leaderboard**: Real-time competitor tracking with warrior avatar badges, live scores, and instant answer submission indicators (`✔ Submitted`).
-- **Radiant Victory Flare**: Golden & emerald celebratory radial light surge upon answering correctly.
-- **Champion Standings Podium**: 1st (Gold 👑), 2nd (Silver 🥈), and 3rd (Bronze 🥉) elevated pedestals for round results and final match victory.
-
-### 3. ⚡ Ultra-Fast Game Synchronization
-- Sub-second room updates powered by **Spring WebSocket STOMP over SockJS**.
-- Multi-phase turn progression: `START (Countdown)` $\rightarrow$ `QUESTION (Text peek)` $\rightarrow$ `ANSWERING (Active timer)` $\rightarrow$ `RESULT (Feedback)` $\rightarrow$ `LEADERBOARD` $\rightarrow$ `GAME_OVER`.
-
----
-
-## 📐 Scoring Formula
-
-QuizArena rewards both **accuracy** and **split-second reaction speed**. Points decay quadratically every second according to:
-
-$$\text{Score} = \left\lceil 1000 - \frac{10 \cdot n \cdot (n + 1)}{2} \right\rceil$$
-
-*Where $n$ represents the number of seconds elapsed before the correct answer is locked in.*
-
-- **Answered in 0s**: $1000\text{ pts}$
-- **Answered in 3s**: $940\text{ pts}$
-- **Answered in 6s**: $790\text{ pts}$
-- **Wrong answer**: $0\text{ pts}$
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                             REACT 19 FRONTEND                               │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌─────────────────┐  │
+│  │ Explore Hub  │  │ Quiz Creator │  │ Match Lobby  │  │ Live Arena Room │  │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └────────┬────────┘  │
+└─────────┼─────────────────┼─────────────────┼───────────────────┼───────────┘
+          │ REST (HTTP)     │ REST (HTTP)     │ WS / STOMP        │ WS / STOMP
+          ▼                 ▼                 ▼                   ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           SPRING BOOT 3.4 BACKEND                           │
+│  ┌───────────────────────────────┐   ┌───────────────────────────────────┐  │
+│  │       REST Controllers        │   │       WebSocket Controllers       │  │
+│  │  Quiz · Room · Category       │   │   GameController (/app/rooms/*)   │  │
+│  └──────────────┬────────────────┘   └─────────────────┬─────────────────┘  │
+│                 │                                      │                    │
+│  ┌──────────────▼──────────────────────────────────────▼─────────────────┐  │
+│  │                           GAME ENGINE CORE                            │  │
+│  │  • GameManager (ConcurrentHashMap Room Registry)                      │  │
+│  │  • GameRoom (Synchronized State, Dynamic Roster, Answer Buffers)      │  │
+│  │  • GameService (ScheduledExecutorService Thread Pool)                 │  │
+│  └──────────────┬────────────────────────────────────────────────────────┘  │
+│                 │                                                           │
+│  ┌──────────────▼────────────────┐                                          │
+│  │   Spring Data JPA Hibernate   │                                          │
+│  │   PostgreSQL / MySQL Store    │                                          │
+│  └───────────────────────────────┘                                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 🛠️ Architecture & Tech Stack
+## ✨ Core Features
 
-### Backend
-- **Framework**: Spring Boot 3.x (Java 21)
-- **Real-Time Protocol**: Spring WebSocket + STOMP Messaging + SockJS
-- **Database & ORM**: PostgreSQL / MySQL with Spring Data JPA & Hibernate
-- **Build Tool**: Gradle
+### 1. 🌐 Explore Public Trivia Hub (`/explore`)
+- **Open Trivia DB (OpenTDB) Integration**: Direct live querying of thousands of verified community questions across 20+ categories (Computer Science, Science & Nature, History, Mythology, Pop Culture, etc.).
+- **Dynamic Filter Controls**: Real-time filtering by category, difficulty (`Easy`, `Medium`, `Hard`, or `Mixed`), and question limits (`5`, `10`, `15`, `20`).
+- **Instant Battle Launcher**: Instantly converts any external API trivia set into an active, shareable multiplayer room with a single click.
 
-### Frontend
-- **Framework**: React 19 with React Router v7
-- **Styling**: Tailwind CSS v4 + Custom GPU-accelerated glow utilities
-- **Build System**: Vite 8 (Hot Module Replacement, sub-second production builds)
-- **Icons & Graphics**: Custom SVG Cel-Shaded Esports Warrior Badges
+### 2. 🛠️ Custom Quiz Creator (`/create`)
+- **Interactive Question Builder**: Add, edit, reorder, and remove custom questions on the fly.
+- **Configurable Match Settings**: Custom question time limits (5s to 60s), custom categories, and 4-option multiple-choice matrix with radio validation.
+- **Client & Server Validation**: Guards against incomplete question sets, missing correct answers, and invalid time limits before persisting to the database.
 
----
+### 3. 🛡️ Match Readiness Lobby (`/lobby/:roomCode`)
+- **Room Code Plaque**: One-click clipboard copy with live visual feedback.
+- **Dynamic Player Roster**: Real-time synchronization of joined players with custom archetype avatars (Paladin, Berserker, Assassin, Samurai, Crusader, Valkyrie).
+- **Host Controls & Pedestal**: Dedicated host management stage with a synchronized match launch trigger.
+- **Quiz Briefing Matrix**: Displays total question count, category metadata, and dynamically generated concept badges.
+- **Trivia Lore Ticker**: Real-time broadcast channel for lobby events and trivia facts.
 
-## 📌 Current Implementation Notes
-
-> [!NOTE]
-> **Metadata & Static Content in Waiting Room:**
-> In the current development build, certain quiz summary points and trivia lore facts in the Waiting Room are dynamically generated or hold placeholder values. These will be fully connected to user-defined metadata once the upcoming **Quiz Creator** flow is implemented.
-
----
-
-## 🔮 Upcoming Roadmap
-
-- [ ] **Custom Quiz Creator (`CreateQuiz.jsx`)**: Full-featured builder to create quizzes with custom time limits, categories, and question difficulty tags.
-- [ ] **"Explore" Public Quiz Hub**: Integration with **Open Trivia Database (OpenTDB)** and **QuizAPI** to fetch thousands of free, ready-to-play trivia quizzes with 1-click room creation.
-- [ ] **Authentication & User Profiles**: JWT-based Login/Register, match history, leaderboard win rates, and custom unlockable warrior badges.
-- [ ] **Sound FX & Arena Crowds**: Web Audio API integration for authentic sword clashes, fanfare chimes, and roar crescendos on high-speed streaks.
-- [ ] **Backend Concurrency Optimization**: Multi-threaded scheduled task execution and Redis Pub/Sub for cross-server match scaling.
+### 4. ⚔️ Live Battle Arena (`/room/:roomCode`)
+- **3D Perspective Vector Grid Floor**: Custom CSS 3D perspective grid floor (`vector-grid-3d`) with ambient cyan/purple glow lighting and zero raster image dependencies.
+- **Dynamic Neon SVG Timer Ring**: Radial SVG timer changing dynamically from Cyan $\rightarrow$ Amber $\rightarrow$ Pulsing Crimson as the clock expires.
+- **2x2 Combat Answer Pads**: Keyboard-friendly, high-contrast pads (`[A]`, `[B]`, `[C]`, `[D]`) with instant submission locking and server confirmation.
+- **Live Competitor Mini-Leaderboard**: Tracks rival scores and real-time answer submission flags (`✔ Submitted`) during active rounds.
+- **Dynamic Round Podium & Victory Celebrations**: Instant answer reveal highlighting the correct choice, awarding points, and displaying round-by-round and final match podium standings.
 
 ---
 
-## 🚀 Getting Started
+## 🔄 Real-Time Game Loop & State Machine
+
+Every game round runs through a deterministic, server-managed multi-phase state lifecycle orchestrated by `GameService` using an asynchronous scheduled thread pool:
+
+```
+┌─────────────────┐     3s Countdown
+│   START / INIT  │ ──────────────────────┐
+└─────────────────┘                       │
+                                          ▼
+┌─────────────────┐     3s Text Peek    ┌──────────────────────┐
+│  QUESTION_TEXT  │ ◄────────────────── │  QUESTION_PROMPT     │
+└────────┬────────┘                     └──────────────────────┘
+         │
+         │ Timer Starts (e.g., 10s)
+         ▼
+┌─────────────────┐     Time Expires / All Submitted
+│ QUESTION_OPTIONS│ ──────────────────────┐
+└─────────────────┘                       │
+                                          ▼
+┌─────────────────┐     5s Breakdown    ┌──────────────────────┐
+│  LEADERBOARD    │ ◄────────────────── │    QUESTION_STOP     │
+└────────┬────────┘                     │ (Correct Reveal & pts)│
+         │                              └──────────────────────┘
+         ├── [More Questions] ──► (Next QUESTION_PROMPT)
+         │
+         └── [Final Question] ──► ┌──────────────────────┐
+                                  │      GAME_OVER       │
+                                  │ (Final Podium Stand) │
+                                  └──────────────────────┘
+```
+
+---
+
+## 📐 Mathematical Scoring Engine
+
+QuizArena uses a **quadratic time-decay formula** to reward both conceptual accuracy and split-second cognitive speed:
+
+$$\text{Score}(n) = \left\lceil 1000 - \frac{10 \cdot n \cdot (n + 1)}{2} \right\rceil$$
+
+Where $n$ represents the total elapsed seconds before the player's correct answer is registered by the server.
+
+| Elapsed Time ($n$) | Penalty Calculation | Points Awarded |
+| :--- | :--- | :--- |
+| **0.0 seconds** | $0$ | **$1000\text{ pts}$** |
+| **1.0 second** | $\frac{10 \cdot 1 \cdot 2}{2} = 10$ | **$990\text{ pts}$** |
+| **3.0 seconds** | $\frac{10 \cdot 3 \cdot 4}{2} = 60$ | **$940\text{ pts}$** |
+| **5.0 seconds** | $\frac{10 \cdot 5 \cdot 6}{2} = 150$ | **$850\text{ pts}$** |
+| **8.0 seconds** | $\frac{10 \cdot 8 \cdot 9}{2} = 360$ | **$640\text{ pts}$** |
+| **Incorrect / Timeout** | — | **$0\text{ pts}$** |
+
+---
+
+## 📡 WebSocket STOMP Channel Protocol
+
+All real-time communications operate over SockJS at `/ws` using STOMP frame routing:
+
+### Client Inbound Destinations (`/app/rooms/{roomCode}/*`)
+
+| Destination | Request DTO | Description |
+| :--- | :--- | :--- |
+| `/app/rooms/{roomCode}/join` | `JoinRoomRequest` | Join an existing room with player name and avatar ID |
+| `/app/rooms/{roomCode}/leave` | `LeaveRoomRequest` | Leave the room gracefully and update remaining roster |
+| `/app/rooms/{roomCode}/start` | `StartRoomRequest` | Host-only trigger to start the scheduled game loop |
+| `/app/rooms/{roomCode}/submit` | `SubmitAnswerRequest`| Submit selected answer index with client timestamp |
+
+### Server Outbound Topics (`/topic/rooms/{roomCode}/*`)
+
+| Topic | Event / Payload DTO | Description |
+| :--- | :--- | :--- |
+| `/topic/rooms/{roomCode}/waiting` | `RoomInfoDTO` | Broadcasts room metadata and active game state changes |
+| `/topic/rooms/{roomCode}/roster` | `PlayerEventDTO` | Broadcasts join/leave events and updated player lists |
+| `/topic/rooms/{roomCode}/start` | `RoomInfoDTO` | Signals all clients to transition into active arena mode |
+| `/topic/rooms/{roomCode}/question/text` | `QuestionPromptDTO` | Phase 1: Delivers question text only for pre-read phase |
+| `/topic/rooms/{roomCode}/question/options`| `QuestionOptionsDTO`| Phase 2: Delivers multiple-choice options & starts timer |
+| `/topic/rooms/{roomCode}/question/stop` | `QuestionRevealDTO` | Phase 3: Broadcasts correct answer index & score deltas |
+| `/topic/rooms/{roomCode}/leaderboard` | `List<Player>` | Phase 4: Synchronizes sorted leaderboard rankings |
+| `/topic/rooms/{roomCode}/end` | `List<Player>` | Final match results and podium rankings |
+| `/topic/rooms/{roomCode}/players/{name}` | `SystemMessageDTO` | Direct unicast channel for individual player feedback |
+
+---
+
+## 🔌 REST API Reference
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/api/rooms/create` | Create a new multiplayer room (`CreateRoomRequest` $\rightarrow$ `RoomInfoDTO`) |
+| `GET` | `/api/rooms/details/{roomCode}` | Fetch metadata, player roster, and state for a room |
+| `GET` | `/api/quizzes` | Fetch all saved quizzes with categories and question counts |
+| `GET` | `/api/quizzes/{id}` | Fetch full quiz details including questions and options |
+| `POST` | `/api/quizzes` | Persist a newly created custom quiz to the database |
+| `GET` | `/api/categories` | Fetch all available quiz categories |
+
+---
+
+## 📂 Project Directory Structure
+
+```
+quiz-arena/
+├── src/main/java/com/quizarena/
+│   ├── config/              # WebSocket STOMP and CORS configurations
+│   │   ├── CorsConfig.java
+│   │   └── WebSocketConfig.java
+│   ├── controller/          # REST endpoints and WebSocket message mappings
+│   │   ├── CategoryController.java
+│   │   ├── GameController.java
+│   │   ├── QuizController.java
+│   │   └── RoomController.java
+│   ├── dto/                 # Strict separation of DTO models
+│   │   ├── event/           # Real-time event payloads (QuestionPrompt, Reveal, Roster)
+│   │   ├── request/         # Client inbound requests (CreateRoom, Join, SubmitAnswer)
+│   │   └── response/        # REST response envelopes (RoomInfoDTO, JoinRoomResponse)
+│   ├── entity/              # JPA database entities (Quiz, Question, Category, Concept)
+│   ├── game/                # In-memory thread-safe room registry and game models
+│   │   ├── GameManager.java # ConcurrentHashMap room store & atomic code generation
+│   │   ├── GameRoom.java    # Synchronized player roster, answers & state machine
+│   │   ├── Player.java      # Player entity with score, avatar, and round status
+│   │   └── RoomState.java   # State enum (WAITING, STARTING, IN_PROGRESS, FINISHED)
+│   ├── repository/          # Spring Data JPA repositories
+│   └── service/             # Scheduled round timers and business logic
+│       ├── CategoryService.java
+│       ├── GameService.java # ScheduledExecutorService multi-phase game scheduler
+│       └── QuizService.java
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/      # Modular UI components (CyberAvatar, Navbar, QuizCard)
+│   │   ├── pages/           # Route views
+│   │   │   ├── Home.jsx         # Hero landing page & quick join
+│   │   │   ├── Explore.jsx      # OpenTDB dynamic trivia discovery hub
+│   │   │   ├── CreateQuiz.jsx   # Custom question builder & time configuration
+│   │   │   ├── JoinGame.jsx     # Room code verification & warrior selection
+│   │   │   ├── Lobby.jsx        # Pre-match readiness lobby & live roster
+│   │   │   └── Room.jsx         # Live arena battle screen
+│   │   ├── App.jsx          # React Router v7 route definitions
+│   │   ├── index.css        # Tailwind CSS 4 utilities & GPU 3D keyframes
+│   │   └── main.jsx         # Frontend entry point
+│   ├── package.json
+│   └── vite.config.js
+│
+├── build.gradle             # Java 21 & Spring Boot 3.4 dependencies
+└── README.md                # System documentation
+```
+
+---
+
+## 🔮 Upcoming Engineering Roadmap
+
+### 1. 🛡️ Security & Rate Limiting Layer
+- **STOMP Frame Throttling**: Token-bucket rate limiters on `/app/rooms/{roomCode}/submit` to prevent automated script spamming and brute-force answer attempts.
+- **WebSocket Handshake Validation**: Origin verification and connection quota limits per IP to defend against socket exhaustion attacks.
+
+### 2. 🔍 Strict Server-Side Validation Layer
+- **Jakarta Bean Validation (`@Valid`)**: Enforce `@NotBlank`, `@Size`, `@Min`, `@Max`, and regex constraints on all inbound request DTOs (`CreateRoomRequest`, `SubmitAnswerRequest`, `CreateQuizRequest`).
+- **Answer Integrity Guards**: Validate that submitted answers match the current active question cycle, preventing replay attacks or late-arriving packet exploitation.
+
+### 3. 🔐 Authentication, Authorization & User Profiles
+- **Spring Security + JWT Integration**: Stateless token-based authentication for persistent user accounts.
+- **Player Progression & History**: Match history logging, lifetime win-loss records, accuracy metrics, and unlockable avatar tiers.
+- **Role-Based Access Control (RBAC)**: Distinct permissions for Quiz Creators, Room Admins, and standard Competitors.
+
+### 4. 🔒 Private Tournaments & Access Control
+- **Password-Protected Rooms**: Optional cryptographic hashing of room access passcodes.
+- **Whitelist / Invite-Only Matches**: Host-managed access lists for closed corporate or classroom trivia tournaments.
+
+### 5. ⚡ Distributed Horizontal Scaling (Redis Pub/Sub)
+- **Distributed State Management**: Transitioning in-memory `GameManager` state to Redis Key-Value stores and distributed locks (`Redisson`).
+- **Cross-Node WebSocket Messaging**: Redis Pub/Sub message broker replacing Spring's in-memory SimpleBroker to allow seamless multi-instance horizontal scaling behind a load balancer.
+
+### 6. 🔊 Web Audio API Soundscape
+- **Dynamic Acoustic Feedback**: Low-latency synthesized sound effects for countdown heartbeats, buzzer locks, correct streak chimes, and victory fanfares.
+
+### 7. 💬 Real-Time In-Game & Lobby Chat System
+- **Pre-Match Lobby Chatter**: Subscribed STOMP channel (`/topic/rooms/{roomCode}/chat`) enabling joined gladiators to send real-time text banter, coordinate strategies, and interact prior to match launch.
+- **In-Arena Quick Reactions & Emotes**: Low-overhead real-time emote reactions (e.g., 🔥, ⚡, 💀, 🎯) and quick-chat overlays during question reveals and podium standings.
+- **Content Sanitization & Spam Throttling**: Server-side profanity filtering and message frequency throttling to maintain a respectful and clean competitive environment.
+
+---
+
+## 🚀 Local Development & Setup
 
 ### Prerequisites
-- **Java 21+** (JDK)
+- **Java Development Kit (JDK) 21+**
 - **Node.js 20+** and **npm**
-- **PostgreSQL** or **MySQL** instance
+- **PostgreSQL** or **MySQL** (or H2 in-memory for testing)
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/quiz-arena.git
+git clone https://github.com/suleman-muhammad/quiz-arena.git
 cd quiz-arena
 ```
 
@@ -132,53 +300,26 @@ spring.datasource.password=your_password
 spring.jpa.hibernate.ddl-auto=update
 ```
 
-### 3. Run Backend (Spring Boot)
+### 3. Build & Run the Backend
 ```bash
+# On Linux / macOS:
 ./gradlew bootRun
-# On Windows:
+
+# On Windows (PowerShell / Command Prompt):
 .\gradlew.bat bootRun
 ```
-*The Spring Boot server will start on `http://localhost:8080` (WebSocket endpoint: `/ws`).*
+*The Spring Boot server will initialize on `http://localhost:8080` (WebSocket endpoint at `ws://localhost:8080/ws`).*
 
-### 4. Run Frontend (React + Vite)
+### 4. Build & Run the Frontend
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-*The Vite dev server will start on `http://localhost:5173`.*
-
----
-
-## 📂 Project Structure
-
-```
-quiz-arena/
-├── src/main/java/com/quizarena/
-│   ├── controller/      # REST API & STOMP Message Mappings
-│   ├── entity/          # JPA Database Entities (Quiz, Question)
-│   ├── dto/             # Data Transfer Objects (Room, Answer, Player)
-│   ├── game/            # GameRoom state & GameManager logic
-│   ├── service/         # GameService timer & round scheduler
-│   └── repository/      # Spring Data JPA Repositories
-│
-├── frontend/
-│   ├── src/
-│   │   ├── assets/      # Colosseum backgrounds & realistic textures
-│   │   ├── components/  # CyberAvatar (Warrior Badges), Navbar, QuizCard
-│   │   ├── pages/       # Home, WaitingRoom, Room, JoinGame, CreateQuiz, Explore
-│   │   ├── index.css    # Tailwind utilities & living arena GPU keyframes
-│   │   └── App.jsx      # Router configuration
-│   └── package.json
-│
-├── .gitignore           # Unified repository ignore rules
-├── build.gradle         # Spring Boot Gradle dependencies
-└── README.md            # Project documentation
-```
+*The Vite development server will start on `http://localhost:5173`.*
 
 ---
 
 <p align="center">
-  Made with ⚔️ by <b>Suleman Muhammad</b>
+  Crafted with precision by <b>Suleman Muhammad</b>
 </p>
-
