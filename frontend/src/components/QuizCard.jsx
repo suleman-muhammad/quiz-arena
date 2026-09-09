@@ -41,7 +41,7 @@ function QuizCard({ quiz }) {
                 {
                     quizId:quiz.id,
                     hostNickName:hostName,
-                    hostIsPlaying:willPlay
+                    hostIsPlaying:true //willPlay
                 }
             ))
 
@@ -119,9 +119,10 @@ function QuizCard({ quiz }) {
                             <input
                                 type="checkbox"
                                 id="willPlay"
+                                disabled={true}
+                                checked={true}
                                 onChange={(e)=> setWillPlay(e.target.checked)}
-                                className="w-4 h-4 accent-purple-500 cursor-pointer bg-slate-950 border-slate-700 rounded"
-                            />
+                                className="w-4 h-4 accent-purple-500 cursor-not-allowed bg-slate-950 border-slate-700 rounded"                            />
                             <label htmlFor="willPlay" className="text-gray-300 text-sm cursor-pointer select-none">
                                 I want to play too (not just spectate)
                             </label>
