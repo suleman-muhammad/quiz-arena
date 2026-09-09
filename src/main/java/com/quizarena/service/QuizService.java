@@ -11,12 +11,12 @@ import com.quizarena.entity.Quiz;
 import com.quizarena.entity.QuizCategory;
 import com.quizarena.entity.QuizConcept;
 import com.quizarena.entity.TriviaFact;
-import com.quizarena.repository.QuizCategoryRepository;
 import com.quizarena.repository.QuizRepository;
+import com.quizarena.repository.QuizCategoryRepository;
 
 @Service
 public class QuizService {
-    
+
     private final QuizRepository quizRepository;
     private final QuizCategoryRepository quizCategoryRepository;
 
@@ -67,7 +67,9 @@ public class QuizService {
     }
 
     public ResponseEntity<Quiz> findQuizWithId(Long id) {
+
         Optional<Quiz> quiz = quizRepository.findById(id);
+
         if (quiz.isPresent()) {
             return ResponseEntity.ok(quiz.get());
         } else {
@@ -82,4 +84,5 @@ public class QuizService {
         }
         return ResponseEntity.notFound().build();
     }
+
 }
