@@ -75,7 +75,7 @@ public class GameService {
     
         this.roomThread.schedule(() -> {
             try {
-                this.sendQuestionText(room);
+                this.sendQuestionPrompt(room);
             } catch (Exception e) {
                 System.err.println("Sever: in Send next Question.");
                 e.printStackTrace();
@@ -84,8 +84,12 @@ public class GameService {
 
     }
 
-    public void sendQuestionText(GameRoom room) {
+    public void sendQuestionPrompt(GameRoom room) {
         if (room == null) {
+            return;
+        }
+
+        if(!manager.roomExists(room.getRoomCode())){
             return;
         }
 
@@ -168,7 +172,7 @@ public class GameService {
 
         this.roomThread.schedule(() -> {
             try {
-                this.sendQuestionText(room);
+                this.sendQuestionPrompt(room);
             } catch (Exception e) {
                 System.err.println("Sever: in Send next Question.");
                 e.printStackTrace();
@@ -213,5 +217,9 @@ public class GameService {
         messagingTemplate.convertAndSend(roomEndPoint, roomInfo);
         messagingTemplate.convertAndSend("/topic/rooms/" + room.getRoomCode() + "/players/" + request.playerNickName(),
                 new SystemMessageDTO("INFO", "Out of the ROOM."));
+
+        if(room.getPlayers().isEmpty()){
+            manager.removeRoom(room.getRoomCode());
+        }
     }
 }
