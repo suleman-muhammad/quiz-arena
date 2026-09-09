@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
+import { HostAvatar, PlayerAvatar } from "../components/CyberAvatar"
+import { API_BASE_URL, WS_BASE_URL } from "../config/api"
 import SockJS from "sockjs-client"
 import Stomp from 'stompjs'
-import { HostAvatar, PlayerAvatar } from "../components/CyberAvatar"
 
 function Lobby() {
     const navigate = useNavigate()
@@ -36,7 +37,7 @@ function Lobby() {
     const stompClient = useRef(null)
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/rooms/${roomCode}`)
+        fetch(`${API_BASE_URL}/api/rooms/${roomCode}`)
             .then(res => res.json())
             .then((roomInfo) => {
                 if (roomInfo === null) {
@@ -44,7 +45,7 @@ function Lobby() {
                 } else {
                     setPlayers(roomInfo.players || [])
 
-                    fetch(`http://localhost:8080/api/quizzes/${roomInfo.quizId}`)
+                    fetch(`${API_BASE_URL}/api/quizzes/${roomInfo.quizId}`)
                     .then(res => {
                         if (!res.ok) return null
                         return res.json()
@@ -70,7 +71,7 @@ function Lobby() {
             })
             .catch(err => console.log(err))
 
-        const socket = new SockJS('http://localhost:8080/ws')
+        const socket = new SockJS(WS_BASE_URL)
         const client = Stomp.over(socket)
         client.debug = null
         client.connect({}, () => {

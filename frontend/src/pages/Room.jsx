@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
+import { PlayerAvatar, HostAvatar } from "../components/CyberAvatar"
+import { API_BASE_URL, WS_BASE_URL } from "../config/api"
 import SockJS from "sockjs-client"
 import Stomp from 'stompjs'
-import { PlayerAvatar, HostAvatar } from "../components/CyberAvatar"
+
 
 function Room() {
     const navigate = useNavigate()
@@ -77,7 +79,7 @@ function Room() {
     }
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/rooms/${roomCode}`)
+        fetch(`${API_BASE_URL}/api/rooms/${roomCode}`)
             .then(res => res.json())
             .then((roomInfo) => {
                 if (roomInfo === null) {
@@ -91,7 +93,7 @@ function Room() {
                         setPosition(me.currentPosition)
                     }
 
-                    fetch(`http://localhost:8080/api/quizzes/${roomInfo.quizId}`)
+                    fetch(`${API_BASE_URL}/api/quizzes/${roomInfo.quizId}`)
                     .then(res => {
                         if (!res.ok) return null
                         return res.json()
@@ -111,7 +113,7 @@ function Room() {
             })
             .catch(err => console.log(err))
         
-        const socket = new SockJS('http://localhost:8080/ws')
+        const socket = new SockJS(WS_BASE_URL)
         const client = Stomp.over(socket)
         client.debug = null
         client.connect({}, () => {

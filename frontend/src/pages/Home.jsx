@@ -1,12 +1,13 @@
 import { useState, useEffect} from 'react'
 import { Link } from  'react-router-dom'
+import { API_BASE_URL } from '../config/api';
 import QuizCard from '../components/QuizCard'
 
 function Home() {
     const [quizzes, setQuizzes] = useState([])
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/quizzes')
+        fetch(`${API_BASE_URL}/api/quizzes`)
             .then(res => res.json())
             .then(data => setQuizzes(data))
             .catch(err => console.error(err))

@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { WS_BASE_URL } from '../config/api';
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
 
@@ -26,7 +27,7 @@ function QuizCard({ quiz }) {
         }
 
         setError('')
-        const socket = new SockJS('http://localhost:8080/ws')
+        const socket = new SockJS(WS_BASE_URL)
         const client = Stomp.over(socket)
         client.debug = null
 

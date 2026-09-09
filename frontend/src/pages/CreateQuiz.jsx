@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { API_BASE_URL } from '../config/api'
 
 function CreateQuiz() {
     const navigate = useNavigate()
@@ -111,7 +112,7 @@ function CreateQuiz() {
                      category : categories.find(c => c.label === category) || categories[0]
                     }
 
-        fetch('http://localhost:8080/api/quizzes', {
+        fetch(`${API_BASE_URL}/api/quizzes`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(quiz)
@@ -154,7 +155,7 @@ function CreateQuiz() {
     const [categories, setCategories] = useState(defaultCategories)
 
     useEffect(() =>{
-        fetch(`http://localhost:8080/api/quiz-categories`)
+        fetch(`${API_BASE_URL}/api/quiz-categories`)
             .then((res) => {
                 if(!res.ok) return null
                 return res.json()

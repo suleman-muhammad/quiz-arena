@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import SockJS from "sockjs-client"
 import Stomp from 'stompjs'
 import { PlayerAvatar } from '../components/CyberAvatar'
+import { WS_BASE_URL } from '../config/api';
 
 function JoinGame() {
     const navigate = useNavigate()
@@ -20,7 +21,7 @@ function JoinGame() {
         setError('')
         setLoading(true)
 
-        const socket = new SockJS('http://localhost:8080/ws')
+        const socket = new SockJS(WS_BASE_URL)
         const client = Stomp.over(socket)
         client.debug = null
 
