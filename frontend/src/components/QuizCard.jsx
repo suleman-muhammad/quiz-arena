@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { createPortal } from "react-dom"
 import { useNavigate } from "react-router-dom"
 import { WS_BASE_URL } from '../config/api';
 import SockJS from 'sockjs-client'
@@ -88,10 +89,15 @@ function QuizCard({ quiz }) {
                     </button>
                 </div>
             </div>
-            
-            {showModal && (
-                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-                    <div className="bg-slate-900 border border-purple-500 rounded-2xl p-8 w-full max-w-sm shadow-2xl">
+            {showModal && createPortal(
+                <div 
+                    className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[9999] p-4"
+                    onClick={closeModal}
+                >
+                    <div 
+                        className="bg-slate-900 border border-purple-500 rounded-2xl p-8 w-full max-w-sm shadow-[0_0_50px_rgba(168,85,247,0.3)] animate-in fade-in zoom-in-95 duration-200"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <h2 className="text-xl font-bold text-white mb-2 text-center">Host a Game</h2>
                         
                         <p className="text-gray-400 text-sm text-center mb-6">
@@ -144,7 +150,8 @@ function QuizCard({ quiz }) {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </>
     );
