@@ -1,4 +1,4 @@
-﻿package com.quizarena.controller;
+package com.quizarena.controller;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
