@@ -75,7 +75,7 @@ public class GameManager {
             if (room.getState() != RoomState.WAITING) {
                 return new JoinRoomResponse("Cannot Join ROOM mid Game.", null);
             }else{
-                result = room.addPlayer(p)
+                result = room.addPlayer(p);
             }
         }
 
