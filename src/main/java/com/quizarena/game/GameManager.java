@@ -57,50 +57,65 @@ public class GameManager {
     }
 
     public JoinRoomResponse addPlayerToRoom(String roomCode, String playernickName) {
+        GameRoom room;
+        synchronized(rooms){
+            if (rooms.containsKey(roomCode)){
+                room = rooms.get(roomCode);
+            }else{
+                return new JoinRoomResponse("NO ROOM available with given code.", null);
+            }
+        }
 
-        if (rooms.containsKey(roomCode)) {
-            GameRoom room = rooms.get(roomCode);
+        Player p = new Player();
+        p.setNickName(playernickName);
+        p.setCurrentPosition(1);
+        boolean result;
+
+        synchronized(rooms){
             if (room.getState() != RoomState.WAITING) {
                 return new JoinRoomResponse("Cannot Join ROOM mid Game.", null);
-            }
-
-            Player p = new Player();
-            p.setNickName(playernickName);
-            p.setCurrentPosition(1);
-            boolean result = room.addPlayer(p);
-
-            if (result) {
-
-                RoomInfoDTO info = new RoomInfoDTO();
-                info.setPlayers(room.getPlayers());
-                info.setRoomCode(room.getRoomCode());
-                info.setState(room.getState());
-                info.setQuizId(room.getQuizId());
-
-                return new JoinRoomResponse("Ok", info);
-            } else {
-                return new JoinRoomResponse(
-                        "Player with Given Name already exists.", null);
+            }else{
+                result = room.addPlayer(p)
             }
         }
 
-        return new JoinRoomResponse("NO ROOM available with given code.", null);
+        if (result) {
+            RoomInfoDTO info = new RoomInfoDTO();
+            info.setPlayers(room.getPlayers());
+            info.setRoomCode(room.getRoomCode());
+            info.setState(room.getState());
+            info.setQuizId(room.getQuizId());
+
+            return new JoinRoomResponse("Ok", info);
+        } else {
+            return new JoinRoomResponse(
+                    "Player with Given Name already exists.", null);
+        }
+        
     }
 
-    public GameRoom removePlayerFromRoom(String code, String playernickName) {
-        if (rooms.containsKey(code)) {
-            GameRoom room = rooms.get(code);
-            Player player = new Player();
-            player.setNickName(playernickName);
-            boolean result = room.removePlayer(player);
-            return result ? room : null;
+    public GameRoom removePlayerFromRoom(String roomCode, String playernickName) {
+        GameRoom room;
+        synchronized(rooms){
+            if (rooms.containsKey(roomCode)){
+                room = rooms.get(roomCode);
+            }else{
+                return null;
+            }
         }
-        return null;
+
+        Player player = new Player();
+        player.setNickName(playernickName);
+        boolean result = room.removePlayer(player);
+        return result ? room : null;
+
     }
 
     public void removeRoom(String code) {
-        if (rooms.containsKey(code)) {
-            rooms.remove(code);
+        synchronized(rooms){
+            if (rooms.containsKey(code)) {
+                rooms.remove(code);
+            }
         }
     }
 
