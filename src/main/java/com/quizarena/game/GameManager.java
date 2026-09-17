@@ -28,7 +28,7 @@ public class GameManager {
         if (request.hostIsPlaying())
             room.addPlayer(p);
 
-        rooms.put(code, room);
+        rooms.putIfAbsent(code, room);
         return room;
     }
 
@@ -57,13 +57,10 @@ public class GameManager {
     }
 
     public JoinRoomResponse addPlayerToRoom(String roomCode, String playernickName) {
-        GameRoom room;
-        synchronized(rooms){
-            if (rooms.containsKey(roomCode)){
-                room = rooms.get(roomCode);
-            }else{
-                return new JoinRoomResponse("NO ROOM available with given code.", null);
-            }
+        GameRoom room = rooms.getOrDefault(roomCode, null);
+
+        if(room == null){
+            return new JoinRoomResponse("No ROOM found.", null);
         }
 
         Player p = new Player();
@@ -71,7 +68,7 @@ public class GameManager {
         p.setCurrentPosition(1);
         boolean result;
 
-        synchronized(rooms){
+        synchronized(room){
             if (room.getState() != RoomState.WAITING) {
                 return new JoinRoomResponse("Cannot Join ROOM mid Game.", null);
             }else{
@@ -95,13 +92,10 @@ public class GameManager {
     }
 
     public GameRoom removePlayerFromRoom(String roomCode, String playernickName) {
-        GameRoom room;
-        synchronized(rooms){
-            if (rooms.containsKey(roomCode)){
-                room = rooms.get(roomCode);
-            }else{
-                return null;
-            }
+        GameRoom room = rooms.getOrDefault(roomCode, null);
+        
+        if(room == null){
+            return null;
         }
 
         Player player = new Player();
