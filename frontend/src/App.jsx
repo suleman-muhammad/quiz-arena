@@ -9,7 +9,7 @@ import Room from './pages/Room'
 
 function App() {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-zinc-800 to-zinc-950 text-zinc-100 font-sans">
+        <div className="min-h-screen bg-[#0A0C13] text-white font-sans">
             <BrowserRouter>
                 <Navbar />
                 <Routes>
