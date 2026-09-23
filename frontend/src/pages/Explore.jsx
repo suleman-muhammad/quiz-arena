@@ -13,8 +13,7 @@ function Explore() {
     useEffect(() => {
         fetch(`${API_BASE_URL}/api/quizzes`)
             .then(res => {
-                if (!res.ok) throw new Error(`HTTP ${res.status}`)
-                return res.json()
+                if (res.ok) return res.json()
             })
             .then(data => {
                 setQuizzes(data)
@@ -28,14 +27,14 @@ function Explore() {
     }, [])
 
     const categories = [
-        { id: 'ALL', label: 'All Quizzes' },
-        { id: 'cs_it', label: 'CS & IT' },
-        { id: 'science', label: 'Science' },
-        { id: 'history', label: 'History' },
-        { id: 'gaming', label: 'Gaming' },
-        { id: 'cinema', label: 'Pop Culture' },
-        { id: 'nature', label: 'Nature' },
-        { id: 'general', label: 'General' },
+        { id: 'ALL', label: 'All Quizzes', icon: '🌐' },
+        { id: 'cs_it', label: 'CS & IT', icon: '💻' },
+        { id: 'science', label: 'Science', icon: '🔬' },
+        { id: 'history', label: 'History', icon: '🏛️' },
+        { id: 'gaming', label: 'Gaming', icon: '🎮' },
+        { id: 'cinema', label: 'Pop Culture', icon: '🎬' },
+        { id: 'nature', label: 'Nature', icon: '🌿' },
+        { id: 'general', label: 'General', icon: '⚔️' },
     ]
 
     const filteredQuizzes = quizzes.filter(quiz => {
@@ -77,10 +76,14 @@ function Explore() {
                                         type="button"
                                         onClick={() => setSelectedCategory(category.id)}
                                         className={active
-                                            ? 'bg-amber-500 text-gray-950 font-bold text-xs px-3.5 py-1.5 rounded-lg transition-all shadow-sm shrink-0'
-                                            : 'bg-[#111827] text-gray-400 border border-gray-800 hover:text-white text-xs px-3.5 py-1.5 rounded-lg transition-all shrink-0'}
+                                            ? 'inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-950/80 border border-blue-500/60 text-blue-200 shadow-sm shadow-blue-500/10 shrink-0 cursor-pointer'
+                                            : 'inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0f172a]/70 hover:bg-[#1e293b] border border-blue-900/40 text-blue-300 hover:text-blue-200 transition-all shrink-0 cursor-pointer'}
                                     >
+                                        <span className="text-blue-400 text-xs shrink-0">{category.icon}</span>
                                         {category.label}
+                                        <span className="ml-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-900/60 text-blue-300 border border-blue-800/50">
+                                            {category.id === 'ALL' ? quizzes.length : quizzes.filter(quiz => quiz.category?.id === category.id).length}
+                                        </span>
                                     </button>
                                 )
                             })}
