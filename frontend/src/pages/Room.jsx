@@ -272,86 +272,31 @@ function Room() {
 
     return (
         <div className="min-h-screen bg-[#0A0E1A] text-[#F9FAFB] flex flex-col items-center justify-center p-4 sm:p-6">
-            
-            {/* OPTION A: CLEAN ESPORTS ARENA STAGE (Solid #050714 + 3D Grid Stage + HUD) */}
-
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.18)_0%,_transparent_65%)] pointer-events-none" />
-            <div className="absolute top-1/4 -left-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute top-1/3 -right-20 w-96 h-96 bg-purple-600/12 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-cyan-500/15 rounded-full blur-[140px] pointer-events-none" />
-
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <span className="absolute top-[8%] left-[12%] w-1.5 h-1.5 bg-cyan-300 rounded-full animate-star shadow-[0_0_6px_#38bdf8]" style={{ animationDelay: '0s' }} />
-                <span className="absolute top-[14%] left-[28%] w-1 h-1 bg-purple-300 rounded-full animate-star shadow-[0_0_4px_#c084fc]" style={{ animationDelay: '1.2s' }} />
-                <span className="absolute top-[6%] left-[48%] w-2 h-2 bg-cyan-200 rounded-full animate-star shadow-[0_0_8px_#67e8f9]" style={{ animationDelay: '2.1s' }} />
-                <span className="absolute top-[18%] left-[64%] w-1 h-1 bg-amber-200 rounded-full animate-star shadow-[0_0_4px_#fde047]" style={{ animationDelay: '0.7s' }} />
-                <span className="absolute top-[10%] left-[82%] w-1.5 h-1.5 bg-cyan-300 rounded-full animate-star shadow-[0_0_6px_#38bdf8]" style={{ animationDelay: '1.8s' }} />
-                <span className="absolute top-[22%] left-[92%] w-1 h-1 bg-purple-200 rounded-full animate-star shadow-[0_0_4px_#e9d5ff]" style={{ animationDelay: '2.8s' }} />
-            </div>
-
-            <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
-                <div className="absolute top-1/4 left-[14%] w-2.5 h-2.5 bg-cyan-400/40 rotate-45 animate-vector-float shadow-[0_0_10px_rgba(6,182,212,0.6)]" style={{ animationDelay: '0s' }} />
-                <div className="absolute top-1/3 right-[16%] w-3 h-3 bg-purple-400/40 rotate-45 animate-vector-float shadow-[0_0_10px_rgba(168,85,247,0.6)]" style={{ animationDelay: '2.5s' }} />
-                <div className="absolute bottom-1/3 left-[22%] w-2 h-2 bg-amber-400/40 rotate-45 animate-vector-float shadow-[0_0_8px_rgba(245,158,11,0.6)]" style={{ animationDelay: '1.2s' }} />
-                <div className="absolute top-1/2 right-[10%] w-2 h-2 bg-pink-400/40 rotate-45 animate-vector-float shadow-[0_0_8px_rgba(236,72,153,0.6)]" style={{ animationDelay: '3.8s' }} />
-            </div>
-
-            <div className="absolute -bottom-10 inset-x-0 h-[44vh] vector-grid-3d pointer-events-none [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.85)_35%,black_100%)] opacity-70" />
-
-            <div className="absolute bottom-[40vh] inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent shadow-[0_0_18px_rgba(6,182,212,0.9)] pointer-events-none" />
-
-            <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
-                <svg className="absolute top-14 left-6 w-32 h-32 text-purple-500/35 animate-circuit-pulse" viewBox="0 0 100 100" fill="none">
-                    <path d="M0 40 L0 0 L40 0" stroke="currentColor" strokeWidth="2" />
-                    <circle cx="4" cy="4" r="2.5" fill="currentColor" />
-                    <line x1="12" y1="12" x2="35" y2="12" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
-                </svg>
-
-                <svg className="absolute top-14 right-6 w-32 h-32 text-cyan-400/35 animate-circuit-pulse" viewBox="0 0 100 100" fill="none">
-                    <path d="M100 40 L100 0 L60 0" stroke="currentColor" strokeWidth="2" />
-                    <circle cx="96" cy="4" r="2.5" fill="currentColor" />
-                    <line x1="88" y1="12" x2="65" y2="12" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
-                </svg>
-
-                <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] text-purple-500/10 pointer-events-none" viewBox="0 0 400 400" fill="none">
-                    <circle cx="200" cy="200" r="180" stroke="currentColor" strokeWidth="1" strokeDasharray="6 6" />
-                    <circle cx="200" cy="200" r="120" stroke="currentColor" strokeWidth="1" strokeOpacity="0.7" />
-                    <circle cx="200" cy="200" r="60" stroke="currentColor" strokeWidth="1" strokeDasharray="2 4" />
-                </svg>
-            </div>
-
-            {gameState === 'RESULT_CORRECT' && (
-                <div className="absolute inset-0 pointer-events-none z-15">
-                    <div className="absolute inset-0 bg-radial from-emerald-500/25 via-cyan-500/10 to-transparent animate-pulse" />
-                    <div className="absolute bottom-0 inset-x-0 h-96 bg-gradient-to-t from-emerald-500/35 via-cyan-500/15 to-transparent" />
-                </div>
-            )}
-
             <div className="relative z-20 px-4 sm:px-6 pt-4 pb-1">
                 <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
                     
                     <div className="flex items-center gap-2 sm:gap-3">
-                        <div className="bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-1.5 flex items-center gap-2 backdrop-blur-md shadow-md">
+                        <div className="bg-[#111827] border border-gray-800 rounded-xl px-3 py-1.5 flex items-center gap-2">
                             <span className="text-[10px] font-extrabold tracking-widest uppercase text-slate-400">Room</span>
                             <span className="font-mono font-black text-amber-400 tracking-wider text-sm">{roomCode}</span>
                         </div>
-                        <div className="hidden sm:flex items-center gap-1.5 bg-slate-900/60 border border-slate-800 rounded-lg px-2.5 py-1 backdrop-blur-sm">
+                        <div className="hidden sm:flex items-center gap-1.5 bg-[#111827] border border-gray-800 rounded-lg px-2.5 py-1">
                             <span className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-400 animate-pulse' : 'bg-rose-500'}`} />
                             <span className="text-[11px] font-semibold text-slate-300">{connected ? 'Live' : 'Offline'}</span>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <div className="bg-gradient-to-r from-purple-900/80 to-indigo-900/80 border border-purple-400/50 text-purple-200 text-xs font-black px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(168,85,247,0.4)] backdrop-blur-md">
+                        <div className="bg-[#111827] border border-gray-800 text-gray-300 text-xs font-semibold px-4 py-1.5 rounded-lg">
                             Question {currQuestionNo} of {questionCount || 5}
                         </div>
                     </div>
 
                     <div className="flex items-center gap-2 sm:gap-3">
-                        <div className="bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-1 flex items-center gap-3 backdrop-blur-md shadow-md">
+                        <div className="bg-[#111827] border border-gray-800 rounded-xl px-3 py-1 flex items-center gap-3">
                             <div className="text-right">
                                 <p className="text-[9px] uppercase font-extrabold text-slate-400 tracking-wider">Rank</p>
-                                <p className="text-xs font-black text-cyan-400">{getOrdinalPosition(position)}</p>
+                                <p className="text-xs font-black text-amber-400">{getOrdinalPosition(position)}</p>
                             </div>
                             <div className="h-5 w-px bg-slate-700/80" />
                             <div className="text-right">
@@ -362,12 +307,12 @@ function Room() {
                             </div>
                         </div>
 
-                        <PlayerAvatar name={nickName} className="w-9 h-9 border border-purple-500/50 shadow-md" />
+                        <PlayerAvatar name={nickName} className="w-9 h-9" />
 
                         <button
                             onClick={() => setShowLeaveConfirm(true)}
                             title="Leave Battle Arena"
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-900/90 border border-rose-500/60 text-rose-300 hover:text-white text-xs font-bold transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer backdrop-blur-md"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 hover:text-white text-xs font-bold transition-all cursor-pointer"
                         >
                             <span>🚪</span>
                             <span className="hidden sm:inline">Leave</span>
@@ -457,32 +402,32 @@ function Room() {
                     )}
 
                     {gameState === 'SUBMITTED' && (
-                        <div className="bg-slate-900/90 border-2 border-cyan-500/80 rounded-2xl p-8 glow-cyan text-center backdrop-blur-md">
+                        <div className="bg-[#111827] border border-gray-800 rounded-2xl p-6 text-center">
                             <div className="text-4xl mb-3 animate-bounce">🔒</div>
                             <h3 className="text-xl font-black text-white">Answer Locked In!</h3>
-                            <p className="text-xs text-cyan-300 font-bold uppercase tracking-wider mt-1">
+                            <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mt-1">
                                 Stand by while other gladiators submit...
                             </p>
                         </div>
                     )}
 
                     {gameState === 'RESULT_CORRECT' && (
-                        <div className="bg-slate-900/95 border-2 border-emerald-400 rounded-3xl p-8 glow-emerald text-center backdrop-blur-md animate-victory-burst shadow-[0_0_40px_rgba(52,211,153,0.4)]">
+                        <div className="bg-[#111827] border border-emerald-500 rounded-2xl p-6 text-center animate-victory-burst">
                             <div className="text-6xl mb-2 animate-bounce">👑</div>
-                            <h3 className="text-3xl font-black text-emerald-400 tracking-wide drop-shadow-md">
+                            <h3 className="text-3xl font-black text-emerald-300 tracking-wide">
                                 CORRECT!
                             </h3>
                             <p className="text-xs font-black text-amber-300 uppercase tracking-widest mt-1 mb-3">
                                 👏 THE ARENA STANDS UP & ROARS FOR YOU!
                             </p>
-                            <div className="inline-flex items-center gap-2 bg-emerald-950 border border-emerald-400 px-5 py-2 rounded-full text-emerald-200 text-base font-black shadow-[0_0_20px_rgba(52,211,153,0.6)]">
+                            <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500 px-5 py-2 rounded-xl text-emerald-300 text-base font-black">
                                 <span>⚡</span> +{roundScore.current || 940} PTS
                             </div>
                         </div>
                     )}
 
                     {gameState === 'RESULT_WRONG' && (
-                        <div className="bg-slate-900/90 border-2 border-rose-500/80 rounded-2xl p-8 text-center backdrop-blur-md animate-fade-in">
+                        <div className="bg-[#111827] border border-rose-500 rounded-2xl p-6 text-center animate-fade-in">
                             <div className="text-5xl mb-2">❌</div>
                             <h3 className="text-2xl font-black text-rose-500">WRONG!</h3>
                             <p className="text-xs text-slate-300 mt-2">
@@ -493,11 +438,11 @@ function Room() {
                 </div>
 
                 <div className="lg:col-span-4 flex flex-col gap-4">
-                    <div className="bg-slate-900/85 border border-slate-700/80 rounded-2xl p-5 shadow-xl backdrop-blur-md flex flex-col h-full justify-between">
+                    <div className="bg-[#111827] border border-gray-800 rounded-2xl p-5 shadow-xl flex flex-col h-full justify-between">
                         
                         <div>
                             <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-                                <span className="text-xs font-extrabold tracking-wider uppercase text-purple-400 flex items-center gap-1.5">
+                                <span className="text-xs font-extrabold tracking-wider uppercase text-gray-300 flex items-center gap-1.5">
                                     <span>⚔️</span> Live Arena Standings
                                 </span>
                                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
@@ -516,8 +461,8 @@ function Room() {
                                             key={p.currentPosition || index}
                                             className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
                                                 isMe
-                                                    ? 'bg-purple-950/60 border-purple-500/80 shadow-[0_0_12px_rgba(168,85,247,0.4)]'
-                                                    : 'bg-slate-950/60 border-slate-800/80 hover:border-slate-700'
+                                                    ? 'bg-amber-500/10 border-amber-500/60'
+                                                    : 'bg-[#0A0E1A] border-gray-800 hover:border-gray-700'
                                             }`}
                                         >
                                             <div className="flex items-center gap-3">
@@ -528,7 +473,7 @@ function Room() {
                                                 <PlayerAvatar index={p.currentPosition} name={p.nickName} className="w-8 h-8" />
 
                                                 <div>
-                                                    <p className={`text-xs font-black truncate max-w-[100px] ${isMe ? 'text-purple-200' : 'text-slate-200'}`}>
+                                                    <p className={`text-xs font-black truncate max-w-[100px] ${isMe ? 'text-amber-300' : 'text-slate-200'}`}>
                                                         {isMe ? `${p.nickName} (You)` : p.nickName}
                                                     </p>
                                                 </div>
@@ -562,7 +507,7 @@ function Room() {
                                 <PlayerAvatar name={nickName} className="w-8 h-8" />
                                 <div>
                                     <p className="text-xs font-black text-white">{nickName}</p>
-                                    <p className="text-[10px] font-bold text-purple-400">{getOrdinalPosition(position)} place</p>
+                                    <p className="text-[10px] font-bold text-amber-400">{getOrdinalPosition(position)} place</p>
                                 </div>
                             </div>
                             <span className="text-sm font-black text-amber-300 font-mono">
@@ -579,11 +524,11 @@ function Room() {
                         <div className="w-20 h-20 mx-auto mb-4">
                             <HostAvatar className="w-20 h-20" />
                         </div>
-                        <h2 className="text-lg font-black text-purple-300 uppercase tracking-widest mb-1">
+                        <h2 className="text-lg font-black text-amber-400 uppercase tracking-widest mb-1">
                             Prepare for battle!
                         </h2>
                         <p className="text-xs text-slate-400 mb-6">First question starting in</p>
-                        <span className="text-8xl font-black text-white animate-pulse font-mono drop-shadow-[0_0_30px_rgba(168,85,247,0.9)]">
+                        <span className="text-8xl font-black text-[#F9FAFB] animate-pulse font-mono">
                             {countdown}
                         </span>
                     </div>
@@ -600,7 +545,7 @@ function Room() {
                         <h2 className="text-2xl font-black text-white tracking-wide">
                             {gameState === 'GAME_OVER' ? 'Grand Tournament Victor!' : 'Round Standings'}
                         </h2>
-                        <p className="text-xs text-purple-300 font-bold uppercase tracking-widest mt-1 mb-6">
+                        <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1 mb-6">
                             {gameState === 'GAME_OVER' ? 'Final Arena Results' : `After Question ${currQuestionNo}`}
                         </p>
 
@@ -610,7 +555,7 @@ function Room() {
                             }`}>
                                 {leaderboard[1] ? (
                                     <>
-                                        <PlayerAvatar index={2} name={leaderboard[1].nickName} className="w-12 h-12 mb-2 border-2 border-slate-300 shadow-[0_0_15px_rgba(203,213,225,0.5)]" />
+                                        <PlayerAvatar index={2} name={leaderboard[1].nickName} className="w-12 h-12 mb-2" />
                                         <div className="bg-[#0A0E1A] border border-gray-700 rounded-xl p-4 flex items-center justify-between w-full">
                                             <span className="bg-slate-700 text-slate-200 font-mono text-xs font-bold w-7 h-7 rounded-lg flex items-center justify-center">2</span>
                                             <p className="text-[11px] font-black text-slate-100 truncate max-w-[85px]">{leaderboard[1].nickName}</p>
@@ -632,8 +577,8 @@ function Room() {
                             }`}>
                                 {leaderboard[0] ? (
                                     <>
-                                        <span className="text-2xl animate-bounce drop-shadow-[0_0_12px_rgba(245,158,11,0.9)]">👑</span>
-                                        <PlayerAvatar index={1} name={leaderboard[0].nickName} className="w-16 h-16 mb-2 border-2 border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.8)]" />
+                                        <span className="text-2xl animate-bounce text-amber-400">👑</span>
+                                        <PlayerAvatar index={1} name={leaderboard[0].nickName} className="w-16 h-16 mb-2" />
                                         <div className="bg-[#111827] border-2 border-amber-500/80 rounded-2xl p-4 sm:p-5 flex items-center justify-between w-full shadow-lg shadow-amber-500/5">
                                             <span className="w-8 h-8 rounded-lg bg-amber-500 text-gray-950 font-bold font-mono flex items-center justify-center">1</span>
                                             <p className="text-xs font-black text-amber-100 truncate max-w-[90px]">{leaderboard[0].nickName}</p>
@@ -655,7 +600,7 @@ function Room() {
                             }`}>
                                 {leaderboard[2] ? (
                                     <>
-                                        <PlayerAvatar index={3} name={leaderboard[2].nickName} className="w-12 h-12 mb-2 border-2 border-amber-700 shadow-[0_0_15px_rgba(180,83,9,0.5)]" />
+                                        <PlayerAvatar index={3} name={leaderboard[2].nickName} className="w-12 h-12 mb-2" />
                                         <div className="bg-[#0A0E1A] border border-gray-800 rounded-xl p-4 flex items-center justify-between w-full">
                                             <span className="bg-amber-900/60 text-amber-200 font-mono text-xs font-bold w-7 h-7 rounded-lg flex items-center justify-center">3</span>
                                             <p className="text-[11px] font-black text-slate-200 truncate max-w-[85px]">{leaderboard[2].nickName}</p>
@@ -705,8 +650,8 @@ function Room() {
             )}
 
             {showLeaveConfirm && (
-                <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fade-in">
-                    <div className="bg-slate-900/95 border-2 border-rose-500/80 rounded-2xl p-6 max-w-sm w-full text-center shadow-[0_0_30px_rgba(244,63,94,0.35)] relative overflow-hidden">
+                <div className="fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4 animate-fade-in">
+                    <div className="bg-[#111827] border border-gray-800 rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl relative overflow-hidden">
                         <div className="w-14 h-14 rounded-full bg-rose-950/80 border border-rose-500/50 flex items-center justify-center text-3xl mx-auto mb-4">
                             ⚠️
                         </div>
@@ -726,7 +671,7 @@ function Room() {
                                     setShowLeaveConfirm(false)
                                     leaveRoom()
                                 }}
-                                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white text-xs font-black shadow-lg transition-all cursor-pointer"
+                                className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-gray-950 text-xs font-bold shadow-md transition-all cursor-pointer"
                             >
                                 Confirm Leave
                             </button>
@@ -736,15 +681,15 @@ function Room() {
             )}
 
             {gameState === 'LEFT' && (
-                <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 p-4">
-                    <div className="bg-slate-900/95 border-2 border-purple-500/80 rounded-3xl p-8 max-w-md w-full text-center glow-purple relative overflow-hidden">
-                        <div className="w-16 h-16 rounded-2xl bg-purple-950/80 border border-purple-400/50 flex items-center justify-center text-4xl mx-auto mb-4 shadow-[0_0_20px_rgba(168,85,247,0.5)]">
+                <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
+                    <div className="bg-[#111827] border border-gray-800 rounded-2xl p-6 max-w-md w-full text-center shadow-2xl relative overflow-hidden">
+                        <div className="w-16 h-16 rounded-2xl bg-[#0A0E1A] border border-gray-800 flex items-center justify-center text-4xl mx-auto mb-4 text-amber-400">
                             🚪
                         </div>
                         <h2 className="text-2xl font-black text-white mb-2 tracking-wide">
                             You Have Left the Arena
                         </h2>
-                        <p className="text-xs text-purple-300/80 mb-6 leading-relaxed">
+                        <p className="text-xs text-gray-400 mb-6 leading-relaxed">
                             You have disconnected from battle room <span className="font-mono font-bold text-amber-400">{roomCode}</span>.
                         </p>
 
@@ -757,7 +702,7 @@ function Room() {
                             </div>
                             <div className="text-center border-l border-slate-800">
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Final Rank</p>
-                                <p className="text-lg font-black text-cyan-400 mt-0.5">
+                                    <p className="text-lg font-black text-amber-400 mt-0.5">
                                     {getOrdinalPosition(position)}
                                 </p>
                             </div>
@@ -765,7 +710,7 @@ function Room() {
 
                         <button
                             onClick={() => navigate('/')}
-                            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:from-purple-500 hover:to-amber-400 text-white font-black text-sm tracking-wider shadow-[0_0_20px_rgba(217,70,239,0.5)] transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                            className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold text-sm tracking-wider shadow-md transition-all cursor-pointer active:scale-[0.98]"
                         >
                             RETURN TO LOBBY
                         </button>

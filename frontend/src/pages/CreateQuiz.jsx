@@ -289,7 +289,7 @@ function CreateQuiz() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {[
                                     { letter: 'A', border: 'border-rose-500/50 focus-within:border-rose-400', badge: 'bg-rose-500', optIndex: 0 },
-                                    { letter: 'B', border: 'border-cyan-500/50 focus-within:border-cyan-400', badge: 'bg-cyan-500', optIndex: 1 },
+                                    { letter: 'B', border: 'border-blue-500/50 focus-within:border-blue-400', badge: 'bg-blue-500', optIndex: 1 },
                                     { letter: 'C', border: 'border-emerald-500/50 focus-within:border-emerald-400', badge: 'bg-emerald-500', optIndex: 2 },
                                     { letter: 'D', border: 'border-amber-500/50 focus-within:border-amber-400', badge: 'bg-amber-500', optIndex: 3 },
                                 ].map(({ letter, border, optIndex }) => {
@@ -298,8 +298,8 @@ function CreateQuiz() {
                                         <div 
                                             key={letter}
                                             onClick={() => updateQuestion(index, 'correctOption', optIndex)}
-                                            className={`flex items-center gap-2.5 bg-[#111827] border border-gray-800 rounded-xl px-3 py-2 focus-within:border-gray-700 transition-all cursor-pointer ${border} ${
-                                                isCorrect ? 'ring-1 ring-amber-500 bg-amber-950/20' : ''
+                                            className={`flex items-center gap-2.5 bg-[#0A0E1A] border border-gray-800 text-gray-300 rounded-xl px-3 py-2 focus-within:border-gray-700 transition-all cursor-pointer ${border} ${
+                                                isCorrect ? 'border-amber-500 text-amber-400 bg-amber-500/10' : ''
                                             }`}
                                         >
                                             <input

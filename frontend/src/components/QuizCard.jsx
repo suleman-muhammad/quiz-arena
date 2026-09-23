@@ -93,13 +93,13 @@ function QuizCard({ quiz }) {
                     onClick={closeModal}
                 >
                     <div 
-                        className="bg-[#12151f] border border-slate-800 rounded-2xl p-8 w-full max-w-sm shadow-lg animate-in fade-in zoom-in-95 duration-200"
+                        className="bg-[#111827] border border-gray-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl animate-in fade-in zoom-in-95 duration-200"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <h2 className="text-xl font-bold text-white mb-2 text-center">Host a Game</h2>
                         
                         <p className="text-gray-400 text-sm text-center mb-6">
-                            Quiz: <span className="font-semibold text-purple-400">{quiz.title}</span>
+                            Quiz: <span className="font-semibold text-amber-400">{quiz.title}</span>
                         </p>
 
                         {error && (
@@ -116,7 +116,7 @@ function QuizCard({ quiz }) {
                                 maxLength={20}
                                 value={hostName}
                                 onChange={(e)=>{setHostName(e.target.value)}}
-                                className="w-full bg-[#1a1e2d] border border-slate-700 text-white rounded-lg px-4 py-3 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none placeholder-gray-500 transition-colors"
+                                className="w-full bg-[#0A0E1A] border border-gray-800 text-[#F9FAFB] rounded-xl px-4 py-2.5 focus:border-amber-500 focus:outline-none placeholder-gray-500 transition-colors"
                             />
                         </div>
 
@@ -127,7 +127,7 @@ function QuizCard({ quiz }) {
                                 disabled={true}
                                 checked={true}
                                 onChange={(e)=> setWillPlay(e.target.checked)}
-                                className="w-4 h-4 accent-purple-500 cursor-not-allowed bg-slate-950 border-slate-700 rounded"                            />
+                                className="w-4 h-4 accent-amber-500 cursor-not-allowed bg-[#0A0E1A] border-gray-800 rounded"                            />
                             <label htmlFor="willPlay" className="text-gray-300 text-sm cursor-pointer select-none">
                                 I want to play too (not just spectate)
                             </label>
@@ -136,13 +136,13 @@ function QuizCard({ quiz }) {
                         <div className="flex gap-3">
                             <button
                                 onClick={closeModal}
-                                className="flex-1 border border-slate-600 hover:bg-slate-800 text-white py-3 rounded-lg font-bold transition-colors"
+                                className="flex-1 border border-gray-800 hover:bg-gray-800 text-gray-300 py-3 rounded-xl font-bold transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleHostGame}
-                                className="flex-1 bg-yellow-500 hover:bg-yellow-400 text-black py-3 rounded-lg font-extrabold transition-colors"
+                                className="flex-1 bg-amber-500 hover:bg-amber-400 text-gray-950 py-3 rounded-xl font-bold transition-colors"
                             >
                                 Create Room
                             </button>

@@ -9,7 +9,7 @@ import Room from './pages/Room'
 
 function App() {
     return (
-        <div className="min-h-screen bg-[#0A0C13] text-white font-sans">
+        <div className="min-h-screen bg-[#0A0E1A] text-[#F9FAFB] font-sans">
             <BrowserRouter>
                 <Navbar />
                 <Routes>

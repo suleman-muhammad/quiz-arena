@@ -153,13 +153,13 @@ function Lobby() {
             <div className="w-full max-w-[1440px] mx-auto space-y-4">
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <span className="text-xs sm:text-sm font-black tracking-wider text-purple-300 flex items-center gap-1.5 bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-1.5 backdrop-blur-md shadow-md">
-                        <span>⚔️</span> <span className="text-white">QUIZ</span>ARENA LOBBY
+                    <span className="text-xs sm:text-sm font-semibold tracking-wider text-gray-300 flex items-center gap-1.5 bg-[#111827] border border-gray-800 rounded-xl px-3 py-1.5">
+                        <span>⚔️</span> <span className="text-[#F9FAFB]">QUIZ</span>ARENA LOBBY
                     </span>
                 </div>
 
                 <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="flex items-center gap-2 bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-1 backdrop-blur-md shadow-md">
+                    <div className="flex items-center gap-2 bg-[#111827] border border-gray-800 rounded-xl px-3 py-1">
                         <PlayerAvatar name={nickName} className="w-7 h-7" />
                         <span className="text-xs font-bold text-slate-200">{nickName}</span>
                     </div>
@@ -167,7 +167,7 @@ function Lobby() {
                     <button
                         onClick={leaveRoom}
                         title="Leave Battle Lobby"
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-900/90 border border-rose-500/60 text-rose-300 hover:text-white text-xs font-bold transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer backdrop-blur-md"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 hover:text-white text-xs font-bold transition-all cursor-pointer"
                     >
                         <span>🚪</span>
                         <span className="hidden sm:inline">Leave</span>
@@ -213,15 +213,14 @@ function Lobby() {
                                 </span>
                             </div>
 
-                            <div className="w-full h-24 rounded-xl bg-gradient-to-br from-purple-950/60 via-slate-900 to-indigo-950/60 border border-purple-500/30 flex items-center justify-center p-3 relative overflow-hidden mb-3 group">
-                                <div className="absolute inset-0 bg-cyan-500/5 cyber-grid opacity-50" />
-                                <div className="text-5xl drop-shadow-[0_0_15px_rgba(168,85,247,0.8)] relative z-10 transition-transform group-hover:scale-110 duration-300">
+                            <div className="w-full h-24 rounded-xl bg-[#0A0E1A] border border-gray-800 flex items-center justify-center p-3 relative overflow-hidden mb-3">
+                                <div className="text-5xl">
                                     {quizCategory.icon}
                                 </div>
                             </div>
 
                             <h3 className="text-xl font-extrabold text-white leading-tight">{quizTitle || 'Loading Quiz...'}</h3>
-                            <p className="text-xs text-purple-300/80 mt-1 mb-4">{quizDescription || 'Test your knowledge in the arena'}</p>
+                            <p className="text-xs text-gray-400 mt-1 mb-4">{quizDescription || 'Test your knowledge in the arena'}</p>
 
                             <div className="border-t border-slate-800 pt-3">
                                 <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Key concepts</p>
@@ -229,9 +228,9 @@ function Lobby() {
                                     {quizConcepts.map((c, idx) => (
                                         <li key={idx} className="flex items-center gap-2">
                                             <span className={`w-1.5 h-1.5 rounded-full ${
-                                                idx % 4 === 0 ? 'bg-purple-400' :
-                                                idx % 4 === 1 ? 'bg-cyan-400' :
-                                                idx % 4 === 2 ? 'bg-pink-400' : 'bg-emerald-400'
+                                                idx % 4 === 0 ? 'bg-amber-400' :
+                                                idx % 4 === 1 ? 'bg-sky-400' :
+                                                idx % 4 === 2 ? 'bg-emerald-400' : 'bg-gray-400'
                                             }`} />
                                             <span className="truncate">{c?.concept}</span>
                                         </li>
@@ -246,7 +245,7 @@ function Lobby() {
                     
                     <div className="flex flex-col items-center relative w-full pt-2">
                         <HostAvatar className="w-20 h-20" />
-                        <h3 className="text-xl font-black text-white tracking-wide mt-1 drop-shadow-md">
+                        <h3 className="text-xl font-bold text-[#F9FAFB] tracking-wide mt-1">
                             {hostPlayer?.nickName || 'Host'}
                         </h3>
                         <span className="text-xs font-semibold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 mt-1">
@@ -255,7 +254,7 @@ function Lobby() {
                     </div>
 
                     <div className="w-full my-4">
-                        <p className="text-xs font-bold text-center tracking-wider text-purple-300 uppercase mb-3">
+                        <p className="text-xs font-bold text-center tracking-wider text-gray-400 uppercase mb-3">
                             Waiting for players: at least 2 needed
                         </p>
                         <div className="text-xs font-semibold text-gray-400 bg-[#0A0E1A] border border-gray-800 px-3 py-1.5 rounded-lg inline-flex items-center gap-2 mb-6">
@@ -317,17 +316,17 @@ function Lobby() {
                     
                     <div className="bg-[#111827] border border-gray-800 rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
                         <div className="flex items-center justify-between mb-3 border-b border-slate-800 pb-2">
-                            <span className="text-xs font-extrabold tracking-wider uppercase text-purple-400 flex items-center gap-1.5">
+                            <span className="text-xs font-extrabold tracking-wider uppercase text-gray-300 flex items-center gap-1.5">
                                 <span>💡</span> Trivia Ticker ({quizTitle || 'Arena'})
                             </span>
                         </div>
 
                         <div className="space-y-2 overflow-y-auto max-h-40 pr-1">
                             {quizTriviaFacts.map((fact, idx) => (
-                                <div key={idx} className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 flex items-start gap-2.5 hover:border-purple-500/40 transition-colors">
+                                <div key={idx} className="bg-[#0A0E1A] border border-gray-800 rounded-xl p-2.5 flex items-start gap-2.5 hover:border-gray-700 transition-colors">
                                     <span className="text-lg shrink-0 mt-0.5">{fact.icon}</span>
                                     <div>
-                                        <h4 className="text-[11px] font-bold text-purple-300">{fact.title}</h4>
+                                        <h4 className="text-[11px] font-bold text-[#F9FAFB]">{fact.title}</h4>
                                         <p className="text-[11px] text-slate-300 leading-snug mt-0.5">{fact.text}</p>
                                     </div>
                                 </div>
@@ -335,7 +334,7 @@ function Lobby() {
                         </div>
                     </div>
 
-                    <div className="bg-slate-900/85 border border-slate-700/80 rounded-2xl p-4 shadow-lg backdrop-blur-md flex flex-col flex-grow min-h-[160px]">
+                    <div className="bg-[#111827] border border-gray-800 rounded-2xl p-5 shadow-xl flex flex-col flex-grow min-h-[160px]">
                         <div className="flex items-center justify-between mb-2 border-b border-slate-800 pb-2">
                             <div className="flex items-center gap-2 text-xs font-bold text-emerald-400">
                                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -353,8 +352,8 @@ function Lobby() {
                             <>
                                 <div className="flex-grow space-y-2 overflow-y-auto max-h-40 my-2 pr-1 text-xs">
                                     {chatMessages.map((msg, idx) => (
-                                        <div key={idx} className={`rounded-lg p-2 ${msg.isSystem ? 'bg-purple-950/40 border border-purple-900/50 text-purple-300' : 'bg-slate-950/80 border border-slate-800 text-slate-200'}`}>
-                                            <span className="font-bold text-cyan-400 mr-1.5">{msg.sender}:</span>
+                                        <div key={idx} className={`rounded-lg p-2 ${msg.isSystem ? 'bg-[#0A0E1A] border border-gray-800 text-gray-300' : 'bg-[#0A0E1A] border border-gray-800 text-slate-200'}`}>
+                                            <span className="font-bold text-amber-400 mr-1.5">{msg.sender}:</span>
                                             <span>{msg.text}</span>
                                         </div>
                                     ))}
@@ -366,11 +365,11 @@ function Lobby() {
                                         placeholder="Chat with players..."
                                         value={chatInput}
                                         onChange={(e) => setChatInput(e.target.value)}
-                                        className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"
+                                        className="flex-1 bg-[#0A0E1A] border border-gray-800 rounded-xl px-3 py-1.5 text-xs text-[#F9FAFB] placeholder-slate-500 focus:outline-none focus:border-amber-500"
                                     />
                                     <button
                                         type="submit"
-                                        className="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors"
+                                        className="bg-amber-500 hover:bg-amber-400 text-gray-950 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors"
                                     >
                                         ➤
                                     </button>
@@ -385,11 +384,11 @@ function Lobby() {
 
             {errorMessage && (
                 <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-                    <div className="bg-slate-900 border-2 border-rose-500/80 rounded-2xl p-6 w-full max-w-sm text-center shadow-2xl glow-purple">
-                        <p className="text-white font-bold text-base mb-6">{errorMessage}</p>
+                    <div className="bg-[#111827] border border-red-500/40 rounded-2xl p-6 w-full max-w-sm text-center shadow-2xl">
+                        <p className="text-red-400 font-bold text-base mb-6">{errorMessage}</p>
                         <button
                             onClick={() => setErrorMessage('')}
-                            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-8 py-2.5 rounded-lg font-bold transition-all"
+                            className="bg-amber-500 hover:bg-amber-400 text-gray-950 px-8 py-2.5 rounded-xl font-bold transition-all"
                         >
                             OK
                         </button>
