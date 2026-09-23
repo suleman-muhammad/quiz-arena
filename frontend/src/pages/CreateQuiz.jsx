@@ -172,353 +172,80 @@ function CreateQuiz() {
     const selectedCategoryObj = categories.find(c => c.label === category) || categories[0]
 
     return (
-        <div className="min-h-screen bg-[#070a18] text-white relative overflow-hidden flex flex-col justify-between py-10 px-4 sm:px-6 selection:bg-purple-500 selection:text-white font-sans">
-            
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.22)_0%,_transparent_65%)] pointer-events-none" />
-            <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-purple-700/15 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute top-1/2 right-10 w-[400px] h-[400px] bg-amber-600/10 rounded-full blur-[100px] pointer-events-none" />
-            <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-cyan-500/15 rounded-full blur-[150px] pointer-events-none" />
-            <div className="absolute -bottom-10 inset-x-0 h-[40vh] vector-grid-3d pointer-events-none [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.85)_35%,black_100%)] opacity-60" />
-            <div className="absolute bottom-[36vh] inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-purple-500/60 to-transparent shadow-[0_0_18px_rgba(168,85,247,0.8)] pointer-events-none" />
-            <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
-                <svg className="absolute top-14 left-6 w-32 h-32 text-purple-500/35 animate-circuit-pulse" viewBox="0 0 100 100" fill="none">
-                    <path d="M0 40 L0 0 L40 0" stroke="currentColor" strokeWidth="2" />
-                    <circle cx="4" cy="4" r="2.5" fill="currentColor" />
-                    <line x1="12" y1="12" x2="35" y2="12" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
-                </svg>
-                <svg className="absolute top-14 right-6 w-32 h-32 text-cyan-400/35 animate-circuit-pulse" viewBox="0 0 100 100" fill="none">
-                    <path d="M100 40 L100 0 L60 0" stroke="currentColor" strokeWidth="2" />
-                    <circle cx="96" cy="4" r="2.5" fill="currentColor" />
-                    <line x1="88" y1="12" x2="65" y2="12" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
-                </svg>
+        <div className="min-h-screen w-full bg-[#0A0E1A] text-[#F9FAFB] py-8 px-4 sm:px-6 lg:px-8 flex flex-col gap-8">
+            <header>
+                <h1 className="text-2xl font-bold text-[#F9FAFB]">Create Tournament</h1>
+                <p className="text-sm text-gray-400 mt-1">Set up tournament details, lobby briefing notes, and battle questions.</p>
+            </header>
+
+            {error && <div className="bg-rose-950/80 border border-rose-500/80 text-rose-300 text-xs font-bold px-4 py-3 rounded-xl text-center">⚠️ {error}</div>}
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+                <aside className="bg-[#111827] border border-gray-800 rounded-2xl p-6 flex flex-col gap-4 shadow-xl">
+                    <span className="text-xs font-mono font-bold text-gray-400 uppercase tracking-wider">LIVE LOBBY PREVIEW</span>
+                    <div className="bg-[#0A0E1A] border border-gray-800 rounded-xl p-5 flex flex-col gap-4">
+                        <div className="flex items-center justify-between">
+                            <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-gray-800 text-sky-400 border border-gray-700/60">{questions.length} Questions</span>
+                            <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-gray-800 text-amber-400 border border-gray-700/60">{selectedCategoryObj?.label || 'General Arena'}</span>
+                        </div>
+                        <div className="h-32 rounded-xl bg-[#111827] border border-gray-800 flex items-center justify-center text-5xl">{selectedCategoryObj?.icon || '💻'}</div>
+                        <div>
+                            <h2 className="text-xl font-bold text-[#F9FAFB]">{title || 'Untitled Tournament'}</h2>
+                            <p className="text-sm text-gray-400 mt-1">{description || 'Test your knowledge in the arena'}</p>
+                        </div>
+                        <div className="border-t border-gray-800 pt-4">
+                            <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Key concepts</p>
+                            <ul className="text-sm text-gray-300 space-y-1.5">
+                                {keyConcepts.slice(0, 4).map((concept, idx) => <li key={idx} className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-amber-400" /><span className="truncate">{concept}</span></li>)}
+                            </ul>
+                        </div>
+                    </div>
+                </aside>
+
+                <section className="bg-[#111827] border border-gray-800 rounded-2xl p-6 flex flex-col gap-4 shadow-xl">
+                    <span className="text-xs font-mono font-bold text-gray-400 uppercase tracking-wider">TOURNAMENT INFO</span>
+                    <div>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1.5">Tournament Title *</label>
+                        <input type="text" placeholder="e.g. Master of Java & JVM Internals" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-[#0A0E1A] border border-gray-800 text-sm rounded-xl p-2.5 text-[#F9FAFB] focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none" />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1.5">Category</label>
+                        <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
+                            {categories.map(cat => <button key={cat.id} type="button" onClick={() => setCategory(cat.label)} className={`px-3 py-1.5 rounded-lg text-xs border ${category === cat.label ? 'bg-amber-500 text-gray-950 font-bold border-amber-400' : 'bg-[#0A0E1A] border-gray-800 text-gray-400 hover:text-white'}`}><span>{cat.icon}</span> {cat.label.replace(cat.icon, '').trim()}</button>)}
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1.5">Description</label>
+                        <input type="text" placeholder="Describe the tournament..." value={description} onChange={(e) => setDescription(e.target.value)} className="w-full bg-[#0A0E1A] border border-gray-800 text-sm rounded-xl p-2.5 text-[#F9FAFB] focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none" />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1.5">Key Concepts</label>
+                        <div className="flex flex-wrap gap-2 mb-2">{keyConcepts.map((concept, idx) => <span key={idx} className="bg-gray-800 border border-gray-700/60 text-amber-400 text-xs px-2.5 py-1 rounded-md flex items-center gap-1.5">{concept}<button type="button" onClick={() => handleRemoveConcept(idx)} className="text-gray-400 hover:text-rose-400">✕</button></span>)}</div>
+                        <div className="flex gap-2"><input type="text" placeholder="Add key concept..." value={newConcept} onChange={(e) => setNewConcept(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleAddConcept(e)} className="flex-1 bg-[#0A0E1A] border border-gray-800 text-sm rounded-xl p-2.5 text-[#F9FAFB] focus:border-amber-500 outline-none" /><button type="button" onClick={handleAddConcept} className="bg-amber-500 hover:bg-amber-400 text-gray-950 text-sm font-semibold px-4 rounded-xl">+ Add</button></div>
+                    </div>
+                </section>
+
+                <section className="bg-[#111827] border border-gray-800 rounded-2xl p-6 flex flex-col gap-4 shadow-xl">
+                    <span className="text-xs font-mono font-bold text-gray-400 uppercase tracking-wider">WAITING ROOM TRIVIA & TIPS</span>
+                    <div className="flex gap-2"><select value={newFactIcon} onChange={(e) => setNewFactIcon(e.target.value)} className="w-24 bg-[#0A0E1A] border border-gray-800 text-[#F9FAFB] rounded-xl px-2 py-2 text-sm"><option value="💡">💡 Tip</option><option value="⚔️">⚔️ Combat</option><option value="📜">📜 Lore</option><option value="🧠">🧠 Mind</option><option value="⚡">⚡ Speed</option><option value="🏆">🏆 Trophy</option></select><input type="text" placeholder="Tip title" value={newFactTitle} onChange={(e) => setNewFactTitle(e.target.value)} className="flex-1 bg-[#0A0E1A] border border-gray-800 text-sm rounded-xl px-3 py-2 text-[#F9FAFB] focus:border-amber-500 outline-none" /></div>
+                    <input type="text" placeholder="Tip description..." value={newFactText} onChange={(e) => setNewFactText(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleAddFact(e)} className="w-full bg-[#0A0E1A] border border-gray-800 text-sm rounded-xl px-3 py-2 text-[#F9FAFB] focus:border-amber-500 outline-none" />
+                    <button type="button" onClick={handleAddFact} className="bg-amber-500 hover:bg-amber-400 text-gray-950 font-semibold px-4 py-2 rounded-xl">+ Add Fact</button>
+                    <div className="max-h-56 overflow-y-auto space-y-2 pr-1">{triviaFacts.map((fact, idx) => <div key={idx} className="bg-[#0A0E1A] border border-gray-800 rounded-xl p-3 flex items-start justify-between gap-2"><div><h4 className="text-sm font-bold text-[#F9FAFB]">{fact.icon} {fact.title}</h4><p className="text-xs text-gray-400 mt-1">{fact.text}</p></div><button type="button" onClick={() => handleRemoveFact(idx)} className="text-gray-400 hover:text-rose-400">✕</button></div>)}</div>
+                </section>
             </div>
 
-            <div className="max-w-6xl mx-auto w-full relative z-10 space-y-10">
-                
-                {/* Page Header */}
-                <div className="text-center">
-                    <span className="bg-purple-950/80 border border-purple-400/50 text-purple-300 text-[10px] font-black uppercase tracking-widest px-3.5 py-1 rounded-full shadow-[0_0_12px_rgba(168,85,247,0.4)] mb-2 inline-block">
-                        ⚔️ ARENA FORGE
-                    </span>
-                    <h1 className="text-3xl sm:text-4xl font-black text-white tracking-wide">
-                        Create Battle Tournament
-                    </h1>
-                    <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-lg mx-auto">
-                        Customize what players see on the Waiting Room briefing & trivia cards, forge questions, and publish to the arena.
-                    </p>
-                </div>
-
-                {/* Error Banner */}
-                {error && (
-                    <div className="max-w-2xl mx-auto bg-rose-950/80 border border-rose-500/80 text-rose-300 text-xs font-bold px-4 py-3 rounded-2xl text-center animate-fade-in shadow-lg">
-                        ⚠️ {error}
-                    </div>
-                )}
-
-                {/* SECTION 1: WAITING ROOM LEFT CARD (Briefing & Concepts)    */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                    
-                    {/* Left Card Input Form (7 cols) */}
-                    <div className="lg:col-span-7 bg-slate-900/90 border-2 border-purple-500/60 rounded-3xl p-6 sm:p-8 glow-purple backdrop-blur-md shadow-2xl">
-                        <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-5">
-                            <h2 className="text-base font-black text-purple-300 uppercase tracking-wider flex items-center gap-2">
-                                <span>📜</span> 1. Waiting Room Left Card: Quiz Briefing
-                            </h2>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Left Side</span>
-                        </div>
-
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-1.5">
-                                    Tournament Title *
-                                </label>
-                                <input
-                                    type="text"
-                                    placeholder="e.g. Master of Java & JVM Internals"
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                    className="w-full bg-slate-950/90 border-2 border-slate-700 text-white rounded-2xl px-4 py-3 text-sm font-bold focus:border-purple-400 focus:outline-none transition-colors"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-1.5">
-                                    Arena Discipline / Profession
-                                </label>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto pr-1">
-                                    {categories.map((cat) => (
-                                        <button
-                                            key={cat.id}
-                                            type="button"
-                                            onClick={() => setCategory(cat.label)}
-                                            className={`px-3 py-2 rounded-xl text-xs font-bold transition-all border text-left flex items-center gap-1.5 cursor-pointer ${
-                                                category === cat.label
-                                                    ? 'bg-purple-950/90 border-purple-400 text-purple-200 shadow-[0_0_12px_rgba(168,85,247,0.5)] scale-[1.02]'
-                                                    : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200'
-                                            }`}
-                                        >
-                                            <span className="shrink-0">{cat.icon}</span>
-                                            <span className="truncate text-[11px]">{cat.label.replace(cat.icon, '').trim()}</span>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-1.5">
-                                    Description / Lore Summary
-                                </label>
-                                <input
-                                    type="text"
-                                    placeholder="e.g. High-speed arena challenge testing core multithreading and memory principles."
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    className="w-full bg-slate-950/90 border-2 border-slate-700 text-white rounded-2xl px-4 py-3 text-sm focus:border-purple-400 focus:outline-none transition-colors"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-1.5">
-                                    Key Concepts Tested (Left Card Bullets)
-                                </label>
-                                <div className="flex flex-wrap gap-2 mb-2">
-                                    {keyConcepts.map((concept, idx) => (
-                                        <span 
-                                            key={idx} 
-                                            className="bg-purple-950/90 border border-purple-400/60 text-purple-200 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm"
-                                        >
-                                            <span>{concept}</span>
-                                            <button 
-                                                type="button" 
-                                                onClick={() => handleRemoveConcept(idx)}
-                                                className="text-purple-400 hover:text-rose-400 text-xs font-black cursor-pointer"
-                                            >
-                                                ✕
-                                            </button>
-                                        </span>
-                                    ))}
-                                </div>
-
-                                <div className="flex gap-2">
-                                    <input
-                                        type="text"
-                                        placeholder="Add key concept (e.g. Memory Model, Deadlocks)..."
-                                        value={newConcept}
-                                        onChange={(e) => setNewConcept(e.target.value)}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleAddConcept(e)}
-                                        className="flex-1 bg-slate-950/90 border border-slate-700 text-white rounded-xl px-3.5 py-2 text-xs focus:border-purple-400 focus:outline-none"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={handleAddConcept}
-                                        className="bg-purple-600/80 hover:bg-purple-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-sm cursor-pointer"
-                                    >
-                                        + Add
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Exact Left Card Live Preview (5 cols) */}
-                    <div className="lg:col-span-5 flex flex-col">
-                        <div className="mb-2 flex items-center justify-between px-1">
-                            <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                                <span>👀</span> Live Left Card Preview (Waiting Room)
-                            </span>
-                            <span className="text-[10px] text-slate-500 font-bold">1:1 Scale</span>
-                        </div>
-
-                        <div className="bg-slate-900/85 border-2 border-purple-500/80 rounded-2xl p-5 glow-purple backdrop-blur-md flex flex-col justify-between shadow-2xl">
-                            <div>
-                                <div className="flex items-center justify-between mb-4">
-                                    <span className="bg-purple-900/60 border border-purple-400/50 text-purple-200 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-[0_0_10px_rgba(168,85,247,0.3)]">
-                                        {questions.length} Questions <span className="text-pink-400">✨</span>
-                                    </span>
-                                </div>
-
-                                <div className="w-full h-32 rounded-xl bg-gradient-to-br from-purple-950/60 via-slate-900 to-indigo-950/60 border border-purple-500/30 flex items-center justify-center p-3 relative overflow-hidden mb-4 group">
-                                    <div className="absolute inset-0 bg-cyan-500/5 cyber-grid opacity-50" />
-                                    <div className="text-5xl drop-shadow-[0_0_15px_rgba(168,85,247,0.8)] relative z-10 transition-transform group-hover:scale-110 duration-300">
-                                        {selectedCategoryObj?.icon || '💻'}
-                                    </div>
-                                </div>
-
-                                <h3 className="text-xl font-extrabold text-white leading-tight">
-                                    {title || 'Untitled Tournament'}
-                                </h3>
-                                <p className="text-xs text-purple-300/80 mt-1 mb-4">
-                                    {description || 'Test your knowledge in the arena'}
-                                </p>
-
-                                <div className="border-t border-slate-800 pt-3">
-                                    <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Key concepts</p>
-                                    <ul className="text-xs text-slate-300 space-y-1.5">
-                                        {keyConcepts.slice(0, 4).map((concept, idx) => (
-                                            <li key={idx} className="flex items-center gap-2">
-                                                <span className={`w-1.5 h-1.5 rounded-full ${
-                                                    idx % 4 === 0 ? 'bg-purple-400' :
-                                                    idx % 4 === 1 ? 'bg-cyan-400' :
-                                                    idx % 4 === 2 ? 'bg-pink-400' : 'bg-emerald-400'
-                                                }`} />
-                                                <span className="truncate">{concept}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* SECTION 2: WAITING ROOM RIGHT CARD (Trivia Ticker Only)    */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                    
-                    <div className="lg:col-span-7 bg-slate-900/90 border-2 border-amber-500/60 rounded-3xl p-6 sm:p-8 glow-amber backdrop-blur-md shadow-2xl">
-                        <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-5">
-                            <h2 className="text-base font-black text-amber-300 uppercase tracking-wider flex items-center gap-2">
-                                <span>💡</span> 2. Waiting Room Right Card: Custom Trivia & Tips Ticker
-                            </h2>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Right Side</span>
-                        </div>
-
-                        <div className="space-y-4">
-                            <div>
-                                <div className="flex items-center justify-between mb-1.5">
-                                    <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300">
-                                        Custom Trivia & Arena Tips Ticker
-                                    </label>
-                                    <span className="text-[10px] font-bold text-amber-400 bg-amber-950/80 border border-amber-500/40 px-2 py-0.5 rounded-full">
-                                        {triviaFacts.length} Facts Added
-                                    </span>
-                                </div>
-                                <p className="text-xs text-slate-400 mb-3">
-                                    Add interesting facts or battle tips that will rotate for gladiators on the right of the waiting room.
-                                </p>
-                                
-                                <div className="space-y-2 mb-3 max-h-48 overflow-y-auto pr-1.5">
-                                    {triviaFacts.map((fact, idx) => (
-                                        <div key={idx} className="bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between gap-3 hover:border-slate-700 transition-colors">
-                                            <div className="flex items-start gap-2.5">
-                                                <span className="text-lg shrink-0">{fact.icon}</span>
-                                                <div>
-                                                    <h4 className="text-xs font-black text-purple-300">{fact.title}</h4>
-                                                    <p className="text-xs text-slate-300 leading-snug">{fact.text}</p>
-                                                </div>
-                                            </div>
-                                            <button
-                                                type="button"
-                                                onClick={() => handleRemoveFact(idx)}
-                                                className="text-slate-500 hover:text-rose-400 text-xs font-black px-2 py-1 cursor-pointer shrink-0"
-                                            >
-                                                ✕
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-3.5 space-y-2.5">
-                                    <div className="grid grid-cols-4 gap-2">
-                                        <select
-                                            value={newFactIcon}
-                                            onChange={(e) => setNewFactIcon(e.target.value)}
-                                            className="col-span-1 bg-slate-900 border border-slate-700 text-white rounded-xl px-2 py-2 text-xs focus:outline-none"
-                                        >
-                                            <option value="💡">💡 Tip</option>
-                                            <option value="⚔️">⚔️ Combat</option>
-                                            <option value="📜">📜 Lore</option>
-                                            <option value="🧠">🧠 Mind</option>
-                                            <option value="⚡">⚡ Speed</option>
-                                            <option value="🏆">🏆 Trophy</option>
-                                        </select>
-                                        <input
-                                            type="text"
-                                            placeholder="Tip Title (e.g. Speed Tip)..."
-                                            value={newFactTitle}
-                                            onChange={(e) => setNewFactTitle(e.target.value)}
-                                            className="col-span-3 bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs focus:outline-none"
-                                        />
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <input
-                                            type="text"
-                                            placeholder="Tip description or interesting fun fact..."
-                                            value={newFactText}
-                                            onChange={(e) => setNewFactText(e.target.value)}
-                                            onKeyDown={(e) => e.key === 'Enter' && handleAddFact(e)}
-                                            className="flex-1 bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs focus:outline-none"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={handleAddFact}
-                                            className="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black px-5 py-2 rounded-xl transition-all shadow-sm cursor-pointer shrink-0"
-                                        >
-                                            + Add Fact
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Exact Right Card Live Preview (5 cols) - FIXED HEIGHT & SCROLLABLE */}
-                    <div className="lg:col-span-5 flex flex-col">
-                        <div className="mb-2 flex items-center justify-between px-1">
-                            <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                                <span>👀</span> Live Trivia Ticker Preview (Waiting Room)
-                            </span>
-                            <span className="text-[10px] text-slate-500 font-bold">1:1 Scale • Scrollable</span>
-                        </div>
-
-                        <div className="bg-slate-900/85 border-2 border-amber-500/80 rounded-2xl p-5 glow-amber backdrop-blur-md flex flex-col h-[415px] shadow-2xl">
-                            <div className="flex items-center justify-between mb-3 border-b border-slate-800 pb-2 shrink-0">
-                                <span className="text-xs font-extrabold tracking-wider uppercase text-purple-400 flex items-center gap-1.5">
-                                    <span>💡</span> Trivia Ticker ({title ? title.slice(0, 18) : 'Arena'})
-                                </span>
-                                <span className="text-[10px] font-bold text-slate-400">
-                                    {triviaFacts.length} Items
-                                </span>
-                            </div>
-
-                            <div className="space-y-3 overflow-y-auto flex-grow pr-1.5">
-                                {triviaFacts.map((fact, idx) => (
-                                    <div key={idx} className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 flex items-start gap-3 hover:border-purple-500/40 transition-colors">
-                                        <span className="text-lg shrink-0 mt-0.5">{fact.icon}</span>
-                                        <div>
-                                            <h4 className="text-[11px] font-bold text-purple-300">{fact.title}</h4>
-                                            <p className="text-[11px] text-slate-300 leading-snug mt-0.5">{fact.text}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* SECTION 3: BATTLE QUESTIONS FORGE                         */}
-                <div className="space-y-6">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                        <h2 className="text-base sm:text-lg font-black text-purple-300 uppercase tracking-wider flex items-center gap-2">
-                            <span>⚔️</span> 3. Arena Battle Questions ({questions.length})
-                        </h2>
-                        <button
-                            type="button"
-                            onClick={addQuestion}
-                            className="bg-purple-600 hover:bg-purple-500 text-white font-black text-xs px-4 py-2 rounded-xl transition-all shadow-[0_0_12px_rgba(168,85,247,0.4)] cursor-pointer"
-                        >
-                            + Add Question
-                        </button>
-                    </div>
-
+            <section className="bg-[#111827] border border-gray-800 rounded-2xl p-6 sm:p-8 flex flex-col gap-6 shadow-xl w-full">
+                <div className="flex items-center justify-between gap-4"><div><span className="text-xs font-mono font-bold text-gray-400 uppercase tracking-wider">QUESTION BUILDER</span><h2 className="text-lg font-bold text-[#F9FAFB] mt-1">Arena Battle Questions ({questions.length})</h2></div><button type="button" onClick={addQuestion} className="border border-dashed border-gray-700 bg-transparent text-gray-300 hover:text-white rounded-xl py-3 px-4 text-sm font-semibold">+ Add Question</button></div>
+                <div className="space-y-4">
                     {questions.map((q, index) => (
-                        <div key={index} className="bg-slate-900/90 border-2 border-slate-700/80 hover:border-purple-500/60 rounded-3xl p-6 shadow-xl backdrop-blur-md transition-all">
+                        <div key={index} className="bg-[#0A0E1A] border border-gray-800 rounded-xl p-5 space-y-4 transition-all">
                             
                             <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
                                 <div className="flex items-center gap-2.5">
-                                    <span className="w-8 h-8 rounded-xl bg-purple-900/80 border border-purple-400/50 flex items-center justify-center font-black text-xs text-purple-200 shadow-sm">
+                                    <span className="text-amber-400 font-mono text-sm font-bold flex items-center gap-2">
                                         Q{index + 1}
                                     </span>
-                                    <h3 className="text-sm font-black text-white">Battle Question #{index + 1}</h3>
+                                    <h3 className="text-sm font-bold text-[#F9FAFB]">Battle Question #{index + 1}</h3>
                                 </div>
 
                                 <div className="flex items-center gap-3">
@@ -541,7 +268,7 @@ function CreateQuiz() {
                                         <button
                                             type="button"
                                             onClick={() => removeQuestion(index)}
-                                            className="text-slate-500 hover:text-rose-400 text-xs font-bold transition-colors cursor-pointer px-2 py-1"
+                                            className="text-gray-400 hover:text-rose-400 text-xs font-medium px-2 py-1 rounded transition-colors cursor-pointer"
                                         >
                                             Delete
                                         </button>
@@ -555,7 +282,7 @@ function CreateQuiz() {
                                     placeholder="Enter your question prompt (e.g. Which JVM memory area stores thread stack frames?)..."
                                     value={q.questionText}
                                     onChange={(e) => updateQuestion(index, 'questionText', e.target.value)}
-                                    className="w-full bg-slate-950/90 border-2 border-slate-700 text-white rounded-2xl px-4 py-3.5 text-sm font-bold focus:border-purple-400 focus:outline-none transition-colors"
+                                    className="w-full bg-[#0A0E1A] border border-gray-800 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-[#F9FAFB] placeholder:text-gray-500 rounded-xl px-4 py-2.5 text-sm outline-none transition-all"
                                 />
                             </div>
 
@@ -565,14 +292,14 @@ function CreateQuiz() {
                                     { letter: 'B', border: 'border-cyan-500/50 focus-within:border-cyan-400', badge: 'bg-cyan-500', optIndex: 1 },
                                     { letter: 'C', border: 'border-emerald-500/50 focus-within:border-emerald-400', badge: 'bg-emerald-500', optIndex: 2 },
                                     { letter: 'D', border: 'border-amber-500/50 focus-within:border-amber-400', badge: 'bg-amber-500', optIndex: 3 },
-                                ].map(({ letter, border, badge, optIndex }) => {
+                                ].map(({ letter, border, optIndex }) => {
                                     const isCorrect = q.correctOption === optIndex
                                     return (
                                         <div 
                                             key={letter}
                                             onClick={() => updateQuestion(index, 'correctOption', optIndex)}
-                                            className={`flex items-center gap-3 p-2.5 rounded-2xl border-2 bg-slate-950/80 transition-all cursor-pointer ${border} ${
-                                                isCorrect ? 'ring-2 ring-emerald-400 bg-emerald-950/20' : ''
+                                            className={`flex items-center gap-2.5 bg-[#111827] border border-gray-800 rounded-xl px-3 py-2 focus-within:border-gray-700 transition-all cursor-pointer ${border} ${
+                                                isCorrect ? 'ring-1 ring-amber-500 bg-amber-950/20' : ''
                                             }`}
                                         >
                                             <input
@@ -580,10 +307,10 @@ function CreateQuiz() {
                                                 name={`correct-${index}`}
                                                 checked={isCorrect}
                                                 onChange={() => updateQuestion(index, 'correctOption', optIndex)}
-                                                className="accent-emerald-400 w-4 h-4 cursor-pointer ml-1"
+                                                className="accent-amber-500 w-4 h-4 cursor-pointer ml-1"
                                             />
 
-                                            <span className={`w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs text-white ${badge}`}>
+                                            <span className="w-6 h-6 rounded-md bg-gray-800 text-gray-300 font-mono text-xs font-bold flex items-center justify-center shrink-0">
                                                 {letter}
                                             </span>
 
@@ -593,11 +320,11 @@ function CreateQuiz() {
                                                 value={q[`option${letter}`]}
                                                 onChange={(e) => updateQuestion(index, `option${letter}`, e.target.value)}
                                                 onClick={(e) => e.stopPropagation()}
-                                                className="flex-1 bg-transparent text-white text-xs font-bold focus:outline-none placeholder-slate-600"
+                                                className="bg-transparent text-sm text-[#F9FAFB] placeholder:text-gray-500 w-full outline-none"
                                             />
 
                                             {isCorrect && (
-                                                <span className="text-[10px] font-black text-emerald-400 mr-2 bg-emerald-950/80 border border-emerald-500/40 px-2 py-0.5 rounded-md">
+                                                <span className="text-[10px] font-semibold text-amber-400 mr-2 bg-gray-800 border border-gray-700/60 px-2 py-0.5 rounded-md">
                                                     CORRECT ✔
                                                 </span>
                                             )}
@@ -609,11 +336,11 @@ function CreateQuiz() {
                     ))}
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-900/90 border-2 border-slate-700/80 rounded-3xl p-6 backdrop-blur-md shadow-2xl">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#111827] border border-gray-800 rounded-2xl p-6 shadow-2xl">
                     <button
                         type="button"
                         onClick={addQuestion}
-                        className="w-full sm:w-auto border-2 border-slate-600 hover:border-purple-400 text-slate-200 hover:text-white px-6 py-3.5 rounded-2xl font-extrabold text-sm transition-all cursor-pointer"
+                        className="w-full py-3 border border-dashed border-gray-700 hover:border-amber-500/60 bg-[#0A0E1A] hover:bg-[#0f1422] text-gray-300 hover:text-amber-400 text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2"
                     >
                         + Add Another Question
                     </button>
@@ -622,17 +349,17 @@ function CreateQuiz() {
                         type="button"
                         onClick={handleSubmit}
                         disabled={loading}
-                        className={`w-full sm:w-auto px-10 py-4 rounded-2xl font-black text-base tracking-wider transition-all shadow-[0_0_20px_rgba(234,179,8,0.35)] cursor-pointer flex items-center justify-center gap-2 ${
+                        className={`bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-gray-950 font-bold px-8 py-3 rounded-xl transition-all shadow-md text-sm inline-flex items-center justify-center gap-2 ${
                             loading
                                 ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                                : 'bg-yellow-500 hover:bg-yellow-400 text-black hover:scale-[1.02] active:scale-[0.98]'
+                            : ''
                         }`}
                     >
                         {loading ? 'PUBLISHING TOURNAMENT...' : 'PUBLISH TOURNAMENT ⚔️'}
                     </button>
                 </div>
+                </section>
             </div>
-        </div>
     )
 }
 
