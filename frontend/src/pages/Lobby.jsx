@@ -149,56 +149,9 @@ function Lobby() {
     const filledSegments = Math.min(totalSegments, Math.max(0, Math.floor(((players?.length || 0) / 2) * (totalSegments / 2))))
 
     return (
-        <div className="min-h-screen bg-[#050714] text-white relative overflow-hidden flex flex-col justify-between selection:bg-purple-500 selection:text-white font-sans">
-            
-            {/* LUMINOUS ESPORTS STAGING DECK (Depth Flares + 3D Grid + Tactical Vectors) */}
-
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.22)_0%,_transparent_65%)] pointer-events-none" />
-            <div className="absolute top-1/4 -left-20 w-[450px] h-[450px] bg-cyan-500/15 rounded-full blur-[130px] pointer-events-none" />
-            <div className="absolute top-1/3 -right-20 w-[450px] h-[450px] bg-purple-600/18 rounded-full blur-[130px] pointer-events-none" />
-            <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-cyan-500/20 rounded-full blur-[150px] pointer-events-none" />
-
-            <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
-                <span className="absolute top-[8%] left-[10%] w-1.5 h-1.5 bg-cyan-300 rounded-full animate-star shadow-[0_0_6px_#38bdf8]" style={{ animationDelay: '0s' }} />
-                <span className="absolute top-[15%] left-[25%] w-1 h-1 bg-purple-300 rounded-full animate-star shadow-[0_0_4px_#c084fc]" style={{ animationDelay: '1.2s' }} />
-                <span className="absolute top-[6%] left-[50%] w-2 h-2 bg-cyan-200 rounded-full animate-star shadow-[0_0_8px_#67e8f9]" style={{ animationDelay: '2.1s' }} />
-                <span className="absolute top-[18%] left-[70%] w-1 h-1 bg-amber-200 rounded-full animate-star shadow-[0_0_4px_#fde047]" style={{ animationDelay: '0.7s' }} />
-                <span className="absolute top-[12%] left-[85%] w-1.5 h-1.5 bg-cyan-300 rounded-full animate-star shadow-[0_0_6px_#38bdf8]" style={{ animationDelay: '1.8s' }} />
-                <span className="absolute top-[22%] left-[94%] w-1 h-1 bg-purple-200 rounded-full animate-star shadow-[0_0_4px_#e9d5ff]" style={{ animationDelay: '2.8s' }} />
-            </div>
-
-            <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
-                <div className="absolute top-1/4 left-[12%] w-2.5 h-2.5 bg-cyan-400/40 rotate-45 animate-vector-float shadow-[0_0_10px_rgba(6,182,212,0.6)]" style={{ animationDelay: '0s' }} />
-                <div className="absolute top-1/3 right-[14%] w-3 h-3 bg-purple-400/40 rotate-45 animate-vector-float shadow-[0_0_10px_rgba(168,85,247,0.6)]" style={{ animationDelay: '2.5s' }} />
-                <div className="absolute bottom-1/3 left-[20%] w-2 h-2 bg-amber-400/40 rotate-45 animate-vector-float shadow-[0_0_8px_rgba(245,158,11,0.6)]" style={{ animationDelay: '1.2s' }} />
-                <div className="absolute top-1/2 right-[8%] w-2 h-2 bg-pink-400/40 rotate-45 animate-vector-float shadow-[0_0_8px_rgba(236,72,153,0.6)]" style={{ animationDelay: '3.8s' }} />
-            </div>
-
-            <div className="absolute -bottom-10 inset-x-0 h-[44vh] vector-grid-3d pointer-events-none [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.85)_35%,black_100%)] opacity-70" />
-
-            <div className="absolute bottom-[40vh] inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent shadow-[0_0_18px_rgba(6,182,212,0.9)] pointer-events-none" />
-
-            <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
-                <svg className="absolute top-14 left-6 w-32 h-32 text-purple-500/35 animate-circuit-pulse" viewBox="0 0 100 100" fill="none">
-                    <path d="M0 40 L0 0 L40 0" stroke="currentColor" strokeWidth="2" />
-                    <circle cx="4" cy="4" r="2.5" fill="currentColor" />
-                    <line x1="12" y1="12" x2="35" y2="12" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
-                </svg>
-
-                <svg className="absolute top-14 right-6 w-32 h-32 text-cyan-400/35 animate-circuit-pulse" viewBox="0 0 100 100" fill="none">
-                    <path d="M100 40 L100 0 L60 0" stroke="currentColor" strokeWidth="2" />
-                    <circle cx="96" cy="4" r="2.5" fill="currentColor" />
-                    <line x1="88" y1="12" x2="65" y2="12" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
-                </svg>
-
-                <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] text-purple-500/10 pointer-events-none" viewBox="0 0 400 400" fill="none">
-                    <circle cx="200" cy="200" r="180" stroke="currentColor" strokeWidth="1" strokeDasharray="6 6" />
-                    <circle cx="200" cy="200" r="120" stroke="currentColor" strokeWidth="1" strokeOpacity="0.7" />
-                    <circle cx="200" cy="200" r="60" stroke="currentColor" strokeWidth="1" strokeDasharray="2 4" />
-                </svg>
-            </div>
-
-            <div className="relative z-20 px-4 sm:px-6 pt-4 pb-0 w-full max-w-7xl mx-auto flex items-center justify-between gap-3">
+        <div className="min-h-screen bg-[#0A0E1A] text-[#F9FAFB] py-4 px-4 sm:px-6 flex flex-col items-center justify-center">
+            <div className="w-full max-w-[1440px] mx-auto space-y-4">
+            <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <span className="text-xs sm:text-sm font-black tracking-wider text-purple-300 flex items-center gap-1.5 bg-slate-900/80 border border-slate-700/80 rounded-xl px-3 py-1.5 backdrop-blur-md shadow-md">
                         <span>⚔️</span> <span className="text-white">QUIZ</span>ARENA LOBBY
@@ -222,12 +175,12 @@ function Lobby() {
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto w-full px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10 my-auto">
+            <div className="w-full max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
     
-                <div className="lg:col-span-3 flex flex-col gap-5">
-                    <div className="bg-slate-900/90 border-2 border-amber-500/80 rounded-2xl p-5 glow-amber text-center relative overflow-hidden backdrop-blur-md">
+                <div className="bg-[#111827] border border-gray-800 rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
+                    <div className="flex flex-col items-center justify-center p-4 bg-[#0A0E1A] border border-gray-800 rounded-xl gap-1.5 text-center relative overflow-hidden">
                         <div className="flex items-center justify-between mb-2">
-                            <span className="text-[11px] font-extrabold tracking-widest text-amber-400 uppercase">Room Code</span>
+                            <span className="text-xs uppercase tracking-widest font-bold text-gray-400">Room Code</span>
                             <div className="flex items-center gap-1.5">
                                 <span className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-400 animate-pulse' : 'bg-rose-500'}`} />
                                 <span className="text-[11px] font-semibold text-emerald-400">{connected ? 'Connected' : 'Offline'}</span>
@@ -239,7 +192,7 @@ function Lobby() {
                             title="Click to copy room code"
                             className="cursor-pointer group py-1"
                         >
-                            <h2 className="text-4xl font-black font-mono tracking-widest text-white group-hover:text-amber-400 transition-colors drop-shadow-[0_0_12px_rgba(251,191,36,0.4)]">
+                            <h2 className="font-mono tracking-[0.25em] text-3xl sm:text-4xl font-extrabold text-amber-400">
                                 {roomCode}
                             </h2>
                             <p className="text-[10px] text-slate-400 group-hover:text-slate-200 mt-1">
@@ -248,19 +201,19 @@ function Lobby() {
                         </div>
                     </div>
 
-                    <div className="bg-slate-900/85 border-2 border-purple-500/80 rounded-2xl p-5 glow-purple backdrop-blur-md flex flex-col justify-between flex-grow">
+                    <div className="bg-[#111827] border border-gray-800 rounded-2xl p-4 flex flex-col justify-between flex-grow">
                         <div>
                             <div className="flex items-center justify-between mb-4">
-                                <span className="bg-purple-900/60 border border-purple-400/50 text-purple-200 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-[0_0_10px_rgba(168,85,247,0.3)]">
-                                    {questionCount} Questions <span className="text-pink-400">✨</span>
+                                <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-gray-800 text-amber-400 border border-gray-700/60">
+                                    {questionCount} Questions
                                 </span>
                                 {/* 🏷️ CATEGORY BADGE */}
-                                <span className="bg-amber-950/60 border border-amber-500/40 text-amber-300 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                                <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-gray-800 text-sky-400 border border-gray-700/60">
                                     {quizCategory?.label || '⚔️ General Arena'}
                                 </span>
                             </div>
 
-                            <div className="w-full h-32 rounded-xl bg-gradient-to-br from-purple-950/60 via-slate-900 to-indigo-950/60 border border-purple-500/30 flex items-center justify-center p-3 relative overflow-hidden mb-4 group">
+                            <div className="w-full h-24 rounded-xl bg-gradient-to-br from-purple-950/60 via-slate-900 to-indigo-950/60 border border-purple-500/30 flex items-center justify-center p-3 relative overflow-hidden mb-3 group">
                                 <div className="absolute inset-0 bg-cyan-500/5 cyber-grid opacity-50" />
                                 <div className="text-5xl drop-shadow-[0_0_15px_rgba(168,85,247,0.8)] relative z-10 transition-transform group-hover:scale-110 duration-300">
                                     {quizCategory.icon}
@@ -289,17 +242,14 @@ function Lobby() {
                     </div>
                 </div>
 
-                <div className="lg:col-span-6 flex flex-col items-center justify-between min-h-[540px]">
+                <div className="bg-[#111827] border border-gray-800 rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
                     
                     <div className="flex flex-col items-center relative w-full pt-2">
-                        <div className="pedestal-stage rounded-full p-4 flex flex-col items-center relative">
-                            <HostAvatar className="w-28 h-28 relative z-10" />
-                            <div className="w-48 h-10 rounded-[50%] bg-purple-600/50 border border-purple-400 shadow-[0_0_35px_rgba(168,85,247,0.9)] flex items-center justify-center -mt-5 z-0" />
-                        </div>
+                        <HostAvatar className="w-20 h-20" />
                         <h3 className="text-xl font-black text-white tracking-wide mt-1 drop-shadow-md">
                             {hostPlayer?.nickName || 'Host'}
                         </h3>
-                        <span className="bg-purple-600/80 border border-purple-400 text-purple-100 text-[10px] font-black uppercase tracking-widest px-3.5 py-0.5 rounded-full shadow-[0_0_12px_rgba(168,85,247,0.6)] mt-1">
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 mt-1">
                             HOST
                         </span>
                     </div>
@@ -308,29 +258,18 @@ function Lobby() {
                         <p className="text-xs font-bold text-center tracking-wider text-purple-300 uppercase mb-3">
                             Waiting for players: at least 2 needed
                         </p>
-                        <div className="flex items-center justify-center gap-1.5 mb-6 px-4">
-                            {Array.from({ length: totalSegments }).map((_, idx) => {
-                                const isLit = idx < filledSegments
-                                return (
-                                    <div
-                                        key={idx}
-                                        className={`h-4 w-3 sm:w-4 rounded-sm transition-all duration-500 ${
-                                            isLit
-                                                ? 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)] scale-105'
-                                                : 'bg-slate-800/90 border border-slate-700/60'
-                                        }`}
-                                    />
-                                )
-                            })}
+                        <div className="text-xs font-semibold text-gray-400 bg-[#0A0E1A] border border-gray-800 px-3 py-1.5 rounded-lg inline-flex items-center gap-2 mb-6">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                            <span>Waiting for players ({players.length}/2 minimum)</span>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-xl mx-auto justify-items-center min-h-[110px] px-2">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 my-3 w-full">
                             {otherPlayers.map((p, idx) => (
-                                <div key={idx} className="w-24 flex flex-col items-center group animate-fade-in">
-                                    <PlayerAvatar index={idx + 1} name={p?.nickName || `Player ${idx + 1}`} className="w-16 h-16" />
+                                <div key={idx} className="bg-[#0A0E1A] border border-gray-800 rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 text-center">
+                                    <PlayerAvatar index={idx + 1} name={p?.nickName || `Player ${idx + 1}`} className="w-10 h-10" />
                                     <span 
                                         title={p?.nickName || `Player ${idx + 1}`}
-                                        className="text-[11px] font-bold text-slate-200 mt-2 px-2 py-0.5 bg-slate-900/90 border border-slate-700 rounded-md truncate max-w-[90px] text-center"
+                                        className="text-xs font-semibold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 truncate max-w-[90px] text-center"
                                     >
                                         {p?.nickName || `Player ${idx + 1}`}
                                     </span>
@@ -338,8 +277,8 @@ function Lobby() {
                             ))}
 
                             {Array.from({ length: Math.max(0, 3 - otherPlayers.length) }).map((_, idx) => (
-                                <div key={`empty-${idx}`} className="w-24 flex flex-col items-center opacity-40 hover:opacity-70 transition-opacity">
-                                    <div className="w-16 h-16 rounded-full border-2 border-dashed border-slate-600 bg-slate-900/40 flex items-center justify-center text-slate-500 text-xl font-bold">
+                                <div key={`empty-${idx}`} className="border border-dashed border-gray-800 rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 text-gray-600 text-xs">
+                                    <div className="w-10 h-10 rounded-xl border border-dashed border-gray-800 flex items-center justify-center text-gray-600 text-xl font-bold">
                                         +
                                     </div>
                                     <span className="text-[11px] text-slate-500 mt-2">Open Slot</span>
@@ -348,20 +287,16 @@ function Lobby() {
                         </div>
                     </div>
 
-                    <div className="w-full max-w-sm flex flex-col items-center">
-                        <div className="flex items-center gap-2 text-xs font-bold mb-2 text-slate-400">
-                            <span>{players.length < 2 ? '🔒' : '🚀'}</span>
-                            <span>{players.length < 2 ? 'Waiting for players...' : 'Ready to launch arena!'}</span>
-                        </div>
+                    <div className="w-full flex flex-col items-center mt-auto">
 
                         {isHost ? (
                             <button
                                 onClick={startGame}
                                 disabled={players.length < 2}
-                                className={`w-full py-4 rounded-xl font-black text-lg tracking-wider transition-all duration-300 ${
+                                className={`w-full bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-gray-950 font-bold py-3 rounded-xl transition-all shadow-md mt-auto ${
                                     players.length < 2
                                         ? 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'
-                                        : 'bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:from-purple-500 hover:to-amber-400 text-white shadow-[0_0_30px_rgba(217,70,239,0.6)] cursor-pointer hover:scale-[1.02] active:scale-[0.98]'
+                                    : ''
                                 }`}
                             >
                                 START GAME
@@ -378,16 +313,16 @@ function Lobby() {
                     </div>
                 </div>
 
-                <div className="lg:col-span-3 flex flex-col gap-5">
+                <div className="flex flex-col gap-5">
                     
-                    <div className="bg-slate-900/85 border border-slate-700/80 rounded-2xl p-4 shadow-lg backdrop-blur-md flex flex-col">
+                    <div className="bg-[#111827] border border-gray-800 rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
                         <div className="flex items-center justify-between mb-3 border-b border-slate-800 pb-2">
                             <span className="text-xs font-extrabold tracking-wider uppercase text-purple-400 flex items-center gap-1.5">
                                 <span>💡</span> Trivia Ticker ({quizTitle || 'Arena'})
                             </span>
                         </div>
 
-                        <div className="space-y-3 overflow-y-auto max-h-56 pr-1">
+                        <div className="space-y-2 overflow-y-auto max-h-40 pr-1">
                             {quizTriviaFacts.map((fact, idx) => (
                                 <div key={idx} className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 flex items-start gap-2.5 hover:border-purple-500/40 transition-colors">
                                     <span className="text-lg shrink-0 mt-0.5">{fact.icon}</span>
@@ -400,7 +335,7 @@ function Lobby() {
                         </div>
                     </div>
 
-                    <div className="bg-slate-900/85 border border-slate-700/80 rounded-2xl p-4 shadow-lg backdrop-blur-md flex flex-col flex-grow min-h-[220px]">
+                    <div className="bg-slate-900/85 border border-slate-700/80 rounded-2xl p-4 shadow-lg backdrop-blur-md flex flex-col flex-grow min-h-[160px]">
                         <div className="flex items-center justify-between mb-2 border-b border-slate-800 pb-2">
                             <div className="flex items-center gap-2 text-xs font-bold text-emerald-400">
                                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -444,6 +379,8 @@ function Lobby() {
                         )}
                     </div>
                 </div>
+            </div>
+
             </div>
 
             {errorMessage && (
