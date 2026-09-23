@@ -2,13 +2,13 @@ import { Link } from 'react-router-dom'
 
 function Navbar() {
     return (
-        <nav className="flex items-center justify-between px-6 py-4 bg-transparent border-b border-purple-900/30">
-            <Link to="/" className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+        <nav className="sticky top-0 z-50 bg-[#0A0E1A]/90 backdrop-blur-md border-b border-gray-800 flex items-center justify-between px-6 py-4">
+            <Link to="/" className="text-[#F9FAFB] font-bold text-lg tracking-tight flex items-center gap-2">
                 QuizArena
             </Link>
             <Link 
                 to="/explore" 
-                className="border-2 border-yellow-500 text-yellow-500 bg-transparent hover:bg-yellow-500/10 px-5 py-2 rounded-lg font-bold transition-all"
+                className="bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-gray-950 font-semibold text-sm px-4 py-2 rounded-lg transition-all shadow-sm"
             >
                 Explore Quizzes
             </Link>

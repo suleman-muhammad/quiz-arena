@@ -61,7 +61,7 @@ function JoinGame() {
             <div className="absolute top-1/4 left-1/3 w-[450px] h-[450px] bg-purple-700/15 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-amber-600/10 rounded-full blur-[100px] pointer-events-none" />
 
-            <div className="max-w-md w-full bg-slate-900/90 border-2 border-purple-500/60 rounded-3xl p-8 glow-purple backdrop-blur-md shadow-2xl relative z-10">
+            <div className="bg-[#111827] border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-xl max-w-md w-full relative z-10">
                 <div className="flex flex-col items-center text-center mb-6">
                     <div className="mb-3">
                         <PlayerAvatar name={nickname || 'Warrior'} className="w-20 h-20 shadow-[0_0_20px_rgba(168,85,247,0.5)]" />
@@ -93,7 +93,7 @@ function JoinGame() {
                             value={roomCode}
                             onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
                             maxLength={6}
-                            className="w-full bg-slate-950/90 border-2 border-slate-700 text-amber-400 rounded-2xl px-4 py-3 text-center text-2xl font-black tracking-widest font-mono focus:border-amber-400 focus:outline-none shadow-inner transition-colors"
+                            className="w-full bg-[#0A0E1A] border border-gray-800 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-[#F9FAFB] placeholder:text-gray-500 rounded-xl px-4 py-2.5 text-sm outline-none transition-all text-center text-2xl font-black tracking-widest font-mono"
                         />
                     </div>
 
@@ -107,7 +107,7 @@ function JoinGame() {
                             value={nickname}
                             onChange={(e) => setNickname(e.target.value)}
                             maxLength={20}
-                            className="w-full bg-slate-950/90 border-2 border-slate-700 text-white rounded-2xl px-4 py-3.5 text-sm font-bold focus:border-purple-400 focus:outline-none shadow-inner transition-colors placeholder-slate-500"
+                            className="w-full bg-[#0A0E1A] border border-gray-800 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-[#F9FAFB] placeholder:text-gray-500 rounded-xl px-4 py-2.5 text-sm outline-none transition-all"
                         />
                     </div>
                     <button
@@ -116,7 +116,7 @@ function JoinGame() {
                         className={`w-full py-4 rounded-2xl font-black text-base tracking-wider transition-all duration-300 mt-2 ${
                             roomCode.length !== 6 || !nickname.trim() || loading
                                 ? 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'
-                                : 'bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:from-purple-500 hover:to-amber-400 text-white shadow-[0_0_25px_rgba(217,70,239,0.5)] cursor-pointer hover:scale-[1.02] active:scale-[0.98]'
+                                : 'w-full bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-gray-950 font-semibold text-sm py-2.5 rounded-xl transition-all shadow-sm'
                         }`}
                     >
                         {loading ? 'ENTERING ARENA...' : 'ENTER THE ARENA ⚔️'}
