@@ -271,7 +271,7 @@ function Room() {
     const strokeDashoffset = totalTime > 0 ? circumference - (timeLeft / totalTime) * circumference : circumference
 
     return (
-        <div className="min-h-screen bg-[#050714] text-white relative overflow-hidden flex flex-col justify-between selection:bg-purple-500 selection:text-white font-sans">
+        <div className="min-h-screen bg-[#0A0E1A] text-[#F9FAFB] flex flex-col items-center justify-center p-4 sm:p-6">
             
             {/* OPTION A: CLEAN ESPORTS ARENA STAGE (Solid #050714 + 3D Grid Stage + HUD) */}
 
@@ -380,106 +380,75 @@ function Room() {
                 
                 <div className="lg:col-span-8 flex flex-col justify-between">
                     
-                    <div className="flex justify-center mb-4">
-                        <div className="relative flex items-center justify-center">
-                            <svg className="w-24 h-24 transform -rotate-90">
-                                <circle
-                                    cx="48"
-                                    cy="48"
-                                    r={radius}
-                                    stroke="currentColor"
-                                    strokeWidth="6"
-                                    className="text-slate-800"
-                                    fill="transparent"
-                                />
-                                <circle
-                                    cx="48"
-                                    cy="48"
-                                    r={radius}
-                                    stroke="currentColor"
-                                    strokeWidth="6"
-                                    strokeDasharray={circumference}
-                                    strokeDashoffset={strokeDashoffset}
-                                    strokeLinecap="round"
-                                    className={`transition-all duration-1000 ${
-                                        timeLeft <= 3 ? 'text-rose-500 animate-pulse' :
-                                        timeLeft <= 5 ? 'text-amber-400' : 'text-cyan-400'
-                                    }`}
-                                    fill="transparent"
-                                />
-                            </svg>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <span className={`text-2xl font-black font-mono ${
-                                    timeLeft <= 3 ? 'text-rose-400' : 'text-white'
-                                }`}>
-                                    {String(timeLeft).padStart(2, '0')}
-                                </span>
-                                <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">SEC</span>
-                            </div>
+                    <div className="w-full max-w-3xl bg-[#111827] border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-2xl flex flex-col gap-6">
+                        <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-gray-400">
+                            <span className="text-amber-400 font-mono">Question {currQuestionNo} / {questionCount || 5}</span>
+                            <span>{String(timeLeft).padStart(2, '0')} sec</span>
                         </div>
-                    </div>
 
-                    <div className="bg-slate-900/90 border-2 border-purple-500/60 rounded-2xl p-6 sm:p-8 glow-purple backdrop-blur-md relative overflow-hidden mb-6 text-center">
-                        <span className="bg-purple-950/80 border border-purple-400/50 text-purple-200 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-3 inline-block">
-                            Question {currQuestionNo} of {questionCount || 5}
-                        </span>
+                        <div className="w-full h-2 bg-[#0A0E1A] border border-gray-800 rounded-full overflow-hidden">
+                            <div
+                                className="h-full bg-amber-500 transition-all duration-300 rounded-full"
+                                style={{ width: `${totalTime > 0 ? (timeLeft / totalTime) * 100 : 0}%` }}
+                            />
+                        </div>
                         
-                        <h2 className="text-xl sm:text-2xl font-black text-white leading-relaxed mt-2 drop-shadow-md">
+                        <h2 className="text-xl sm:text-2xl font-bold text-[#F9FAFB] tracking-tight leading-snug text-center py-2">
                             {questionText || "Waiting for battle question to commence..."}
                         </h2>
 
                         {gameState === 'QUESTION' && (
-                            <p className="text-xs text-purple-300 font-bold uppercase tracking-widest mt-4 animate-pulse">
+                            <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-4 animate-pulse">
                                 ⚔️ Answers unlocking shortly... Read carefully!
                             </p>
                         )}
                     </div>
 
                     {gameState === 'ANSWERING' && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                             {[
                                 { 
                                     label: 'A', 
                                     text: optionA, 
-                                    border: 'border-rose-500/70 hover:border-rose-400',
-                                    bg: 'bg-gradient-to-br from-rose-950/60 via-slate-900 to-rose-900/40',
-                                    badge: 'bg-rose-500 text-white shadow-[0_0_12px_rgba(244,63,94,0.7)]',
+                                    border: 'border-gray-800 hover:border-gray-700',
+                                    bg: 'bg-[#0A0E1A] hover:bg-[#0f1422]',
+                                    badge: '',
                                     val: 0 
                                 },
                                 { 
                                     label: 'B', 
                                     text: optionB, 
-                                    border: 'border-cyan-500/70 hover:border-cyan-400',
-                                    bg: 'bg-gradient-to-br from-cyan-950/60 via-slate-900 to-cyan-900/40',
-                                    badge: 'bg-cyan-500 text-slate-950 shadow-[0_0_12px_rgba(6,182,212,0.7)]',
+                                    border: 'border-gray-800 hover:border-gray-700',
+                                    bg: 'bg-[#0A0E1A] hover:bg-[#0f1422]',
+                                    badge: '',
                                     val: 1 
                                 },
                                 { 
                                     label: 'C', 
                                     text: optionC, 
-                                    border: 'border-emerald-500/70 hover:border-emerald-400',
-                                    bg: 'bg-gradient-to-br from-emerald-950/60 via-slate-900 to-emerald-900/40',
-                                    badge: 'bg-emerald-500 text-slate-950 shadow-[0_0_12px_rgba(16,185,129,0.7)]',
+                                    border: 'border-gray-800 hover:border-gray-700',
+                                    bg: 'bg-[#0A0E1A] hover:bg-[#0f1422]',
+                                    badge: '',
                                     val: 2 
                                 },
                                 { 
                                     label: 'D', 
                                     text: optionD, 
-                                    border: 'border-amber-500/70 hover:border-amber-400',
-                                    bg: 'bg-gradient-to-br from-amber-950/60 via-slate-900 to-amber-900/40',
-                                    badge: 'bg-amber-500 text-slate-950 shadow-[0_0_12px_rgba(245,158,11,0.7)]',
+                                    border: 'border-gray-800 hover:border-gray-700',
+                                    bg: 'bg-[#0A0E1A] hover:bg-[#0f1422]',
+                                    badge: '',
                                     val: 3 
                                 },
                             ].map(opt => (
                                 <button
                                     key={opt.label}
                                     onClick={() => submitAnswer(opt.val)}
-                                    className={`${opt.bg} border-2 ${opt.border} rounded-2xl p-5 text-left transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg flex items-center gap-4 group cursor-pointer`}
+                                    className={`${opt.bg} border ${opt.border} w-full text-left p-4 rounded-xl text-[#F9FAFB] font-medium transition-all flex items-center gap-3.5 active:scale-[0.99] group cursor-pointer`}
                                 >
-                                    <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm shrink-0 ${opt.badge}`}>
+                                    <span className="w-7 h-7 rounded-lg bg-gray-800 border border-gray-700/60 text-gray-300 font-mono text-xs font-bold flex items-center justify-center group-hover:border-gray-600 transition-colors shrink-0">
                                         {opt.label}
                                     </span>
-                                    <span className="font-bold text-sm sm:text-base text-slate-100 group-hover:text-white leading-snug">
+                                    <span className="leading-snug">
                                         {opt.text || `Option ${opt.label}`}
                                     </span>
                                 </button>
@@ -623,7 +592,7 @@ function Room() {
 
             {(gameState === 'LEADERBOARD' || gameState === 'GAME_OVER') && (
                 <div className="fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4 overflow-y-auto">
-                    <div className="bg-slate-900 border-2 border-purple-500/80 rounded-3xl p-6 sm:p-8 max-w-lg w-full text-center shadow-2xl glow-purple backdrop-blur-xl animate-fade-in my-auto">
+                    <div className="bg-[#111827] border border-gray-800 rounded-2xl p-6 sm:p-8 max-w-lg w-full text-center shadow-2xl animate-fade-in my-auto">
                         
                         <div className="text-5xl mb-2">
                             {gameState === 'GAME_OVER' ? '🏆' : '⚔️'}
@@ -642,10 +611,10 @@ function Room() {
                                 {leaderboard[1] ? (
                                     <>
                                         <PlayerAvatar index={2} name={leaderboard[1].nickName} className="w-12 h-12 mb-2 border-2 border-slate-300 shadow-[0_0_15px_rgba(203,213,225,0.5)]" />
-                                        <div className="w-full bg-gradient-to-t from-slate-900 via-slate-800 to-slate-700/60 border-t-4 border-slate-300 rounded-t-xl p-2 flex flex-col items-center h-24 justify-between shadow-lg">
-                                            <span className="text-sm font-black text-slate-300">🥈 2ND</span>
+                                        <div className="bg-[#0A0E1A] border border-gray-700 rounded-xl p-4 flex items-center justify-between w-full">
+                                            <span className="bg-slate-700 text-slate-200 font-mono text-xs font-bold w-7 h-7 rounded-lg flex items-center justify-center">2</span>
                                             <p className="text-[11px] font-black text-slate-100 truncate max-w-[85px]">{leaderboard[1].nickName}</p>
-                                            <span className="text-[10px] font-mono text-slate-200 font-bold">{leaderboard[1].score?.toLocaleString()} pts</span>
+                                            <span className="text-sm font-mono font-bold text-gray-300">{leaderboard[1].score?.toLocaleString()} pts</span>
                                         </div>
                                     </>
                                 ) : (
@@ -665,10 +634,10 @@ function Room() {
                                     <>
                                         <span className="text-2xl animate-bounce drop-shadow-[0_0_12px_rgba(245,158,11,0.9)]">👑</span>
                                         <PlayerAvatar index={1} name={leaderboard[0].nickName} className="w-16 h-16 mb-2 border-2 border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.8)]" />
-                                        <div className="w-full bg-gradient-to-t from-amber-950/90 via-amber-900/70 to-amber-600/50 border-t-4 border-amber-400 rounded-t-2xl p-2.5 flex flex-col items-center h-36 justify-between shadow-[0_0_35px_rgba(245,158,11,0.7)]">
-                                            <span className="text-base font-black text-amber-300">🥇 1ST</span>
+                                        <div className="bg-[#111827] border-2 border-amber-500/80 rounded-2xl p-4 sm:p-5 flex items-center justify-between w-full shadow-lg shadow-amber-500/5">
+                                            <span className="w-8 h-8 rounded-lg bg-amber-500 text-gray-950 font-bold font-mono flex items-center justify-center">1</span>
                                             <p className="text-xs font-black text-amber-100 truncate max-w-[90px]">{leaderboard[0].nickName}</p>
-                                            <span className="text-xs font-mono text-amber-300 font-black">{leaderboard[0].score?.toLocaleString()} pts</span>
+                                            <span className="text-lg font-mono font-bold text-amber-400">{leaderboard[0].score?.toLocaleString()} pts</span>
                                         </div>
                                     </>
                                 ) : (
@@ -687,10 +656,10 @@ function Room() {
                                 {leaderboard[2] ? (
                                     <>
                                         <PlayerAvatar index={3} name={leaderboard[2].nickName} className="w-12 h-12 mb-2 border-2 border-amber-700 shadow-[0_0_15px_rgba(180,83,9,0.5)]" />
-                                        <div className="w-full bg-gradient-to-t from-slate-900 via-slate-800 to-amber-950/50 border-t-4 border-amber-700 rounded-t-xl p-2 flex flex-col items-center h-20 justify-between shadow-lg">
-                                            <span className="text-sm font-black text-amber-600">🥉 3RD</span>
+                                        <div className="bg-[#0A0E1A] border border-gray-800 rounded-xl p-4 flex items-center justify-between w-full">
+                                            <span className="bg-amber-900/60 text-amber-200 font-mono text-xs font-bold w-7 h-7 rounded-lg flex items-center justify-center">3</span>
                                             <p className="text-[11px] font-black text-slate-200 truncate max-w-[85px]">{leaderboard[2].nickName}</p>
-                                            <span className="text-[10px] font-mono text-amber-300 font-bold">{leaderboard[2].score?.toLocaleString()} pts</span>
+                                            <span className="text-sm font-mono font-bold text-amber-300">{leaderboard[2].score?.toLocaleString()} pts</span>
                                         </div>
                                     </>
                                 ) : (
@@ -726,7 +695,7 @@ function Room() {
                         {gameState === 'GAME_OVER' && (
                             <button
                                 onClick={() => navigate('/')}
-                                className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:from-purple-500 hover:to-amber-400 text-white font-black text-base tracking-wider shadow-[0_0_20px_rgba(217,70,239,0.5)] transition-all cursor-pointer"
+                                className="bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-gray-950 font-bold px-6 py-3 rounded-xl transition-all shadow-md text-sm inline-flex items-center justify-center gap-2"
                             >
                                 RETURN TO LOBBY
                             </button>
