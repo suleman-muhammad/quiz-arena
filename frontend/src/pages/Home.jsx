@@ -47,6 +47,28 @@ function Home() {
     return (
         <div className="min-h-screen bg-[#0A0E1A] text-[#F9FAFB] flex flex-col">
             <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <div className="flex items-center gap-3">
+                    <Link
+                        to="/create"
+                        className="bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-gray-950 font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-md shadow-amber-500/10 inline-flex items-center gap-2"
+                    >
+                        <span className="text-base leading-none font-bold">+</span>
+                        <span>Create Quiz</span>
+                    </Link>
+                    <Link
+                        to="/join"
+                        className="bg-[#111827] hover:bg-[#1a2337] active:scale-[0.98] text-[#F9FAFB] border border-gray-800 hover:border-gray-700 font-semibold text-sm px-5 py-2.5 rounded-xl transition-all inline-flex items-center gap-2"
+                    >
+                        <span>🔑</span>
+                        <span>Join Quiz</span>
+                    </Link>
+                </div>
+                <div className="hidden sm:flex items-center gap-2 text-xs text-gray-400 font-medium bg-[#111827] border border-gray-800 px-3 py-1.5 rounded-lg">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Live Arena Ready</span>
+                </div>
+            </div>
             <div className="bg-[#111827] border border-gray-800 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8">
                 
                 <div className="flex items-center justify-between mb-6">
