@@ -323,9 +323,9 @@ function Room() {
 
             <main className="max-w-7xl mx-auto w-full px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10 my-auto">
                 
-                <div className="lg:col-span-8 flex flex-col justify-between">
+                <div className="lg:col-span-8 flex flex-col gap-6 w-full">
                     
-                    <div className="w-full max-w-3xl bg-[#111827] border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-2xl flex flex-col gap-6">
+                    <div className="bg-[#111827] border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-xl w-full flex flex-col gap-6">
                         <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-gray-400">
                             <span className="text-amber-400 font-mono">Question {currQuestionNo} / {questionCount || 5}</span>
                             <span>{String(timeLeft).padStart(2, '0')} sec</span>
@@ -350,7 +350,7 @@ function Room() {
                     </div>
 
                     {gameState === 'ANSWERING' && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                        <div className="bg-[#111827] border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-xl w-full grid grid-cols-1 md:grid-cols-2 gap-3.5">
                             {[
                                 { 
                                     label: 'A', 
@@ -402,7 +402,7 @@ function Room() {
                     )}
 
                     {gameState === 'SUBMITTED' && (
-                        <div className="bg-[#111827] border border-gray-800 rounded-2xl p-6 text-center">
+                        <div className="bg-[#111827] border border-gray-800 rounded-2xl p-6 shadow-xl w-full text-center">
                             <div className="text-4xl mb-3 animate-bounce">🔒</div>
                             <h3 className="text-xl font-black text-white">Answer Locked In!</h3>
                             <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mt-1">
@@ -417,9 +417,6 @@ function Room() {
                             <h3 className="text-3xl font-black text-emerald-300 tracking-wide">
                                 CORRECT!
                             </h3>
-                            <p className="text-xs font-black text-amber-300 uppercase tracking-widest mt-1 mb-3">
-                                👏 THE ARENA STANDS UP & ROARS FOR YOU!
-                            </p>
                             <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500 px-5 py-2 rounded-xl text-emerald-300 text-base font-black">
                                 <span>⚡</span> +{roundScore.current || 940} PTS
                             </div>
@@ -550,16 +547,18 @@ function Room() {
                         </p>
 
                         <div className="flex items-end justify-center gap-2 sm:gap-3 mb-8 px-1 sm:px-2 min-h-[220px]">
-                            <div className={`flex flex-col items-center flex-1 transition-all duration-700 ease-out transform ${
+                            <div className={`flex flex-col items-center justify-between p-3 rounded-xl border w-full min-w-[90px] text-center flex-1 transition-all duration-700 ease-out transform ${
                                 podiumStep >= 2 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-16 scale-75 pointer-events-none'
                             }`}>
                                 {leaderboard[1] ? (
                                     <>
                                         <PlayerAvatar index={2} name={leaderboard[1].nickName} className="w-12 h-12 mb-2" />
-                                        <div className="bg-[#0A0E1A] border border-gray-700 rounded-xl p-4 flex items-center justify-between w-full">
-                                            <span className="bg-slate-700 text-slate-200 font-mono text-xs font-bold w-7 h-7 rounded-lg flex items-center justify-center">2</span>
-                                            <p className="text-[11px] font-black text-slate-100 truncate max-w-[85px]">{leaderboard[1].nickName}</p>
-                                            <span className="text-sm font-mono font-bold text-gray-300">{leaderboard[1].score?.toLocaleString()} pts</span>
+                                        <div className="bg-[#0A0E1A] border border-gray-700 rounded-xl p-3 flex flex-col items-center justify-between w-full text-center">
+                                            <div className="flex items-center gap-1.5 mb-1">
+                                                <span className="w-5 h-5 rounded-md text-[11px] font-bold flex items-center justify-center bg-slate-700 text-slate-200">2</span>
+                                                <span className="text-xs font-semibold text-[#F9FAFB] truncate max-w-[70px]" title={leaderboard[1].nickName}>{leaderboard[1].nickName}</span>
+                                            </div>
+                                            <div className="text-xs font-extrabold text-gray-300">{leaderboard[1].score?.toLocaleString()} <span className="text-[10px] text-gray-400 font-normal">pts</span></div>
                                         </div>
                                     </>
                                 ) : (
@@ -572,17 +571,19 @@ function Room() {
                                 )}
                             </div>
 
-                            <div className={`flex flex-col items-center flex-1 -mt-6 z-10 transition-all duration-800 ease-out transform ${
+                            <div className={`flex flex-col items-center justify-between p-3 rounded-xl border w-full min-w-[90px] text-center flex-1 -mt-6 z-10 transition-all duration-800 ease-out transform ${
                                 podiumStep >= 3 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-20 scale-75 pointer-events-none'
                             }`}>
                                 {leaderboard[0] ? (
                                     <>
                                         <span className="text-2xl animate-bounce text-amber-400">👑</span>
                                         <PlayerAvatar index={1} name={leaderboard[0].nickName} className="w-16 h-16 mb-2" />
-                                        <div className="bg-[#111827] border-2 border-amber-500/80 rounded-2xl p-4 sm:p-5 flex items-center justify-between w-full shadow-lg shadow-amber-500/5">
-                                            <span className="w-8 h-8 rounded-lg bg-amber-500 text-gray-950 font-bold font-mono flex items-center justify-center">1</span>
-                                            <p className="text-xs font-black text-amber-100 truncate max-w-[90px]">{leaderboard[0].nickName}</p>
-                                            <span className="text-lg font-mono font-bold text-amber-400">{leaderboard[0].score?.toLocaleString()} pts</span>
+                                        <div className="bg-[#111827] border-2 border-amber-500/80 rounded-2xl p-4 sm:p-5 flex flex-col items-center justify-between w-full text-center shadow-lg shadow-amber-500/5">
+                                            <div className="flex items-center gap-1.5 mb-1">
+                                                <span className="w-5 h-5 rounded-md text-[11px] font-bold flex items-center justify-center bg-amber-500 text-gray-950">1</span>
+                                                <span className="text-xs font-semibold text-[#F9FAFB] truncate max-w-[70px]" title={leaderboard[0].nickName}>{leaderboard[0].nickName}</span>
+                                            </div>
+                                            <div className="text-xs font-extrabold text-amber-400">{leaderboard[0].score?.toLocaleString()} <span className="text-[10px] text-gray-400 font-normal">pts</span></div>
                                         </div>
                                     </>
                                 ) : (
@@ -595,16 +596,18 @@ function Room() {
                                 )}
                             </div>
 
-                            <div className={`flex flex-col items-center flex-1 transition-all duration-700 ease-out transform ${
+                            <div className={`flex flex-col items-center justify-between p-3 rounded-xl border w-full min-w-[90px] text-center flex-1 transition-all duration-700 ease-out transform ${
                                 podiumStep >= 1 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-16 scale-75 pointer-events-none'
                             }`}>
                                 {leaderboard[2] ? (
                                     <>
                                         <PlayerAvatar index={3} name={leaderboard[2].nickName} className="w-12 h-12 mb-2" />
-                                        <div className="bg-[#0A0E1A] border border-gray-800 rounded-xl p-4 flex items-center justify-between w-full">
-                                            <span className="bg-amber-900/60 text-amber-200 font-mono text-xs font-bold w-7 h-7 rounded-lg flex items-center justify-center">3</span>
-                                            <p className="text-[11px] font-black text-slate-200 truncate max-w-[85px]">{leaderboard[2].nickName}</p>
-                                            <span className="text-sm font-mono font-bold text-amber-300">{leaderboard[2].score?.toLocaleString()} pts</span>
+                                        <div className="bg-[#0A0E1A] border border-gray-800 rounded-xl p-3 flex flex-col items-center justify-between w-full text-center">
+                                            <div className="flex items-center gap-1.5 mb-1">
+                                                <span className="w-5 h-5 rounded-md text-[11px] font-bold flex items-center justify-center bg-amber-900/60 text-amber-200">3</span>
+                                                <span className="text-xs font-semibold text-[#F9FAFB] truncate max-w-[70px]" title={leaderboard[2].nickName}>{leaderboard[2].nickName}</span>
+                                            </div>
+                                            <div className="text-xs font-extrabold text-amber-400">{leaderboard[2].score?.toLocaleString()} <span className="text-[10px] text-gray-400 font-normal">pts</span></div>
                                         </div>
                                     </>
                                 ) : (
