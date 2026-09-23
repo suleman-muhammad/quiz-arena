@@ -53,7 +53,7 @@ function QuizCard({ quiz }) {
 
     return (
         <>
-            <div className="bg-slate-900 border border-purple-500 rounded-xl p-5 flex flex-col h-full hover:shadow-[0_0_15px_rgba(168,85,247,0.2)] transition-shadow">
+            <div className="group relative bg-[#111827] border border-gray-800 hover:border-amber-500/50 rounded-2xl p-5 sm:p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/40 flex flex-col justify-between">
                 
                 <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
@@ -63,39 +63,37 @@ function QuizCard({ quiz }) {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
                         </div>
-                        <h3 className="text-xl font-bold text-white">{quiz.title}</h3>
+                        <h3 className="text-lg sm:text-xl font-bold text-[#F9FAFB] group-hover:text-amber-400 transition-colors tracking-tight line-clamp-1">{quiz.title}</h3>
                     </div>
-                    <span className="bg-purple-600 text-white text-sm font-bold w-10 h-10 flex items-center justify-center rounded-full shrink-0">
+                    <span className="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-md bg-gray-800 text-sky-400 border border-gray-700/60 shrink-0">
                         {quiz.questions?.length || 0} Qs
                     </span>
                 </div>
 
-                <p className="text-gray-300 text-sm mb-6 flex-grow">
+                <p className="text-sm text-gray-400 leading-normal mb-6 flex-grow">
                     {quiz.description || "No description"}
                 </p>
 
-                <div className="flex items-center justify-between mt-auto">
-                    <span className="text-sm text-white font-semibold">
+                <div className="mt-5 pt-4 border-t border-gray-800 flex items-center justify-between">
+                    <span className="text-xs text-gray-400 font-medium">
                         {quiz.createdAt ? new Date(quiz.createdAt).toLocaleDateString() : ""}
                     </span>
                     <button
                         onClick={() => {setShowModal(true)}}
-                        className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black text-sm font-extrabold px-4 py-2 rounded-md transition-colors"
+                        className="bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-gray-950 font-semibold text-sm px-7 py-3 rounded-xl transition-all shadow-sm inline-flex items-center gap-3"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                            <path d="M2.736 9.775a.75.75 0 0 0-1.12.868l2.368 9.255c.264 1.002 1.215 1.102 1.942 1.102h12.148c.727 0 1.678-.1 1.942-1.102l2.368-9.255a.75.75 0 0 0-1.12-.868l-4.707 3.32-3.14-9.034a.75.75 0 0 0-1.417 0l-3.14 9.034-4.707-3.32Z" />
-                        </svg>
-                        HOST GAME
+                        <span>👑</span>
+                        <span>Host Game</span>
                     </button>
                 </div>
             </div>
             {showModal && createPortal(
                 <div 
-                    className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[9999] p-4"
+                    className="fixed inset-0 bg-black/80 flex items-center justify-center z-[9999] p-4"
                     onClick={closeModal}
                 >
                     <div 
-                        className="bg-slate-900 border border-purple-500 rounded-2xl p-8 w-full max-w-sm shadow-[0_0_50px_rgba(168,85,247,0.3)] animate-in fade-in zoom-in-95 duration-200"
+                        className="bg-[#12151f] border border-slate-800 rounded-2xl p-8 w-full max-w-sm shadow-lg animate-in fade-in zoom-in-95 duration-200"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <h2 className="text-xl font-bold text-white mb-2 text-center">Host a Game</h2>
@@ -118,7 +116,7 @@ function QuizCard({ quiz }) {
                                 maxLength={20}
                                 value={hostName}
                                 onChange={(e)=>{setHostName(e.target.value)}}
-                                className="w-full bg-slate-950 border border-slate-700 text-white rounded-lg px-4 py-3 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 focus:outline-none placeholder-gray-500 transition-colors"
+                                className="w-full bg-[#1a1e2d] border border-slate-700 text-white rounded-lg px-4 py-3 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none placeholder-gray-500 transition-colors"
                             />
                         </div>
 
