@@ -3,10 +3,10 @@ import React from 'react'
 
 export function HostAvatar({ className = "w-28 h-28" }) {
   return (
-    <div className={`relative flex items-center justify-center ${className}`}>
-      <div className="absolute inset-0 rounded-full bg-purple-600/40 blur-xl animate-pulse" />
+    <div className={`relative rounded-xl border border-gray-700/80 bg-[#111827] flex items-center justify-center font-bold font-mono text-[#F9FAFB] shadow-sm select-none ${className}`}>
+      <span className="text-amber-400 text-3xl">♛</span>
       
-      <svg viewBox="0 0 120 120" className="w-full h-full relative z-10 drop-shadow-[0_0_18px_rgba(168,85,247,0.9)]">
+      <svg viewBox="0 0 120 120" className="hidden">
         <defs>
           <linearGradient id="hostCrownGold" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#fef08a" />
@@ -66,10 +66,29 @@ export function HostAvatar({ className = "w-28 h-28" }) {
   )
 }
 
+const AVATAR_ICONS = [
+  (className) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M8 21h8M12 17v4M7 4h10l1 5a6 6 0 11-12 0l1-5ZM5 4h14M4 6h3m10 0h3" /></svg>,
+  (className) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M12 3 5 6v5c0 4.5 2.9 7.7 7 10 4.1-2.3 7-5.5 7-10V6l-7-3Z" /></svg>,
+  (className) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="m14 4-4 6 3 1-3 9 4-6-3-1 3-9ZM5 8l2 2m10-2-2 2M5 16l2-2m10 2-2-2" /></svg>,
+  (className) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M12 21c4.5-2.2 7-5.6 7-10.2C19 7.2 16.7 5 14 5c-1 0-1.8.3-2.5 1C10.8 5.3 10 5 9 5 6.3 5 4 7.2 4 10.8 4 15.4 7.5 18.8 12 21Z" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 6c1-2 2.5-3 4-3" /></svg>,
+  (className) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="m4 10 2-6 6 4 6-4 2 6-2 9H6l-2-9ZM6 10h12M8 14h8" /></svg>,
+  (className) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="3" /><path strokeLinecap="round" d="m17.5 6.5 2-2M6.5 17.5l-2 2" /></svg>,
+  (className) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="m13 2-8 12h6l-1 8 8-12h-6l1-8Z" /></svg>,
+  (className) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="m12 3 2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8L12 3Z" /></svg>
+]
+
+const getIconIndex = (name = '') => {
+  let hash = 0
+  for (let index = 0; index < name.length; index++) {
+    hash = name.charCodeAt(index) + ((hash << 5) - hash)
+  }
+  return Math.abs(hash) % AVATAR_ICONS.length
+}
+
 const WARRIOR_BADGES = [
   {
     name: "Gothic Sallet Knight",
-    ringColor: "border-cyan-400 shadow-[0_0_14px_rgba(6,182,212,0.6)]",
+    ringColor: "border-sky-400/70",
     render: () => (
       <svg viewBox="0 0 100 100" className="w-full h-full">
         <defs>
@@ -91,7 +110,7 @@ const WARRIOR_BADGES = [
   },
   {
     name: "Templar Crusader",
-    ringColor: "border-amber-400 shadow-[0_0_14px_rgba(251,191,36,0.6)]",
+    ringColor: "border-amber-400/70",
     render: () => (
       <svg viewBox="0 0 100 100" className="w-full h-full">
         <defs>
@@ -116,7 +135,7 @@ const WARRIOR_BADGES = [
   },
   {
     name: "Shadow Assassin",
-    ringColor: "border-purple-500 shadow-[0_0_14px_rgba(168,85,247,0.6)]",
+    ringColor: "border-indigo-400/70",
     render: () => (
       <svg viewBox="0 0 100 100" className="w-full h-full">
         <circle cx="50" cy="50" r="48" fill="#0b0714" />
@@ -131,7 +150,7 @@ const WARRIOR_BADGES = [
   },
   {
     name: "Viking Warlord",
-    ringColor: "border-orange-500 shadow-[0_0_14px_rgba(249,115,22,0.6)]",
+    ringColor: "border-amber-500/70",
     render: () => (
       <svg viewBox="0 0 100 100" className="w-full h-full">
         <circle cx="50" cy="50" r="48" fill="#160b05" />
@@ -148,7 +167,7 @@ const WARRIOR_BADGES = [
   },
   {
     name: "Crimson Knight",
-    ringColor: "border-rose-500 shadow-[0_0_14px_rgba(244,63,94,0.6)]",
+    ringColor: "border-rose-400/70",
     render: () => (
       <svg viewBox="0 0 100 100" className="w-full h-full">
         <circle cx="50" cy="50" r="48" fill="#15080c" />
@@ -162,7 +181,7 @@ const WARRIOR_BADGES = [
   },
   {
     name: "Valkyrie Maiden",
-    ringColor: "border-emerald-400 shadow-[0_0_14px_rgba(16,185,129,0.6)]",
+    ringColor: "border-emerald-400/70",
     render: () => (
       <svg viewBox="0 0 100 100" className="w-full h-full">
         <circle cx="50" cy="50" r="48" fill="#041f18" />
@@ -186,13 +205,14 @@ export function PlayerAvatar({ index = 0, name = "", className = "w-16 h-16" }) 
     hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
   }
   const preset = WARRIOR_BADGES[Math.abs(hash) % WARRIOR_BADGES.length]
+  const AvatarIcon = AVATAR_ICONS[getIconIndex(name || String(index))]
 
   return (
     <div 
       title={preset.name}
-      className={`relative rounded-full border-2 p-0.5 bg-slate-950 ${preset.ringColor} ${className} transition-transform hover:scale-110 duration-200 cursor-pointer shadow-lg`}
+      className={`relative rounded-xl border border-gray-700/80 bg-[#111827] flex items-center justify-center font-bold font-mono text-[#F9FAFB] shadow-sm select-none ${preset.ringColor} ${className} transition-transform hover:scale-105 duration-200 cursor-pointer`}
     >
-      {preset.render()}
+      <AvatarIcon className="w-5 h-5 text-amber-400" />
     </div>
   )
 }
