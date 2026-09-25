@@ -71,4 +71,13 @@ public class QuizControllerTest {
             .andExpect(jsonPath("$.id").value(1L))
             .andExpect(jsonPath("$.title").value("Mock Quiz 1")); 
     }
+
+    @Test
+    public void testGetQuizByIdWhenNotExists() throws Exception{
+    
+        when(quizService.findQuizWithId(2L)).thenReturn(ResponseEntity.notFound().build());
+
+        mockMvc.perform(get("/api/quizzes/2"))
+            .andExpect(status().isNotFound());
+    }
 }
