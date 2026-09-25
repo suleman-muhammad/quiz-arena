@@ -33,6 +33,30 @@ public class QuizControllerTest {
     private QuizService quizService;
 
     @Test
+    void testReturnAllQuizzes() throws Exception{
+
+        Quiz q1 = new Quiz();
+        Quiz q2 = new Quiz();
+
+        q1.setId(1L);
+        q2.setId(2L);
+
+        q1.setTitle("Mock Quiz 1");
+        q2.setTitle("Mock Quiz 2");
+
+        when(quizService.getAllQuizzes()).thenReturn(List.of(q1,q2));
+
+        mockMvc.perform(get("/api/quizzes"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.size()").value(2))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].title").value("Mock Quiz 1"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].title").value("Mock Quiz 2"));
+    }
+
+    @Test
     public void testGetQuizByIdWhenExists() throws Exception{
         Quiz q1 = new Quiz();
 
