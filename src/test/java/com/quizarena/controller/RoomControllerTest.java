@@ -12,8 +12,6 @@ import com.quizarena.game.GameRoom;
 import com.quizarena.game.Player;
 import com.quizarena.game.RoomState;
 
-import tools.jackson.databind.ObjectMapper;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -22,7 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.print.attribute.standard.Media;
 
 @WebMvcTest(RoomController.class)
 public class RoomControllerTest {
