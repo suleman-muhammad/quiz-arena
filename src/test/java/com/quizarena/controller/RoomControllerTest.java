@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.quizarena.game.GameManager;
 import com.quizarena.game.GameRoom;
+import com.quizarena.game.Player;
 import com.quizarena.game.RoomState;
 
 import tools.jackson.databind.ObjectMapper;
@@ -19,6 +20,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.print.attribute.standard.Media;
 
 @WebMvcTest(RoomController.class)
 public class RoomControllerTest {
@@ -61,6 +65,32 @@ public class RoomControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").value(1L));
+    }
+
+    @Test
+    void testGetLeaderBoard() throws Exception{
+        GameRoom responseRoom = new GameRoom("1L2F3T",1L,"Host 1");
+        Player p1 = new Player();
+
+        p1.setCurrentPosition(1);
+        p1.setId("234");
+        p1.setCombo(3);
+        p1.setNickName("Mock Player 1");
+
+        responseRoom.setPlayers(List.of(p1));
+        
+        when(gameManager.findRoomByCode(any(String.class))).thenReturn(responseRoom);
+
+        mockMvc.perform(get("/api/rooms/1L2T3F/leaderboard")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.size()").value(1))
+                .andExpect(jsonPath("$[0].id").value("234"))                   
+                .andExpect(jsonPath("$[0].currentPosition").value(1))            
+                .andExpect(jsonPath("$[0].nickName").value("Mock Player 1"))                   
+                .andExpect(jsonPath("$[0].combo").value(3));                   
+
     }
     
 }
