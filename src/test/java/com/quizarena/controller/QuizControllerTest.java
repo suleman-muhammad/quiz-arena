@@ -8,19 +8,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.jayway.jsonpath.JsonPath;
 import com.quizarena.entity.Quiz;
 import com.quizarena.service.QuizService;
 
-import static org.mockito.Mockito.reset;
+import tools.jackson.databind.ObjectMapper;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
 
-import javax.print.attribute.standard.Media;
 
 
 @WebMvcTest(QuizController.class)
@@ -32,6 +32,8 @@ public class QuizControllerTest {
     @MockitoBean 
     private QuizService quizService;
 
+    @Autowired 
+    private ObjectMapper objectMapper;
     @Test
     void testReturnAllQuizzes() throws Exception{
 
@@ -79,5 +81,26 @@ public class QuizControllerTest {
 
         mockMvc.perform(get("/api/quizzes/2"))
             .andExpect(status().isNotFound());
+    }
+
+    @Test 
+    void testCreatQuiz() throws Exception{
+        Quiz requestQuiz = new Quiz();
+        Quiz responseQuiz = new Quiz();
+
+        requestQuiz.setTitle("Mock Quiz");
+        responseQuiz.setTitle("Mock Quiz");
+
+        responseQuiz.setId(1L);
+
+        when(quizService.createQuiz(any(Quiz.class))).thenReturn(responseQuiz);
+
+        mockMvc.perform(post("/api/quizzes")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(requestQuiz))
+                            )
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.id").value(1))
+                            .andExpect(jsonPath("$.title").value("Mock Quiz"));
     }
 }
