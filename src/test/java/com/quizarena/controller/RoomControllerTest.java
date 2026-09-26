@@ -35,7 +35,6 @@ public class RoomControllerTest {
         GameRoom responseRoom = new GameRoom("1L2F3T",1L,"Host 1");
 
         responseRoom.setPlayers(new ArrayList<>());
-        // responseRoom.setState(RoomState.WAITING);
         
         when(gameManager.findRoomByCode(any(String.class))).thenReturn(responseRoom);
 
@@ -46,6 +45,22 @@ public class RoomControllerTest {
                 .andExpect(jsonPath("$.players.size()").value(0))
                 .andExpect(jsonPath("$.quizId").value(1))
                 .andExpect(jsonPath("$.state").value(RoomState.WAITING.toString()));
+    }
+
+    @Test 
+    void testgetRoomQuiz() throws Exception{
+
+        GameRoom responseRoom = new GameRoom("1L2F3T",1L,"Host 1");
+
+        responseRoom.setPlayers(new ArrayList<>());
+        
+        when(gameManager.findRoomByCode(any(String.class))).thenReturn(responseRoom);
+
+        mockMvc.perform(get("/api/rooms/1L2T3F/quiz")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(1L));
     }
     
 }
