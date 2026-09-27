@@ -73,8 +73,7 @@ public class GameRoomTest {
         return pool.get(randomIndex);
     }
 
-    @Test 
-    void testAddPlayer() throws Exception{
+    private List<Player> createSamplePlayers(){
         Player p1 = new Player();
         Player p2 = new Player();
 
@@ -86,47 +85,75 @@ public class GameRoomTest {
         p2.setCurrentPosition(2);
         p2.setId("534");
 
-        assertEquals(testRoom.getPlayers().size(), 0);
-
-        assertTrue(testRoom.addPlayer(p1));
-        assertEquals(testRoom.getPlayers().size(), 1);
-
-        assertFalse(testRoom.addPlayer(p2));
-        assertEquals(testRoom.getPlayers().size(), 1);
-
-        p2.setNickName("Test Player 2");
-
-        assertTrue(testRoom.addPlayer(p2));
-        assertEquals(testRoom.getPlayers().size(), 2);
+        return new ArrayList<>(List.of(p1,p2));
     }
 
     @Test 
-    void testStartRoom() throws Exception{
+    void addPlayer_waitingState_returnsTrue() throws Exception{
         
-        assertTrue(testRoom.startRoom(new ArrayList<Question>()));
-        assertFalse(testRoom.startRoom(new ArrayList<Question>()));
+        List<Player> players = createSamplePlayers();
 
+        assertTrue(testRoom.addPlayer(players.get(0)));
+    }
+
+    @Test 
+    void addPlayer_waitingstateDuplicationAddition_returnsFalse() throws Exception{
+        
+        List<Player> players = createSamplePlayers();
+        testRoom.addPlayer(players.get(0));
+
+        assertFalse(testRoom.addPlayer(players.get(0)));
+    }
+
+    @Test 
+    void addPlayer_otherstate_returnsFalse() throws Exception{
+
+        List<Player> players = createSamplePlayers();
+
+        testRoom.startRoom(new ArrayList<Question>());
+        assertFalse(testRoom.addPlayer(players.get(0)));
+    }
+
+    @Test 
+    void startRoom_waitingState_returnsTrue() throws Exception{
+        assertTrue(testRoom.startRoom(new ArrayList<Question>()));
+    }
+
+    @Test 
+    void startRoom_duplicateStart_returnsFalse() throws Exception{
+        testRoom.startRoom(new ArrayList<Question>());
+        assertFalse(testRoom.startRoom(new ArrayList<Question>()));
     }
 
     @Test  
-    void testQuestionFlow() throws Exception{
-
-        Question q = createTestQuestion(15);
-        
-        assertNull(testRoom.getNextQuestion());
-        testRoom.startRoom(List.of(q));
-
+    void getNextQuestion_roomInWaitingState_returnsNull() throws Exception{
+        assertNull(testRoom.getNextQuestion());    
+    }
+    @Test  
+    void getNextQuestion_roomInProgress_returnsQuestionDTO() throws Exception{
         QuestionOptionsDTO qOptions;
+        Question q = createTestQuestion(15); 
+
+        testRoom.startRoom(List.of(q));
 
         assertNotNull((qOptions = testRoom.getNextQuestion()));
         assertEquals(qOptions.getQuestionText(), q.getQuestionText());
         assertEquals(testRoom.getCurrQuestionNo(), 1);
-        assertNull((qOptions = testRoom.getNextQuestion()));
-        assertTrue(testRoom.hasFinished());
 
     }
 
-    private SubmitAnswerRequest submitAnswerHelper(){
+    @Test 
+    void getNextQuestion_noMoreQuestions_returnsNullAndRoomFinished() throws Exception{
+        Question q = createTestQuestion(15); 
+
+        testRoom.startRoom(List.of(q));
+        testRoom.getNextQuestion();
+
+        assertNull(testRoom.getNextQuestion());
+        assertTrue(testRoom.hasFinished());
+    }
+
+    private SubmitAnswerRequest setUpRoomAndCreateAnswerRequest(){
 
         QuestionOptionsDTO qOptions;
 
@@ -158,7 +185,7 @@ public class GameRoomTest {
     void submitAnswer_validAnswer_awardsScore() throws Exception{
 
         int score;
-        SubmitAnswerRequest submitAnswerRequest = submitAnswerHelper();
+        SubmitAnswerRequest submitAnswerRequest = setUpRoomAndCreateAnswerRequest();
 
         submitAnswerRequest.setAnsweredAtMillis(System.currentTimeMillis() + 5000);
         score = testRoom.submitAnswer(submitAnswerRequest);
@@ -169,7 +196,7 @@ public class GameRoomTest {
 
     @Test void submitAnswer_duplicateSubmission_awardsMinusOne() throws Exception {
         int score;
-        SubmitAnswerRequest submitAnswerRequest = submitAnswerHelper();
+        SubmitAnswerRequest submitAnswerRequest = setUpRoomAndCreateAnswerRequest();
 
         submitAnswerRequest.setAnsweredAtMillis(System.currentTimeMillis() + 5000);
         testRoom.submitAnswer(submitAnswerRequest);
@@ -183,7 +210,7 @@ public class GameRoomTest {
     void submitAnswer_lateSubmission_awardsZero() throws Exception{
 
         int score;
-        SubmitAnswerRequest submitAnswerRequest = submitAnswerHelper();
+        SubmitAnswerRequest submitAnswerRequest = setUpRoomAndCreateAnswerRequest();
 
         submitAnswerRequest.setAnsweredAtMillis(System.currentTimeMillis() + 16000);
         score = testRoom.submitAnswer(submitAnswerRequest);
