@@ -153,7 +153,7 @@ public class GameRoomTest {
         assertTrue(testRoom.hasFinished());
     }
 
-    private SubmitAnswerRequest setUpRoomAndCreateAnswerRequest(){
+    private SubmitAnswerRequest setUpRoomAndCreateAnswerRequest(boolean wrongAnswerChoice){
 
         QuestionOptionsDTO qOptions;
 
@@ -168,7 +168,7 @@ public class GameRoomTest {
         p.setScore(0);
 
         submitAnswerRequest.setRoomCode(testRoom.getRoomCode());
-        submitAnswerRequest.setChosenOption(q.getCorrectOption());
+        submitAnswerRequest.setChosenOption(!wrongAnswerChoice ?  q.getCorrectOption(): 3 - q.getCorrectOption());
         submitAnswerRequest.setPlayerNickName("Mock Player 1");
 
         testRoom.addPlayer(p);
@@ -185,7 +185,7 @@ public class GameRoomTest {
     void submitAnswer_validAnswer_awardsScore() throws Exception{
 
         int score;
-        SubmitAnswerRequest submitAnswerRequest = setUpRoomAndCreateAnswerRequest();
+        SubmitAnswerRequest submitAnswerRequest = setUpRoomAndCreateAnswerRequest(false);
 
         submitAnswerRequest.setAnsweredAtMillis(System.currentTimeMillis() + 5000);
         score = testRoom.submitAnswer(submitAnswerRequest);
@@ -196,7 +196,7 @@ public class GameRoomTest {
 
     @Test void submitAnswer_duplicateSubmission_awardsMinusOne() throws Exception {
         int score;
-        SubmitAnswerRequest submitAnswerRequest = setUpRoomAndCreateAnswerRequest();
+        SubmitAnswerRequest submitAnswerRequest = setUpRoomAndCreateAnswerRequest(false);
 
         submitAnswerRequest.setAnsweredAtMillis(System.currentTimeMillis() + 5000);
         testRoom.submitAnswer(submitAnswerRequest);
@@ -210,9 +210,22 @@ public class GameRoomTest {
     void submitAnswer_lateSubmission_awardsZero() throws Exception{
 
         int score;
-        SubmitAnswerRequest submitAnswerRequest = setUpRoomAndCreateAnswerRequest();
+        SubmitAnswerRequest submitAnswerRequest = setUpRoomAndCreateAnswerRequest(false);
 
         submitAnswerRequest.setAnsweredAtMillis(System.currentTimeMillis() + 16000);
+        score = testRoom.submitAnswer(submitAnswerRequest);
+
+        assertTrue(score == 0);
+
+    }
+
+    @Test 
+    void submitAnswer_wrongOptionChosen_awardsZero() throws Exception{
+
+        int score;
+        SubmitAnswerRequest submitAnswerRequest = setUpRoomAndCreateAnswerRequest(true);
+
+        submitAnswerRequest.setAnsweredAtMillis(System.currentTimeMillis() + 1000);
         score = testRoom.submitAnswer(submitAnswerRequest);
 
         assertTrue(score == 0);
