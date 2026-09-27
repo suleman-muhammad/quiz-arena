@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.quizarena.dto.event.QuestionOptionsDTO;
+import com.quizarena.dto.request.SubmitAnswerRequest;
 import com.quizarena.entity.Question;
 
 
@@ -125,5 +126,70 @@ public class GameRoomTest {
 
     }
 
+    private SubmitAnswerRequest submitAnswerHelper(){
+
+        QuestionOptionsDTO qOptions;
+
+        Question q = createTestQuestion(15);
+        SubmitAnswerRequest submitAnswerRequest = new SubmitAnswerRequest();
+        Player p = new Player();
+        
+
+        p.setCurrentPosition(1);
+        p.setNickName("Mock Player 1");
+        p.setId("234");
+        p.setScore(0);
+
+        submitAnswerRequest.setRoomCode(testRoom.getRoomCode());
+        submitAnswerRequest.setChosenOption(q.getCorrectOption());
+        submitAnswerRequest.setPlayerNickName("Mock Player 1");
+
+        testRoom.addPlayer(p);
+        testRoom.startRoom(List.of(q,q));
+
+        qOptions = testRoom.getNextQuestion();
+        submitAnswerRequest.setQuestionNo(qOptions.getQuestionNo());
+        testRoom.setPreviousQuestionSentTimeMillis(System.currentTimeMillis());
+
+        return submitAnswerRequest;
+    }
+
+    @Test 
+    void submitAnswer_validAnswer_awardsScore() throws Exception{
+
+        int score;
+        SubmitAnswerRequest submitAnswerRequest = submitAnswerHelper();
+
+        submitAnswerRequest.setAnsweredAtMillis(System.currentTimeMillis() + 5000);
+        score = testRoom.submitAnswer(submitAnswerRequest);
+
+        assertTrue(score > 0);
+
+    }
+
+    @Test void submitAnswer_duplicateSubmission_awardsMinusOne() throws Exception {
+        int score;
+        SubmitAnswerRequest submitAnswerRequest = submitAnswerHelper();
+
+        submitAnswerRequest.setAnsweredAtMillis(System.currentTimeMillis() + 5000);
+        testRoom.submitAnswer(submitAnswerRequest);
+        score = testRoom.submitAnswer(submitAnswerRequest);
+
+        assertEquals(score, -1);
+
+    }
+
+    @Test 
+    void submitAnswer_lateSubmission_awardsZero() throws Exception{
+
+        int score;
+        SubmitAnswerRequest submitAnswerRequest = submitAnswerHelper();
+
+        submitAnswerRequest.setAnsweredAtMillis(System.currentTimeMillis() + 16000);
+        score = testRoom.submitAnswer(submitAnswerRequest);
+
+        assertTrue(score == 0);
+
+    }
 
 }
