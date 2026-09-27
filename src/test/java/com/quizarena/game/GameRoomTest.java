@@ -2,13 +2,17 @@ package com.quizarena.game;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.quizarena.dto.event.QuestionOptionsDTO;
 import com.quizarena.entity.Question;
 
 
@@ -19,6 +23,53 @@ public class GameRoomTest {
     @BeforeEach 
     void setup(){
         testRoom = new GameRoom("1L2T3F", 1L, "Test Host");
+    }
+
+    private Question createTestQuestion(int timeLimitSeconds) {
+        List<Question> pool = new ArrayList<>();
+
+        Question q1 = new Question();
+        q1.setQuestionText("What is the capital of France?");
+        q1.setOptionA("London");
+        q1.setOptionB("Paris");
+        q1.setOptionC("Berlin");
+        q1.setOptionD("Madrid");
+        q1.setCorrectOption(1); // Paris
+        q1.setTimeLimitSeconds(timeLimitSeconds);
+        pool.add(q1);
+
+        Question q2 = new Question();
+        q2.setQuestionText("Which planet is known as the Red Planet?");
+        q2.setOptionA("Venus");
+        q2.setOptionB("Mars");
+        q2.setOptionC("Jupiter");
+        q2.setOptionD("Saturn");
+        q2.setCorrectOption(1); // Mars
+        q2.setTimeLimitSeconds(timeLimitSeconds);
+        pool.add(q2);
+
+        Question q3 = new Question();
+        q3.setQuestionText("What is the chemical symbol for Gold?");
+        q3.setOptionA("Au");
+        q3.setOptionB("Ag");
+        q3.setOptionC("Fe");
+        q3.setOptionD("Pb");
+        q3.setCorrectOption(0); // Au
+        q3.setTimeLimitSeconds(timeLimitSeconds);
+        pool.add(q3);
+
+        Question q4 = new Question();
+        q4.setQuestionText("How many continents are on Earth?");
+        q4.setOptionA("5");
+        q4.setOptionB("6");
+        q4.setOptionC("7");
+        q4.setOptionD("8");
+        q4.setCorrectOption(2); // 7
+        q4.setTimeLimitSeconds(timeLimitSeconds);
+        pool.add(q4);
+
+        int randomIndex = new java.util.Random().nextInt(pool.size());
+        return pool.get(randomIndex);
     }
 
     @Test 
@@ -53,7 +104,25 @@ public class GameRoomTest {
         
         assertTrue(testRoom.startRoom(new ArrayList<Question>()));
         assertFalse(testRoom.startRoom(new ArrayList<Question>()));
+
+    }
+
+    @Test  
+    void testQuestionFlow() throws Exception{
+
+        Question q = createTestQuestion(15);
         
+        assertNull(testRoom.getNextQuestion());
+        testRoom.startRoom(List.of(q));
+
+        QuestionOptionsDTO qOptions;
+
+        assertNotNull((qOptions = testRoom.getNextQuestion()));
+        assertEquals(qOptions.getQuestionText(), q.getQuestionText());
+        assertEquals(testRoom.getCurrQuestionNo(), 1);
+        assertNull((qOptions = testRoom.getNextQuestion()));
+        assertTrue(testRoom.hasFinished());
+
     }
 
 
