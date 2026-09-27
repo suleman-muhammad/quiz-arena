@@ -4,10 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.quizarena.entity.Question;
+
 
 public class GameRoomTest {
     
@@ -44,4 +47,14 @@ public class GameRoomTest {
         assertTrue(testRoom.addPlayer(p2));
         assertEquals(testRoom.getPlayers().size(), 2);
     }
+
+    @Test 
+    void testStartRoom() throws Exception{
+        
+        assertTrue(testRoom.startRoom(new ArrayList<Question>()));
+        assertFalse(testRoom.startRoom(new ArrayList<Question>()));
+        
+    }
+
+
 }
