@@ -233,7 +233,7 @@ public class GameRoomTest {
     }
 
 
-    private void setupRoomForFinishRound(boolean wrongAnswerChoice){
+    private void setupRoomSingleQuestionWithSubmission(boolean wrongAnswerChoice, boolean doubleQuestion){
         QuestionOptionsDTO qOptions;
         List<Player> players = createSamplePlayers();
         Question q = createTestQuestion(15);
@@ -244,7 +244,7 @@ public class GameRoomTest {
         submitAnswerRequestPlayer1.setPlayerNickName(players.get(0).getNickName());
 
         testRoom.addPlayer(players.get(0));
-        testRoom.startRoom(List.of(q,q));
+        testRoom.startRoom(doubleQuestion ? List.of(q,q) : List.of(q));
 
         qOptions = testRoom.getNextQuestion();
         submitAnswerRequestPlayer1.setQuestionNo(qOptions.getQuestionNo());
@@ -255,15 +255,76 @@ public class GameRoomTest {
 
     }
 
+    private void setupRoomAndDoubleQuestionWithSubmission(boolean breakCombo){
+        QuestionOptionsDTO qOptions;
+        List<Player> players = createSamplePlayers();
+        Question q = createTestQuestion(15);
+        SubmitAnswerRequest submitAnswerRequestPlayer1 = new SubmitAnswerRequest();
+        
+        submitAnswerRequestPlayer1.setRoomCode(testRoom.getRoomCode());
+        submitAnswerRequestPlayer1.setPlayerNickName(players.get(0).getNickName());
+        submitAnswerRequestPlayer1.setChosenOption(q.getCorrectOption());
+
+        testRoom.addPlayer(players.get(0));
+        testRoom.startRoom(List.of(q,q));
+
+        for(int i = 0; i<2; i++){
+            qOptions = testRoom.getNextQuestion();
+            submitAnswerRequestPlayer1.setQuestionNo(qOptions.getQuestionNo());
+            testRoom.setPreviousQuestionSentTimeMillis(System.currentTimeMillis());
+            submitAnswerRequestPlayer1.setAnsweredAtMillis(System.currentTimeMillis() + 5000);
+            testRoom.submitAnswer(submitAnswerRequestPlayer1);
+            testRoom.finishRound();
+            submitAnswerRequestPlayer1.setChosenOption(breakCombo ? 3 - q.getCorrectOption() : q.getCorrectOption());
+        }
+
+    }
+
     @Test 
     void finishRound_playerAnsweredCorrect_awardsScoreAndIncreaseCombo() throws Exception{
-        setupRoomForFinishRound(false);
+        setupRoomSingleQuestionWithSubmission(false,false);
 
         List<Player> players =  testRoom.finishRound();
 
         assertEquals(players.size(), 1);
         assertTrue(players.getFirst().getScore() > 0);
         assertEquals(players.getFirst().getCombo(), 1);
+    }
+
+    @Test 
+    void finishRound_playerAnsweredWrong_awardsScoreZero() throws Exception{
+        setupRoomSingleQuestionWithSubmission(true,false);
+
+        List<Player> players =  testRoom.finishRound();
+
+        assertEquals(players.size(), 1);
+        assertEquals(players.getFirst().getScore(), 0);
+        assertEquals(players.getFirst().getCombo(), 0);
+    }
+
+    @Test 
+    void finishRound_singleQuestion_stateTransitsToFinished() throws Exception{
+        setupRoomSingleQuestionWithSubmission(false,false);
+        testRoom.finishRound();
+        assertEquals(testRoom.getState(), RoomState.FINISHED);
+    }
+
+    @Test 
+    void finishRound_doubleQuestion_stateTransitsToBetweenQuestions() throws Exception{
+        setupRoomSingleQuestionWithSubmission(false,true);
+        testRoom.finishRound();
+        assertEquals(testRoom.getState().name(), RoomState.BETWEEN_QUESTIONS.name());
+    }
+
+    @Test 
+    void finishRound_twoQuestionsplayerAnsweredSecondWrong_awardsScoreZeroAndBreaksCombo() throws Exception{
+        setupRoomAndDoubleQuestionWithSubmission(true);
+
+        List<Player> players =  testRoom.getPlayers();
+
+        assertEquals(players.size(), 1);
+        assertTrue(players.getFirst().getScore() > 0);
+        assertEquals(players.getFirst().getCombo(), 0);
     }
 
 }
