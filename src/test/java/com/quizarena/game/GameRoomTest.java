@@ -327,4 +327,20 @@ public class GameRoomTest {
         assertEquals(players.getFirst().getCombo(), 0);
     }
 
+
+    @Test 
+    void removePlayer_existingPlayer_returnsTrue() throws Exception{
+        List<Player> players = createSamplePlayers();
+
+        testRoom.addPlayer(players.get(0));
+
+        assertTrue(testRoom.removePlayer(players.get(0)));
+    }
+
+    @Test 
+    void removePlayer_nonExistingPlayer_returnsFalse() throws Exception{
+        List<Player> players = createSamplePlayers();
+
+        assertFalse(testRoom.removePlayer(players.get(0)));
+    }
 }
