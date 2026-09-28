@@ -77,12 +77,12 @@ public class GameRoomTest {
         Player p1 = new Player();
         Player p2 = new Player();
 
-        p1.setNickName("Test Player");
+        p1.setNickName("Test Player 1");
         p1.setCurrentPosition(1);
         p1.setId("123");
 
-        p2.setNickName("Test Player");
-        p2.setCurrentPosition(2);
+        p2.setNickName("Test Player 2");
+        p2.setCurrentPosition(1);
         p2.setId("534");
 
         return new ArrayList<>(List.of(p1,p2));
@@ -230,6 +230,40 @@ public class GameRoomTest {
 
         assertTrue(score == 0);
 
+    }
+
+
+    private void setupRoomForFinishRound(boolean wrongAnswerChoice){
+        QuestionOptionsDTO qOptions;
+        List<Player> players = createSamplePlayers();
+        Question q = createTestQuestion(15);
+        SubmitAnswerRequest submitAnswerRequestPlayer1 = new SubmitAnswerRequest();
+        
+        submitAnswerRequestPlayer1.setRoomCode(testRoom.getRoomCode());
+        submitAnswerRequestPlayer1.setChosenOption(!wrongAnswerChoice ?  q.getCorrectOption(): 3 - q.getCorrectOption());
+        submitAnswerRequestPlayer1.setPlayerNickName(players.get(0).getNickName());
+
+        testRoom.addPlayer(players.get(0));
+        testRoom.startRoom(List.of(q,q));
+
+        qOptions = testRoom.getNextQuestion();
+        submitAnswerRequestPlayer1.setQuestionNo(qOptions.getQuestionNo());
+        testRoom.setPreviousQuestionSentTimeMillis(System.currentTimeMillis());
+
+        submitAnswerRequestPlayer1.setAnsweredAtMillis(System.currentTimeMillis() + 5000);
+        testRoom.submitAnswer(submitAnswerRequestPlayer1);
+
+    }
+
+    @Test 
+    void finishRound_playerAnsweredCorrect_awardsScoreAndIncreaseCombo() throws Exception{
+        setupRoomForFinishRound(false);
+
+        List<Player> players =  testRoom.finishRound();
+
+        assertEquals(players.size(), 1);
+        assertTrue(players.getFirst().getScore() > 0);
+        assertEquals(players.getFirst().getCombo(), 1);
     }
 
 }
