@@ -343,4 +343,30 @@ public class GameRoomTest {
 
         assertFalse(testRoom.removePlayer(players.get(0)));
     }
+
+    private String getCorrectAnswer(Question q){
+        int correct = q.getCorrectOption();
+        return switch (correct) {
+            case 0 -> q.getOptionA();
+            case 1 -> q.getOptionB();
+            case 2 -> q.getOptionC();
+            case 3 -> q.getOptionD();
+            default -> "unknown";
+        };
+    }
+    @Test 
+    void getCorrectAnswer_existingQuestion_returnsCorrectAnswer() throws Exception{
+        Question q = createTestQuestion(15);
+        testRoom.startRoom(List.of(q));
+
+        assertEquals(testRoom.getCorrectAnswer(0), getCorrectAnswer(q));
+    }
+
+    @Test 
+    void getCorrectAnswer_nonExistingQuestion_returnsUnknown() throws Exception{
+        Question q = createTestQuestion(15);
+        testRoom.startRoom(List.of(q));
+
+        assertEquals(testRoom.getCorrectAnswer(1), "unKnown");
+    }
 }
