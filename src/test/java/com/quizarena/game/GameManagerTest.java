@@ -1,6 +1,7 @@
 package com.quizarena.game;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -130,4 +131,16 @@ public class GameManagerTest {
     }
 
 
+    @Test 
+    void roomExists_existingRoom_returnsTrue() throws Exception{
+        CreateRoomRequest roomRequest = new CreateRoomRequest(1, "Mock host", true);
+        GameRoom room = manager.createRoom(roomRequest);
+
+        assertTrue(manager.roomExists(room.getRoomCode()));
+    }
+
+    @Test 
+    void roomExists_nonExistingRoom_returnsFalse() throws Exception{
+        assertFalse(manager.roomExists("1L2T3F"));
+    }
 }
