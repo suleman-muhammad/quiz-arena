@@ -31,5 +31,25 @@ public class GameManagerTest {
         assertEquals(request.hostNickName(), testRoom.getHost());
         assertTrue(testRoom.getPlayers().size() > 0);
     }
+
+    @Test 
+    void findRoomByCode_existingRoom_returnsNotNull() throws Exception{
+        CreateRoomRequest request = new CreateRoomRequest(1, "Mock host", true);
+        GameRoom room  = manager.createRoom(request);
+
+        GameRoom testRoom = manager.findRoomByCode(room.getRoomCode());
+        assertNotNull(testRoom);
+
+        assertEquals(room.getRoomCode(), testRoom.getRoomCode());
+        assertEquals(room.getQuizId(), testRoom.getQuizId());
+        assertEquals(room.getHost(), testRoom.getHost());
+        assertEquals(room.getState().name(), testRoom.getState().name());
+    }
+
+    @Test
+    void findRoomCode_nonExistingRoom_returnsNull() throws Exception{
+        GameRoom testRoom = manager.findRoomByCode("1L2P3R");
+        assertNull(testRoom);
+    }
  
 }
