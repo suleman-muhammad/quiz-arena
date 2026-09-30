@@ -143,4 +143,16 @@ public class GameManagerTest {
     void roomExists_nonExistingRoom_returnsFalse() throws Exception{
         assertFalse(manager.roomExists("1L2T3F"));
     }
+
+    @Test 
+    void removeRoom_existingRoom_removesRoomFromMap() throws Exception{
+        CreateRoomRequest roomRequest = new CreateRoomRequest(1, "Mock host", true);
+        GameRoom room = manager.createRoom(roomRequest);
+        manager.removeRoom(room.getRoomCode());
+        assertFalse(manager.roomExists(room.getRoomCode()));
+    }
+    @Test 
+    void removeRoom_nonExistingRoom_removesRoomFromMap() throws Exception{
+        assertFalse(manager.roomExists("1L2T3F"));
+    }
 }
