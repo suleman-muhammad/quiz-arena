@@ -101,6 +101,33 @@ public class GameManagerTest {
         assertEquals(response.message(), "Player with Given Name already exists.");
 
     }
-    
+
+    @Test 
+    void removePlayerFromRoom_existingRoomAndPlayer_returnsUpdatedGameRoom() throws Exception{
+        CreateRoomRequest roomRequest = new CreateRoomRequest(1, "Mock host", true);
+        GameRoom room = manager.createRoom(roomRequest);
+
+        GameRoom testRoom = manager.removePlayerFromRoom(room.getRoomCode(), "Mock host");
+
+        assertNotNull(testRoom);
+        assertEquals(testRoom.getPlayers().size(), 0);
+    }
+
+    @Test 
+    void removePlayerFromRoom_existingRoomAndNonExistingPlayer_returnsNull() throws Exception{
+        CreateRoomRequest roomRequest = new CreateRoomRequest(1, "Mock host", true);
+        GameRoom room = manager.createRoom(roomRequest);
+        
+        GameRoom testRoom = manager.removePlayerFromRoom(room.getRoomCode(), "Mock player 1");
+        assertNull(testRoom);
+    }
+
+    @Test 
+    void removePlayerFromRoom_nonExistingRoom_returnsNull() throws Exception{
+            
+        GameRoom testRoom = manager.removePlayerFromRoom("1L2T3F", "Mock host");
+        assertNull(testRoom);
+    }
+
 
 }
