@@ -51,5 +51,56 @@ public class GameManagerTest {
         GameRoom testRoom = manager.findRoomByCode("1L2P3R");
         assertNull(testRoom);
     }
- 
+
+    @Test  
+    void addPlayerToRoom_existingRoom_returnsResponseWithRoomInfo() throws Exception{
+        CreateRoomRequest roomRequest = new CreateRoomRequest(1, "Mock host", true);
+        GameRoom testRoom = manager.createRoom(roomRequest);
+
+        JoinRoomResponse response = manager.addPlayerToRoom(testRoom.getRoomCode(), "Mock Player");
+        
+        assertNotNull(response.roomInfo());
+        assertEquals(response.message(), "Ok");
+
+        assertEquals(response.roomInfo().getRoomCode(), testRoom.getRoomCode());
+        assertEquals(response.roomInfo().getState(), testRoom.getState());
+    }
+
+    @Test  
+    void addPlayerToRoom_nonExistingRoom_returnsResponseWithNullRoomInfo() throws Exception{
+
+        JoinRoomResponse response = manager.addPlayerToRoom("1L2F3T", "Mock Player");
+        
+        assertNull(response.roomInfo());
+        assertEquals(response.message(), "No ROOM found.");
+
+    }
+    
+    @Test  
+    void addPlayerToRoom_roomStateIsNotWaiting_returnsResponseWithNullRoomInfo() throws Exception{
+        CreateRoomRequest roomRequest = new CreateRoomRequest(1, "Mock host", true);
+        GameRoom testRoom = manager.createRoom(roomRequest);
+
+        testRoom.setState(RoomState.BETWEEN_QUESTIONS);
+        JoinRoomResponse response = manager.addPlayerToRoom(testRoom.getRoomCode(), "Mock Player");
+        
+        assertNull(response.roomInfo());
+        assertEquals(response.message(), "Cannot Join ROOM mid Game.");
+
+    }
+
+    @Test  
+    void addPlayerToRoom_playerWithNameAlreadyExists_returnsResponseWithNullRoomInfo() throws Exception{
+        CreateRoomRequest roomRequest = new CreateRoomRequest(1, "Mock host", true);
+        GameRoom testRoom = manager.createRoom(roomRequest);
+
+        manager.addPlayerToRoom(testRoom.getRoomCode(), "Mock Player");
+        JoinRoomResponse response = manager.addPlayerToRoom(testRoom.getRoomCode(), "Mock Player");
+        
+        assertNull(response.roomInfo());
+        assertEquals(response.message(), "Player with Given Name already exists.");
+
+    }
+    
+
 }
