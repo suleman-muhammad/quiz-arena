@@ -152,7 +152,8 @@ public class GameManagerTest {
         assertFalse(manager.roomExists(room.getRoomCode()));
     }
     @Test 
-    void removeRoom_nonExistingRoom_removesRoomFromMap() throws Exception{
+    void removeRoom_nonExistingRoom_returnsFalse() throws Exception{
+        manager.removeRoom("1L2T3F");
         assertFalse(manager.roomExists("1L2T3F"));
     }
 }
