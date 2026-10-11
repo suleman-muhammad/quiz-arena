@@ -120,4 +120,13 @@ public class GameManager {
 
         return this.rooms.containsKey(roomCode);
     }
+
+    public boolean playerExistsInRoom(String roomCode, String playerNickName){
+        if(!this.roomExists(roomCode)){
+            return false;
+        }
+        GameRoom room = rooms.get(roomCode);
+        return room.playerExists(playerNickName);
+        
+    }
 }
