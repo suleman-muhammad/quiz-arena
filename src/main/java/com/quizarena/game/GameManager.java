@@ -114,6 +114,10 @@ public class GameManager {
     }
 
     public boolean roomExists(String roomCode) {
+        if(roomCode == null){
+            return false;
+        }
+
         return this.rooms.containsKey(roomCode);
     }
 }
