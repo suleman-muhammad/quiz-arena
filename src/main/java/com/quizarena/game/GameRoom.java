@@ -174,6 +174,20 @@ public class GameRoom {
         return this.currQuestionNo >= this.questions.size();
     }
 
+    public boolean playerExists(String nickName){
+        if(nickName == null){
+            return false;
+        }
+        
+        for(Player p: players){
+            if(p.getNickName().equalsIgnoreCase(nickName)){
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
     public long getQuizId() {
         return quizId;
     }
