@@ -3,7 +3,6 @@ package com.quizarena.controller;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.quizarena.dto.request.SubmitAnswerRequest;
@@ -13,6 +12,7 @@ import com.quizarena.dto.request.CreateRoomRequest;
 import com.quizarena.dto.request.JoinRoomRequest;
 import com.quizarena.dto.request.LeaveRoomRequest;
 import com.quizarena.dto.request.StartRoomRequest;
+import com.quizarena.dto.event.ChatMessage;
 import com.quizarena.game.GameManager;
 import com.quizarena.game.GameRoom;
 import com.quizarena.service.GameService;
@@ -50,9 +50,13 @@ public class GameController {
     public void joinRoom(JoinRoomRequest request) {
         JoinRoomResponse requestAnswer = manager.addPlayerToRoom(request.roomCode(), request.playerNickName());
 
-        messagingTemplate.convertAndSend("/topic/join-requests/" + request.playerNickName() + "/" + request.requestId(),
+        if(requestAnswer.roomInfo() != null){
+            messagingTemplate.convertAndSend("/topic/join-requests/" + request.playerNickName() + "/" + request.requestId(),
                 requestAnswer);
-        messagingTemplate.convertAndSend("/topic/rooms/" + request.roomCode() + "/waiting", requestAnswer.roomInfo());
+            messagingTemplate.convertAndSend("/topic/rooms/" + request.roomCode() + "/waiting", requestAnswer.roomInfo());
+            return;
+        }
+        
 
     }
 
@@ -69,5 +73,24 @@ public class GameController {
     @MessageMapping("/game/rooms/answer")
     public void handleAnswer(@RequestBody SubmitAnswerRequest answer) {
         gameService.handleAnswer(answer.getRoomCode(), answer);
+    }
+
+    // @MessageMapping("/game/rooms/{roomCode}/chat")
+    // public void handleChatMessage(@RequestBody ChatMessage msg, @PathVariable String roomCode){
+    //     ChatMessage res = gameService.handleChatMessage(msg);
+    //     if(res != null){
+    //         return;
+    //     }
+
+    // }
+
+    @MessageMapping("/game/rooms/chat")
+    public void handleChatMessage2(@RequestBody ChatMessage msg){
+        ChatMessage res = gameService.handleChatMessage(msg);
+        if(res != null){
+            messagingTemplate.convertAndSend("/topic/rooms/" + res.roomCode() + "/chat", res);
+            return;
+        }
+
     }
 }
