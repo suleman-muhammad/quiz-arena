@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 import com.quizarena.dto.request.*;
 import com.quizarena.dto.response.*;
 import com.quizarena.dto.event.*;
-import com.quizarena.dto.request.LeaveRoomRequest;
-import com.quizarena.dto.request.StartRoomRequest;
 import com.quizarena.game.*;
 import com.quizarena.entity.Quiz;
 import com.quizarena.repository.QuizRepository;
@@ -221,5 +219,27 @@ public class GameService {
         if(room.getPlayers().isEmpty()){
             manager.removeRoom(room.getRoomCode());
         }
+    }
+
+    public ChatMessage handleChatMessage(ChatMessage msg){
+        
+        if(msg == null){
+            return null;
+        }
+
+        if(msg.sender() == null || msg.msg() == null || msg.roomCode() == null){
+            return null;
+        }
+        String roomCode = msg.roomCode();
+
+        // if(!manager.roomExists(roomCode)){
+        //     return null;
+        // }
+
+        if( !manager.playerExistsInRoom(roomCode, msg.sender()) || msg.msg().isEmpty()){
+            return null;
+        }
+
+        return msg;
     }
 }
