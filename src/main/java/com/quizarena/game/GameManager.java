@@ -122,6 +122,7 @@ public class GameManager {
     }
 
     public boolean playerExistsInRoom(String roomCode, String playerNickName){
+
         if(!this.roomExists(roomCode)){
             return false;
         }
