@@ -94,6 +94,14 @@ function Lobby() {
                 client.disconnect()
                 navigate(`/rooms/${roomCode}?nickname=${nickName}`)
             })
+
+            client.subscribe(`/topic/rooms/${roomCode}/chat`, (msg) =>{
+                const data = JSON.parse(msg.body)
+                setChatMessages((prev) => [...prev, {sender:data.sender, text:data.msg}])
+            })
+
+            chatMsg.current = "";
+
         }, () => {
             setConnected(false)
         })
@@ -121,8 +129,11 @@ function Lobby() {
         e.preventDefault()
         if (!chatInput.trim()) return
 
-        const newMsg = { sender: nickName, text: chatInput.trim() }
-        setChatMessages(prev => [...prev, newMsg])
+        const newMsg = { roomCode: roomCode, sender: nickName, msg: chatInput.trim() }
+        if(stompClient.current){
+            stompClient.current.send("/app/game/rooms/chat",{},JSON.stringify(newMsg))
+        }
+
         setChatInput('')
     }
 
@@ -141,6 +152,8 @@ function Lobby() {
         }
         navigate("/")
     }
+
+    
 
     const hostPlayer = (players && players.length > 0) ? players[0] : { nickName: isHost ? nickName : 'Host' }
     const otherPlayers = (players && players.length > 1) ? players.slice(1) : []
