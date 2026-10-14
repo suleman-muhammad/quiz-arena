@@ -464,7 +464,7 @@ function Room() {
                                         >
                                             <div className="flex items-center gap-3">
                                                 <span className="w-5 text-center text-sm font-black">
-                                                    {isTop3 ? medals[p.currentPosition] : `#${p.currentPosition}`}
+                                                    {isTop3 ? medals[p.currentPosition-1] : `#${p.currentPosition}`}
                                                 </span>
 
                                                 <PlayerAvatar index={p.currentPosition} name={p.nickName} className="w-8 h-8" />
