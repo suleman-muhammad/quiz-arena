@@ -37,6 +37,7 @@ function Lobby() {
     const stompClient = useRef(null)
 
     useEffect(() => {
+        let isCancelled = false;
         fetch(`${API_BASE_URL}/api/rooms/${roomCode}`)
             .then(res => res.json())
             .then((roomInfo) => {
@@ -75,6 +76,12 @@ function Lobby() {
         const client = Stomp.over(socket)
         client.debug = null
         client.connect({}, () => {
+            if(isCancelled){
+                client.disconnect()
+                socket.close();
+                return
+            }
+    
             stompClient.current = client
             setConnected(true)
 
@@ -100,13 +107,12 @@ function Lobby() {
                 setChatMessages((prev) => [...prev, {sender:data.sender, text:data.msg}])
             })
 
-            chatMsg.current = "";
-
         }, () => {
             setConnected(false)
         })
 
         return () => {
+            isCancelled = true;
             if (stompClient.current) stompClient.current.disconnect()
         }
     }, [roomCode, nickName, navigate])
