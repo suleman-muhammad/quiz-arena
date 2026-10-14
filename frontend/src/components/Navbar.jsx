@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom'
 function Navbar() {
     return (
         <nav className="sticky top-0 z-50 bg-[#0A0E1A]/90 backdrop-blur-md border-b border-gray-800 flex items-center justify-between px-6 py-4">
-            <Link to="/" className="text-[#F9FAFB] font-bold text-lg tracking-tight flex items-center gap-2">
-                QuizArena
+            <Link to="/" className="text-[#F9FAFB] font-bold text-lg tracking-tight flex items-center gap-2.5">
+                <img src="/logo.svg" alt="QuizArena Logo" className="w-8 h-8 rounded-lg shadow-sm" />
+                <span>QuizArena</span>
             </Link>
             <Link 
                 to="/explore" 
