@@ -35,6 +35,7 @@ function Lobby() {
     const [chatMinimized, setChatMinimized] = useState(false)
 
     const stompClient = useRef(null)
+    const chatEndRef = useRef(null)
 
     useEffect(() => {
         let isCancelled = false;
@@ -116,6 +117,9 @@ function Lobby() {
             if (stompClient.current) stompClient.current.disconnect()
         }
     }, [roomCode, nickName, navigate])
+    useEffect(() =>{
+        chatEndRef.current?.scrollIntoView({behavior: 'smooth'});
+    },[chatMessages])
 
     function startGame() {
         if (!connected) {
@@ -375,7 +379,9 @@ function Lobby() {
                                             <span className="font-bold text-amber-400 mr-1.5">{msg.sender}:</span>
                                             <span>{msg.text}</span>
                                         </div>
+                                        
                                     ))}
+                                    <div ref={chatEndRef}></div>
                                 </div>
 
                                 <form onSubmit={handleSendChat} className="flex gap-2 mt-auto pt-2 border-t border-slate-800">
