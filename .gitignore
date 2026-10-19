@@ -12,28 +12,13 @@ out/
 
 # Application Secrets & Properties
 src/main/resources/application.properties
+src/main/resources/application-*.properties
+!src/main/resources/application.properties.example
 
-# ==========================================
-# Frontend (Vite / React / Node)
-# ==========================================
-node_modules/
-dist/
-dist-ssr/
-*.local
-
-# Environment variables (ignore all .env files except template example)
-.env
-.env.*
-!.env.example
 
 # Logs
 logs/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
 # ==========================================
 # IDEs, Editors & OS Metadata
@@ -74,4 +59,6 @@ Thumbs.db
 *.sw?
 
 
-frontend/src/assets/avatars/
+# Compiled class & jar files
+*.class
+*.jar
